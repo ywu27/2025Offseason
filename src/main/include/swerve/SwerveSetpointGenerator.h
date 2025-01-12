@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Constants.h"
-#include "SwerveSetpoint.h"
 #include "swerve/SwerveDriveKinematics.h"
 #include "swerve/SwerveModuleState.h"
-#include <vector>
+#include "SwerveSetpoint.h"
 
 class SwerveSetpointGenerator {
 private:
@@ -19,13 +18,5 @@ public:
     {
         std::vector<SwerveModuleState> states = mKinematics->toSwerveStates(currSetpt);
         states = SwerveDriveKinematics::desaturateWheelSpeeds(states, moduleMaxFPS);
-        
-
     }
-
-
-
-
-
-
 };

@@ -4,7 +4,6 @@
 #include "swerve/ChassisSpeeds.h"
 #include <vector>
 
-
 class SwerveSetpoint 
 {
 public:

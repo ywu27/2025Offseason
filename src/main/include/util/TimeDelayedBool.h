@@ -2,7 +2,6 @@
 
 #include <frc/Timer.h>
 
-
 class TimeDelayedBool 
 {
 private:
@@ -22,9 +21,4 @@ public:
         val = input;
         return (val && (timer.Get().value() >= time));
     }
-    
-
-
-
-
 };

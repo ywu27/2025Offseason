@@ -1,29 +1,20 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 #pragma once
 
 #include <frc/TimedRobot.h>
 #include <frc/PS5Controller.h>
-#include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
-
-#include "util/ShuffleUI.h"
-#include <thread>
+#include <frc/Joystick.h>
 
 #include "util/ControlUtil.h"
 #include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
 #include "util/TimeDelayedBool.h"
-#include <frc/Joystick.h>
 #include "sensors/Limelight.h"
 #include "util/SlewRateLimiter.h"
-#include <frc/GenericHID.h>
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
 #include "util/TimeDelayButton.h"
-#include "sensors/Limelight.h"
 
 class Robot : public frc::TimedRobot
 {

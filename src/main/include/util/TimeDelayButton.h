@@ -29,7 +29,5 @@ public:
             wasPressed = false;
             return false;
         }
-
     }
-
 };

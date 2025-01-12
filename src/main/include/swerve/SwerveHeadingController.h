@@ -1,10 +1,10 @@
 #pragma once
+
 #include <Constants.h>
 #include "geometry/Pose2d.h"
 #include <cmath>
 #include <stdexcept>
 #include <frc/controller/PIDController.h>
-
 
 class SwerveHeadingController {
 private:

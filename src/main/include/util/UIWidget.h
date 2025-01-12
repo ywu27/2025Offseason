@@ -4,7 +4,6 @@
 #include <networktables/NetworkTableEntry.h>
 #include <vector>
 
-
 // for use in the ShuffleUI class
 class UIWidget {
   private:
