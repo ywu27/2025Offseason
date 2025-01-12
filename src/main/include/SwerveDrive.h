@@ -1,26 +1,18 @@
 #pragma once
 
 #include "SwerveModule.h"
-#include "geometry/Rotation2d.h"
-#include "swerve/ChassisSpeeds.h"
-#include "geometry/Pose2d.h"
-#include "geometry/Twist2d.h"
-#include "geometry/Translation2d.h"
 #include "Constants.h"
-#include "swerve/SwerveDriveKinematics.h"
-#include "swerve/SwerveModuleState.h"
-#include <thread>
 #include "util/ShuffleUI.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
 #include "sensors/NavX.h"
 
-#include "frc/kinematics/SwerveDriveKinematics.h"
-#include "frc/kinematics/SwerveDriveOdometry.h"
-#include "pathplanner/lib/path/PathPlannerPath.h"
+#include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/kinematics/SwerveDriveOdometry.h>
+#include <thread>
+#include "swerve/SwerveDriveKinematics.h"
 
 // #define maxRot
-
 // TODO: inherit thread helper
 enum DriveState{
     Teleop,
@@ -30,7 +22,7 @@ enum DriveState{
 };
 class SwerveDrive
 {
-public: //CHANGE BACK TO PRIVATE
+private:
     SwerveModule mFrontLeft = SwerveModule(FLsteerID, FLdriveID, FL_CAN_ID);
     SwerveModule mFrontRight = SwerveModule(FRsteerID, FRdriveID, FR_CAN_ID);
     SwerveModule mBackLeft = SwerveModule(BLsteerID, BLdriveID, BL_CAN_ID);
