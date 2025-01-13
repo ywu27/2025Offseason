@@ -53,13 +53,6 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  /*if (ctr.GetCircleButtonPressed()) {
-    mDrive.autoMove(PI/2, 100);
-  }
-  */
-  if (ctr.GetCircleButtonPressed()) {
-    mDrive.mFrontLeft.steerMotor.Set(0.5);
-  }
 
   auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
