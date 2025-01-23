@@ -1,31 +1,26 @@
 #pragma once
 
 #include <thread>
-#include <string>
-
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Timer.h>
 #include <rev/SparkClosedLoopController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
-#include <frc/Timer.h>
+#include <frc/kinematics/SwerveModulePosition.h>
 
 #include "sensors/CAN_Coder.h"
-#include "geometry/Translation2d.h"
-#include "swerve/SwerveModuleState.h"
 #include "Constants.h"
 #include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
-#include "frc/kinematics/SwerveModulePosition.h"
-#include "frc/geometry/Rotation2d.h"
 #include "control/PowerModule.h"
-#include <swerve/TalonFXMotor.h>
+#include "swerve/TalonFXMotor.h"
+#include "swerve/SwerveModuleState.h"
 
 class SwerveModule
 {
-    // private: <- removed for testing
-public:
+private:
     int steerID;
     int driveID;
 
@@ -69,7 +64,7 @@ public:
     // TODO: Brownout module
     double currentSteerOutput = 0.0;
 
-    // public:
+public:
     SwerveModule(int steerMotorID, int driveMotorID, int cancoderID);
     void initMotors();
 

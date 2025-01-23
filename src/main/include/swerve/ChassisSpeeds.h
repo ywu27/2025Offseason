@@ -40,8 +40,7 @@ public:
     //             -vxMetersPerSecond * robotAngle.sin() + vyMetersPerSecond * robotAngle.cos(),
     //             omegaRadiansPerSecond);
     // }
-
-
+    
     std::string toString() const {
         return "ChassisSpeeds(Vx: " + std::to_string(vxMetersPerSecond) + " m/s, Vy: " +
                std::to_string(vyMetersPerSecond) + " m/s, Omega: " +

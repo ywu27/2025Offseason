@@ -116,5 +116,4 @@ public:
         motor.GetConfigurator().Apply(currentConfiguration);
     }
 
-
 };
