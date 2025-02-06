@@ -88,12 +88,12 @@ void Robot::TeleopPeriodic()
   //Decide drive modes
 
   if (ctr.GetCircleButton()) {
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2, true);
+    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2);
     vx = speeds.vxMetersPerSecond;
     vy = speeds.vyMetersPerSecond;
     frc::SmartDashboard::PutNumber("vx", vx);
     frc::SmartDashboard::PutNumber("vy", vy);
-    double zeroSetpoint = limelight.setAngleSetpoint();
+    double zeroSetpoint = 0;
 
     frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
