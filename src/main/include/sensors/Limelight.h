@@ -45,13 +45,20 @@ private:
 public:
     enum Alliance{RED, BLUE};
     enum TagType {REEF, CORALSTATION, PROCESSOR, BARGE};
-    Alliance alliance;
-    TagType tagType;
+    //Alliance alliance;
+    //TagType tagType;
 
-    Limelight(std::string name, double mountAngle, double heightOffFloor, Alliance myAlliance){
+    Limelight(std::string name, double mountAngle, double heightOffFloor, int allianceOption){
         limelightName = name;
         tagType = REEF;
-        alliance = myAlliance;
+        
+        if (allianceOption == 0){
+            alliance = RED;
+        }
+
+        else{
+            alliance = BLUE;
+        }
     }
 
     bool isTargetDetected() {

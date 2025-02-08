@@ -24,7 +24,6 @@
 #include "SwerveDrive.h"
 #include "swerve/SwerveAlign.h"
 #include "util/TimeDelayButton.h"
-#include "sensors/Limelight.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -54,7 +53,7 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   
   //Limelight
-  Limelight limelight = Limelight("", 30, 5, Limelight::RED);
+  Limelight limelight = Limelight("", 30, 5, 0);
 
   SwerveAlign align;
 
