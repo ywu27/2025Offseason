@@ -14,24 +14,33 @@ private:
     std::string limelightName;
     double limelightMountAngle = 30; // Measured in degrees
     double limelightHeight = 5; // Measured in inches
+    enum TagType {REEF, CORALSTATION, PROCESSOR, BARGE};
+    enum Alliance{RED, BLUE};
     
     double reefTagHeight = 6.875; // Measured in inches
     double coralStationTagHeight = 53.25; // Measured in inches
     double processorTagHeight = 45.875; // Measured in inches
     double bargeTagHeight = 69.0; // Measured in inches
     
-    std::vector<int> redReefTargetIDs = {10, 9, 8, 7, 6, 11};
-    std::vector<int> blueReefTargetIDs = {21, 22, 17, 18, 19, 20};
-    std::vector<double> redReefTargetAngles = {0, 60, 120, 180, 240, 300};
+    std::vector<int> redReefTargetIDs = {10, 11, 6, 7, 8, 9};
+    std::vector<int> blueReefTargetIDs = {21, 20, 19, 18, 17, 22};
+    std::vector<int> reefTargetAngles = {180, 240, 300, 0, 60, 120};
 
     std::vector<int> redCoralStationTargetIDs = {1, 2};
     std::vector<int> blueCoralStationTargetIDs = {12, 13};
+    int coralStationTargetAngle1 = 126;
+    int coralStationTargetAngle2 = 234;
 
     int redProcessorTargetIDs = 3;
     int blueProcessorTargetIDs = 16;
+    int processorAngle = 270;
 
     std::vector<int> redBargeTargetIDs = {4, 14};
     std::vector<int> blueBargeTargetIDs = {5, 15};
+    int bargeAngle = 0;
+    
+    Alliance alliance;
+    TagType tagType;
 
 public:
     enum Alliance{RED, BLUE};
@@ -39,7 +48,7 @@ public:
     Alliance alliance;
     TagType tagType;
 
-    Limelight(std::string name, Alliance myAlliance){
+    Limelight(std::string name, double mountAngle, double heightOffFloor, Alliance myAlliance){
         limelightName = name;
         tagType = REEF;
         alliance = myAlliance;
@@ -150,6 +159,48 @@ public:
 
     }
     
+    // sets the angle setpoint based on the angle of the field element's tag ID
+    double setAngleSetpoint(){
+        
+        double angleSetpoint = 0;
+        tagType = getTagType();
+        int tagID = getTagID();
+        
+        switch(tagType){
+            case REEF:
+                if (alliance == RED){
+                    int redIndexAngle = std::find(redReefTargetIDs.begin(), redReefTargetIDs.end(), tagID) - redReefTargetIDs.begin();
+                    angleSetpoint = reefTargetAngles[redIndexAngle];
+                }
+
+                else{
+                    int blueIndexAngle = std::find(blueReefTargetIDs.begin(), blueReefTargetIDs.end(), tagID) - blueReefTargetIDs.begin();
+                    angleSetpoint = reefTargetAngles[blueIndexAngle];
+                }
+                break;
+            
+            case CORALSTATION:
+                if (tagID == 13 or tagID == 1){
+                    angleSetpoint = coralStationTargetAngle1;
+                }
+
+                else if (tagID == 12 or tagID == 2){
+                    angleSetpoint = coralStationTargetAngle2;
+                }
+                break;
+            
+            case PROCESSOR:
+                angleSetpoint = processorAngle;
+                break;
+            
+            case BARGE:
+                angleSetpoint = bargeAngle;
+                break;
+        }
+        
+        return angleSetpoint;
+    }
+    
     double getDistanceToWall() { // perpendicular distance to wall in meters
         double tagHeight = getTagHeight();
         double ty = LimelightHelpers::getTY("");
@@ -161,6 +212,25 @@ public:
         return distanceToWall;
     }
 
+    double getCurrentAngle() {
+        
+        //Uses the getTX() function to get the horizontal angle offset from the field element
+        //This angle offset is added to the angle of the field element to get the current angle of the robot
+        if (isTargetDetected() == true) {
+            //double horizontalDistance = LimelightHelpers::getTX();
+            //double distanceFromWall = getDistanceToWall();
+            //double angleOffset = atan(horizontalDistance / distanceFromWall);
+            double angleOffset = LimelightHelpers::getTX();
+            double angleFieldElement = setAngleSetpoint();
+            double currentAngle = angleFieldElement + angleOffset;
+            return currentAngle;
+        }
+
+        else {
+            return 0;
+        }
+    }
+    
     double getAngleLimelightToTag() { // TY + limelight mount angle
         if (isTargetDetected() == true)
         {
