@@ -61,6 +61,8 @@ void Robot::TeleopPeriodic()
   bool fieldOriented = false;
   fieldOriented = mGyro.gyro.IsConnected();
 
+  frc::SmartDashboard::PutBoolean("aligned?", align.isAligned(limelight));
+
   auto startTime = frc::Timer::GetFPGATimestamp();
   double vx = 0;
   double vy = 0;
@@ -85,7 +87,7 @@ void Robot::TeleopPeriodic()
   //Decide drive modes
   double zeroSetpoint = 0;
 
-  if (ctr.GetCircleButton()&&limelight.isTargetDetected2()) {
+  if (ctr.GetR2Button()&&limelight.isTargetDetected2()) {
     ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 0.75);
     frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);
     vx = speeds.vyMetersPerSecond;
@@ -93,7 +95,7 @@ void Robot::TeleopPeriodic()
     frc::SmartDashboard::PutNumber("vx", vx);
     frc::SmartDashboard::PutNumber("vy", vy);
     fieldOriented = false;
-    zeroSetpoint = 90;
+    zeroSetpoint = 0;
     frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
     mHeadingController.setSetpoint(zeroSetpoint);
