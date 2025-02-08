@@ -216,7 +216,7 @@ public:
         
         //Uses the getTX() function to get the horizontal angle offset from the field element
         //This angle offset is added to the angle of the field element to get the current angle of the robot
-        if (isTargetDetected() == true) {
+        if (isTargetDetected2() == true) {
             //double horizontalDistance = LimelightHelpers::getTX();
             //double distanceFromWall = getDistanceToWall();
             //double angleOffset = atan(horizontalDistance / distanceFromWall);
