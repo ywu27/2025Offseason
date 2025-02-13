@@ -53,7 +53,7 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   
   //Limelight
-  Limelight limelight = Limelight("", 30, 5, 0);
+  Limelight limelight = Limelight("", 0);
 
   SwerveAlign align;
 

@@ -44,7 +44,7 @@ public:
     Alliance alliance;
     TagType tagType;
 
-    Limelight(std::string name, double mountAngle, double heightOffFloor, int allianceOption){
+    Limelight(std::string name, int allianceOption){ // 0 is red alliance
         limelightName = name;
         tagType = REEF;
         
