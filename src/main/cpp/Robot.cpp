@@ -86,7 +86,7 @@ void Robot::TeleopPeriodic()
 
   //Decide drive modes
   double zeroSetpoint = 0;
-
+  
   if (ctr.GetR2Button()&&limelight.isTargetDetected2()) {
     ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 0.75);
     frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);

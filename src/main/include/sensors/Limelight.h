@@ -91,10 +91,6 @@ public:
         return 0.0;
     }
 
-    double isTargetDetected2() {
-        return !(getTX()==0);
-    }
-
     // sets the tag height based on the target ID by comparing it to the vectors of target IDs in different positions of the field
     // returns the tag height in inches
 
