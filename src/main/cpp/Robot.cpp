@@ -11,7 +11,6 @@
 void Robot::RobotInit()
 {
   mDrive.initModules();
-  mGyro.init();
   limelight.setPipelineIndex(0);
   //frc::CameraServer::StartAutomaticCapture();
 }
@@ -44,7 +43,7 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
-  
+  frc::SmartDashboard::PutNumber("tx", limelight.getTX());
   limelight.setPipelineIndex(0);
   limelight.isTargetDetected();
   limelight.setLEDMode(0);
@@ -59,10 +58,10 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  limelight.getTX();
-  limelight.getTY();
-  frc::SmartDashboard::PutNumber("dstance", limelight.getDistanceToWall());
-  std::cout<< limelight.getDistanceToWall();
+  bool fieldOriented = false;
+  fieldOriented = mGyro.gyro.IsConnected();
+
+  frc::SmartDashboard::PutBoolean("aligned?", align.isAligned(limelight));
 
   auto startTime = frc::Timer::GetFPGATimestamp();
   double vx = 0;
@@ -86,33 +85,17 @@ void Robot::TeleopPeriodic()
   double rot = rightX * moduleMaxRot * 2;
 
   //Decide drive modes
-
-  if (ctr.GetCircleButton()) {
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2);
-    vx = speeds.vxMetersPerSecond;
-    vy = speeds.vyMetersPerSecond;
-    frc::SmartDashboard::PutNumber("vx", vx);
-    frc::SmartDashboard::PutNumber("vy", vy);
-    double zeroSetpoint = 0;
-
-    frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(zeroSetpoint);
-  }
-  else // Normal driving mode
-  {
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
-    vx = leftX * moduleMaxFPS;
-    vy = leftY * moduleMaxFPS;
-  }
-
-  if (ctr.GetCircleButton()) {
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2);
+  double zeroSetpoint = 0;
+  
+  if (ctr.GetR2Button()&&limelight.isTargetDetected2()) {
+    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 0.75);
+    frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);
     vx = speeds.vyMetersPerSecond;
     vy = speeds.vxMetersPerSecond;
     frc::SmartDashboard::PutNumber("vx", vx);
     frc::SmartDashboard::PutNumber("vy", vy);
-    double zeroSetpoint = 0;
+    fieldOriented = false;
+    zeroSetpoint = 0;
     frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
     mHeadingController.setSetpoint(zeroSetpoint);
@@ -125,16 +108,19 @@ void Robot::TeleopPeriodic()
     vy = leftY * moduleMaxFPS;
   }
   // Gyro Resets
-  if (ctr.GetCrossButtonReleased())
-  {
+  if (ctr.GetCrossButtonReleased()) {
     mGyro.init();
+  }
+
+  if (align.isAligned(limelight)) {
+    mGyro.setYaw(0);
   }
 
   // Drive function
   mDrive.Drive(
       ChassisSpeeds(vx, vy, -rot),
       mGyro.getBoundedAngleCCW(),
-      mGyro.gyro.IsConnected(),
+      fieldOriented,
       cleanDriveAccum);
   mDrive.updateOdometry();
   frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());

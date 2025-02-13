@@ -7,13 +7,23 @@
 class NavX
 {
 public:
-    studica::AHRS gyro = studica::AHRS(studica::AHRS::NavXComType::kMXP_SPI); // frc::SerialPort::kMXP
+    studica::AHRS gyro = studica::AHRS(studica::AHRS::NavXComType::kMXP_SPI);
     Rotation2d angleOffset = Rotation2d(0.0);
     
     void init()
     {
         gyro.Reset();
         angleOffset = Rotation2d(0.0);
+    }
+
+    void zero() {
+        gyro.ZeroYaw();
+        angleOffset = Rotation2d(0.0);
+    }
+
+    void setYaw(double desiredYaw) {
+        double currentYaw = gyro.GetAngle();
+        angleOffset = Rotation2d::fromDegrees(currentYaw - desiredYaw);
     }
 
     void setOffset(Rotation2d angleOffsetInput) 

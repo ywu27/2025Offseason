@@ -3,27 +3,53 @@
 #include "sensors/Limelight.h"
 #include "ChassisSpeeds.h"
 #include "SwerveHeadingController.h"
+#include "SwerveDrive.h"
 
 class SwerveAlign {
 private:
-    frc::PIDController forwardPID{7, 0.5, 0};
-    frc::PIDController strafePID{0.9, 0, 0.1};
+    frc::PIDController forwardPID{7, 0, 0.1};
+    frc::PIDController strafePID{0.5, 0, 0.1};
+    
+    double forwardSpeed = 0;
+    double strafeSpeed = 0;
+    double targetDistance = 0;
+    double currentX = 0;
+    double currentY = 0;
 
 public:
 
+    bool isAligned(Limelight& limelight) {
+        if (abs(limelight.getTX())<2 && abs(targetDistance-limelight.getDistanceToWall())<0.05) {
+            return true;
+        }
+        return false;
+    }
+
     ChassisSpeeds autoAlign(Limelight& limelight, SwerveHeadingController& headingController, double distance) { // distance in meters
         ChassisSpeeds speeds;
-        //if (limelight.isTargetDetected()) {
-            double tx = limelight.getTX();
-            double distanceToTag = limelight.getDistanceToWall();
+        double tx = limelight.getTX();
+        double distanceToTag = limelight.getDistanceToWall();
+        targetDistance = distance;
+        if (!isAligned(limelight)) {
             double forwardSpeed = forwardPID.Calculate(distanceToTag, distance);
             double strafeSpeed = strafePID.Calculate(tx, 0);
-            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-forwardSpeed, strafeSpeed, 0);
-        //}
-        //else {
-        //    speeds = ChassisSpeeds(0, 0, 0);
-        //}
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-forwardSpeed, -strafeSpeed, 0);
+        }
+        else {
+            speeds = ChassisSpeeds(0, 0, 0);
+        }
 
         return speeds;
+    }
+
+    ChassisSpeeds driveToSetpoint(double setpointX, double setpointY, SwerveDrive& drive) {
+        ChassisSpeeds speeds;
+        if (abs(setpointX-currentX)>0.2 && abs(setpointY-currentY)>0.2) {
+
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-strafeSpeed, -forwardSpeed, 0);
+        }
+        else {
+            speeds = ChassisSpeeds(0, 0, 0);
+        }
     }
 };
