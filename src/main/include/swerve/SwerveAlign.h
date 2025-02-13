@@ -3,12 +3,18 @@
 #include "sensors/Limelight.h"
 #include "ChassisSpeeds.h"
 #include "SwerveHeadingController.h"
+#include "SwerveDrive.h"
 
 class SwerveAlign {
 private:
     frc::PIDController forwardPID{7, 0, 0.1};
     frc::PIDController strafePID{0.5, 0, 0.1};
-    double targetDistance;
+    
+    double forwardSpeed = 0;
+    double strafeSpeed = 0;
+    double targetDistance = 0;
+    double currentX = 0;
+    double currentY = 0;
 
 public:
 
@@ -34,5 +40,16 @@ public:
         }
 
         return speeds;
+    }
+
+    ChassisSpeeds driveToSetpoint(double setpointX, double setpointY, SwerveDrive& drive) {
+        ChassisSpeeds speeds;
+        if (abs(setpointX-currentX)>0.2 && abs(setpointY-currentY)>0.2) {
+
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-strafeSpeed, -forwardSpeed, 0);
+        }
+        else {
+            speeds = ChassisSpeeds(0, 0, 0);
+        }
     }
 };

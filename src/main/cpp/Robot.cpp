@@ -109,10 +109,7 @@ void Robot::TeleopPeriodic()
   }
   // Gyro Resets
   if (ctr.GetCrossButtonReleased()) {
-    //mGyro.init();
-
-    //Setting gyro to the current angle of the robot
-    mGyro.setYaw(limelight.getCurrentAngle());
+    mGyro.init();
   }
 
   if (align.isAligned(limelight)) {

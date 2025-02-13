@@ -14,8 +14,6 @@ private:
     std::string limelightName;
     double limelightMountAngle = 30; // Measured in degrees
     double limelightHeight = 5; // Measured in inches
-    enum TagType {REEF, CORALSTATION, PROCESSOR, BARGE};
-    enum Alliance{RED, BLUE};
     
     double reefTagHeight = 6.875; // Measured in inches
     double coralStationTagHeight = 53.25; // Measured in inches
@@ -38,15 +36,13 @@ private:
     std::vector<int> redBargeTargetIDs = {4, 14};
     std::vector<int> blueBargeTargetIDs = {5, 15};
     int bargeAngle = 0;
-    
-    Alliance alliance;
-    TagType tagType;
 
 public:
     enum Alliance{RED, BLUE};
     enum TagType {REEF, CORALSTATION, PROCESSOR, BARGE};
-    //Alliance alliance;
-    //TagType tagType;
+    
+    Alliance alliance;
+    TagType tagType;
 
     Limelight(std::string name, double mountAngle, double heightOffFloor, int allianceOption){
         limelightName = name;
