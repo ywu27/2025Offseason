@@ -85,42 +85,115 @@ void Trajectory::followPath(Trajectory::autos autopath)
     switch (autopath)
     {
     // do nothing
-    case auto_1A:
-        break;
-    case auto_1B:
-        break;
-    case auto_1C:
-        break;
-    case auto_1D:
-        break;
-    case auto_1E:
-        break;
-    case auto_1F:
-        break;
-    case auto_2A:
-        break;
-    case auto_2B:
-        break;
-    case auto_2C:
-        break;
-    case auto_2D:
-        break;
-    case auto_2E:
-        break;
-    case auto_2F:    
-        break;
-    case auto_3A:
-        break;
-    case auto_3B:
-        break;
-    case auto_3C:
-        break;
-    case auto_3D:
-        break;
-    case auto_3E:
-        break;
-    case auto_3F:
-        break;
+        case auto_1A:
+            follow("1 to A");
+            follow("A to coral station");
+            follow("Coral station to A");
+            follow("A to coral station");
+            break;
+        case auto_1B:
+            follow("1 to B");
+            follow("B to coral station");
+            follow("Coral station to B");
+            follow("B to coral station");
+            break;
+        case auto_1C:
+            follow("1 to C");
+            follow("C to coral station");
+            follow("Coral station to C");
+            follow("C to coral station");
+            break;
+        case auto_1D:
+            follow("1 to D");
+            follow("D to coral station");
+            follow("Coral station to D");
+            follow("D to coral station");
+            break;
+        case auto_1E:
+            follow("1 to E");
+            follow("E to coral station");
+            follow("Coral station to E");
+            follow("E to coral station");
+            break;
+        case auto_1F:
+            follow("1 to F");
+            follow("F to coral station");
+            follow("Coral station to F");
+            follow("F to coral station");
+            break;
+        case auto_2A:
+            follow("2 to A");
+            follow("A to coral station");
+            follow("Coral station to A");
+            follow("A to coral station");
+            break;
+        case auto_2B:
+            follow("2 to B");
+            follow("B to coral station");
+            follow("Coral station to B");
+            follow("B to coral station");
+            break;
+        case auto_2C:
+            follow("2 to C");
+            follow("C to coral station");
+            follow("Coral station to C");
+            follow("C to coral station");
+            break;
+        case auto_2D:
+            follow("2 to D");
+            follow("D to coral station");
+            follow("Coral station to D");
+            follow("D to coral station");
+            break;
+        case auto_2E:
+            follow("2 to E");
+            follow("E to coral station");
+            follow("Coral station to E");
+            follow("E to coral station");
+            break;
+        case auto_2F:    
+            follow("2 to F");
+            follow("F to coral station");
+            follow("Coral station to F");
+            follow("F to coral station");
+            break;
+        case auto_3A:
+            follow("3 to A");
+            follow("A to coral station");
+            follow("Coral station to A");
+            follow("A to coral station");
+            break;
+        case auto_3B:
+            follow("3 to B");
+            follow("B to coral station");
+            follow("Coral station to B");
+            follow("B to coral station");
+            break;
+        case auto_3C:
+            follow("3 to C");
+            follow("C to coral station");
+            follow("Coral station to C");
+            follow("C to coral station");
+            break;
+        case auto_3D:
+            follow("3 to D");
+            follow("D to coral station");
+            follow("Coral station to D");
+            follow("D to coral station");
+            break;
+        case auto_3E:
+            follow("3 to E");
+            follow("E to coral station");
+            follow("Coral station to E");
+            follow("E to coral station");
+            break;
+        case auto_3F:
+            follow("3 to F");
+            follow("F to coral station");
+            follow("Coral station to F");
+            follow("F to coral station");
+            break;
+
     }
 
     
