@@ -80,36 +80,48 @@ void Trajectory::follow(std::string const &traj_dir_file_path)
 /**
  * Calls sequences of follow functions for set paths
  */
-void Trajectory::followPath(int numPath)
+void Trajectory::followPath(Trajectory::autos autopath)
 {
-    switch (numPath)
+    switch (autopath)
     {
     // do nothing
-    case 0: 
-        break; 
-
-    // straight
-    case 1:
-        follow("Straight");
+    case auto_1A:
         break;
-
-    // straight, shoot
-    case 2:
-        follow("Straight");
-        //  CALL SUPERSTRUCTURE SHOOT SPEAKER FOR SHOOTER AUTO
+    case auto_1B:
         break;
-
-    // straight, shoot, straight
-    case 3:
-        follow("Straight");
+    case auto_1C:
         break;
-
-    // curve
-    case 4:
-        follow("Curve");
+    case auto_1D:
         break;
-
-    default:
+    case auto_1E:
+        break;
+    case auto_1F:
+        break;
+    case auto_2A:
+        break;
+    case auto_2B:
+        break;
+    case auto_2C:
+        break;
+    case auto_2D:
+        break;
+    case auto_2E:
+        break;
+    case auto_2F:    
+        break;
+    case auto_3A:
+        break;
+    case auto_3B:
+        break;
+    case auto_3C:
+        break;
+    case auto_3D:
+        break;
+    case auto_3E:
+        break;
+    case auto_3F:
         break;
     }
+
+    
 }

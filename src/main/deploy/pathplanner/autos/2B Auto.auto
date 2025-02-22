@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top coral to F Path"
+            "pathName": "Coral station to B"
           }
         },
         {
@@ -43,43 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "F to coral station"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Coral station to A"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "A to coral station"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "top coral to F Path"
+            "pathName": "B to coral station"
           }
         }
       ]

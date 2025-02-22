@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom coral to E"
+            "pathName": "Bottom Coral Station to C"
           }
         },
         {
@@ -43,43 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "E to bottom coral"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom coral to E"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "E to bottom coral"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom coral to D"
+            "pathName": "C to bottom coral station"
           }
         }
       ]

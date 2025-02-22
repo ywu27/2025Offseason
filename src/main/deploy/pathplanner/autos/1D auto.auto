@@ -25,13 +25,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottom coral to E"
+            "pathName": "Bottom coral to D"
           }
         },
         {
@@ -43,19 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "E to bottom coral"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom coral to F"
+            "pathName": "D to bottom coral"
           }
         }
       ]
