@@ -8,30 +8,53 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0045981923623417,
-        "y": 1.3829790312812045
+        "x": 2.1266443412514175,
+        "y": 1.3863193833958425
       },
       "isLocked": false,
       "linkedName": "bottom coral station"
     },
     {
       "anchor": {
-        "x": 5.2102662037037035,
-        "y": 2.7470974392361107
+        "x": 5.64630787037037,
+        "y": 2.859601779513888
       },
       "prevControl": {
-        "x": 4.37766493798171,
-        "y": 2.3889475159954885
+        "x": 5.528387591654566,
+        "y": 2.6391594789733905
+      },
+      "nextControl": {
+        "x": 5.764228149086174,
+        "y": 3.080044080054386
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.9435825376157405,
+        "y": 3.8929296874999992
+      },
+      "prevControl": {
+        "x": 5.6183997311463445,
+        "y": 2.665394110999122
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "D"
+      "linkedName": "C"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Coral Intake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,7 +65,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
