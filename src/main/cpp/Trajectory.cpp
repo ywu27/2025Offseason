@@ -17,22 +17,30 @@ static frc::HolonomicDriveController controller{
     frc::ProfiledPIDController<units::radian>{
         steerP, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
-            units::radians_per_second_t(189.2),
-            units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}};
+            units::radians_per_second_t(189.2), // prev: 5.0
+            units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}}; // prev: 100
 
 /**
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
  */
 void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
-{
+{   
+    // Calculate new chassis speeds given robot position and next desired state in trajectory
     frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), state.pose, state.linearVelocity, state.deltaRot);
 
+    // Calculate x, y speeds from MPS
     double vx_feet = correction.vx.value() * 3.281;
     double vy_feet = correction.vy.value() * 3.281;
-    double rotCompass = Rotation2d::compassToPolar(state.deltaRot.Radians().value());
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, correction.omega.value()}, Rotation2d{rotCompass}, false);
+    // Clamp rot speed to 2.0 since that is the max rot we allow
+    double rot = std::clamp(correction.omega.value(), -moduleMaxRot, moduleMaxRot);
+
+    frc::SmartDashboard::PutNumber("autoVY", vy_feet);
+    frc::SmartDashboard::PutNumber("autoVX", vx_feet);
+    frc::SmartDashboard::PutNumber("autoRot", rot);
+
+    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**

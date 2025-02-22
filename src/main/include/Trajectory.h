@@ -26,10 +26,11 @@ class Trajectory
 {
 private:
     SwerveDrive &mDrive;
+    NavX &mGyro;
     RobotConfig &config;
 
 public:
-    // Trajectory(SwerveDrive &mDriveInput) : mDrive(mDriveInput) {};
+    Trajectory(SwerveDrive &mDriveInput, NavX &mGyroInput, RobotConfig &configInput) : mDrive(mDriveInput), mGyro(mGyroInput), config(configInput){}; // Check patherplanner::RobotConfig documentation 
 
     void driveToState(PathPlannerTrajectoryState const &state);
 
