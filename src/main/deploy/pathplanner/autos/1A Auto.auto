@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 to F"
+            "pathName": "1 to A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "F to coral station"
+            "pathName": "A to coral station"
           }
         },
         {
@@ -26,6 +26,12 @@
           "type": "path",
           "data": {
             "pathName": "A to coral station"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Coral station to B"
           }
         }
       ]

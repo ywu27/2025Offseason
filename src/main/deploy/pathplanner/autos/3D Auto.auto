@@ -7,25 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 to F"
+            "pathName": "3 to D"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "F to coral station"
+            "pathName": "D to bottom coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Coral station to A"
+            "pathName": "Bottom coral to D"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "A to coral station"
+            "pathName": "D to bottom coral"
           }
         }
       ]

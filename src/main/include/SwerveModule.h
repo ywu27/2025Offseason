@@ -27,7 +27,6 @@ private:
     rev::spark::SparkMax steerMotor;
     rev::spark::SparkMaxConfig config;
     rev::spark::SparkClosedLoopController PIDController = steerMotor.GetClosedLoopController();
-    TalonFXMotor driveMotor;
 
     CAN_Coder steerEnc;
     frc::PIDController steerCTR;
@@ -65,6 +64,7 @@ private:
     double currentSteerOutput = 0.0;
 
 public:
+    TalonFXMotor driveMotor;
     SwerveModule(int steerMotorID, int driveMotorID, int cancoderID);
     void initMotors();
 

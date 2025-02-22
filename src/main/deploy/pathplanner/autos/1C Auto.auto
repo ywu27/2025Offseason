@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 to F"
+            "pathName": "1 to C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "F to coral station"
+            "pathName": "C to bottom coral station"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Coral station to A"
+            "pathName": "bottom coral to E"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "A to coral station"
+            "pathName": "E to bottom coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottom coral to F"
           }
         }
       ]
