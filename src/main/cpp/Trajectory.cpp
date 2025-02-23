@@ -87,114 +87,119 @@ void Trajectory::followPath(Trajectory::autos autopath)
     // do nothing
         case auto_1A:
             follow("1 to A");
-            follow("A to coral station");
-            follow("Coral station to A");
-            follow("A to coral station");
+            follow("A to Top Coral Station");
+            follow("Top Coral Station to A");
+            follow("A to Top Coral Station");
             break;
         case auto_1B:
             follow("1 to B");
-            follow("B to coral station");
-            follow("Coral station to B");
-            follow("B to coral station");
+            follow("B to Top Coral Station");
+            follow("Top Coral Station to B");
+            follow("B to Top Coral Station");
             break;
         case auto_1C:
             follow("1 to C");
-            follow("C to coral station");
-            follow("Coral station to C");
-            follow("C to coral station");
+            follow("C to Bottom Coral Station");
+            follow("Bottom Coral Station to C");
+            follow("C to Bottom Coral Station");
             break;
         case auto_1D:
             follow("1 to D");
-            follow("D to coral station");
-            follow("Coral station to D");
-            follow("D to coral station");
+            follow("D to Bottom Coral Station");
+            follow("Bottom Coral Station to D");
+            follow("D to Bottom Coral Station");
             break;
         case auto_1E:
             follow("1 to E");
-            follow("E to coral station");
-            follow("Coral station to E");
-            follow("E to coral station");
+            follow("E to Bottom Coral Station");
+            follow("Bottom Coral Station to E");
+            follow("E to Bottom Coral Station");
             break;
         case auto_1F:
             follow("1 to F");
-            follow("F to coral station");
-            follow("Coral station to F");
-            follow("F to coral station");
+            follow("F to Bottom Coral Station");
+            follow("Bottom Coral Station to F");
+            follow("F to Bottom Coral Station");
             break;
         case auto_2A:
             follow("2 to A");
-            follow("A to coral station");
-            follow("Coral station to A");
-            follow("A to coral station");
+            follow("A to Top Coral Station");
+            follow("Top Coral Station to A");
+            follow("A to Top Coral Station");
             break;
         case auto_2B:
             follow("2 to B");
-            follow("B to coral station");
-            follow("Coral station to B");
-            follow("B to coral station");
+            follow("B to Top Coral Station");
+            follow("Top Coral Station to B");
+            follow("B to Top Coral Station");
             break;
         case auto_2C:
             follow("2 to C");
-            follow("C to coral station");
-            follow("Coral station to C");
-            follow("C to coral station");
+            follow("C to Bottom Coral Station");
+            follow("Bottom Coral Station to C");
+            follow("C to Bottom Coral Station");
             break;
         case auto_2D:
             follow("2 to D");
-            follow("D to coral station");
-            follow("Coral station to D");
-            follow("D to coral station");
+            follow("D to Bottom Coral Station");
+            follow("Bottom Coral Station to D");
+            follow("D to Bottom Coral Stationn");
             break;
         case auto_2E:
             follow("2 to E");
-            follow("E to coral station");
-            follow("Coral station to E");
-            follow("E to coral station");
+            follow("E to Bottom Coral Station");
+            follow("Bottom Coral Station to E");
+            follow("E to Bottom Coral Station");
             break;
         case auto_2F:    
             follow("2 to F");
-            follow("F to coral station");
-            follow("Coral station to F");
-            follow("F to coral station");
+            follow("F to Bottom Coral Station");
+            follow("Bottom Coral Station to F");
+            follow("F to Bottom Coral Station");
             break;
         case auto_3A:
             follow("3 to A");
-            follow("A to coral station");
-            follow("Coral station to A");
-            follow("A to coral station");
+            follow("A to Top Coral Station");
+            follow("Top Coral Station to A");
+            follow("A to Top Coral Station");
             break;
         case auto_3B:
             follow("3 to B");
-            follow("B to coral station");
-            follow("Coral station to B");
-            follow("B to coral station");
+            follow("B to Top Coral Station");
+            follow("Top Coral Station to B");
+            follow("B to Top Coral Station");
             break;
         case auto_3C:
             follow("3 to C");
-            follow("C to coral station");
-            follow("Coral station to C");
-            follow("C to coral station");
+            follow("C to Bottom Coral Station");
+            follow("Bottom Coral Station to C");
+            follow("C to Bottom Coral Station");
             break;
         case auto_3D:
             follow("3 to D");
-            follow("D to coral station");
-            follow("Coral station to D");
-            follow("D to coral station");
+            follow("D to Bottom Coral Station");
+            follow("Bottom Coral Station to D");
+            follow("D to Bottom Coral Station");
             break;
         case auto_3E:
             follow("3 to E");
-            follow("E to coral station");
-            follow("Coral station to E");
-            follow("E to coral station");
+            follow("E to Bottom Coral Station");
+            follow("Bottom Coral Station to E");
+            follow("E to Bottom Coral Station");
             break;
         case auto_3F:
             follow("3 to F");
-            follow("F to coral station");
-            follow("Coral station to F");
-            follow("F to coral station");
+            follow("F to Bottom Coral Station");
+            follow("Bottom Coral Station to F");
+            follow("F to Bottom Coral Station");
             break;
 
     }
 
     
+}
+
+void Trajectory::waitToShoot(int delaySeconds)
+{
+    //will finish when elevator is assembled and ready...closer to comp
 }

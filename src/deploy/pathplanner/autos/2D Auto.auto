@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 to B Path"
+            "pathName": "2 to D"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B to coral station"
+            "pathName": "D to Bottom Coral Station"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Coral station to B"
+            "pathName": "Bottom Coral Station to D"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B to coral station"
+            "pathName": "D to Bottom Coral Station"
           }
         }
       ]
