@@ -215,19 +215,19 @@ public:
         
         //Uses the getTX() function to get the horizontal angle offset from the field element
         //This angle offset is added to the angle of the field element to get the current angle of the robot
-        if (isTargetDetected2() == true) {
-            //double horizontalDistance = LimelightHelpers::getTX();
-            //double distanceFromWall = getDistanceToWall();
-            //double angleOffset = atan(horizontalDistance / distanceFromWall);
-            double angleOffset = LimelightHelpers::getTX();
-            double angleFieldElement = setAngleSetpoint();
-            double currentAngle = angleFieldElement + angleOffset;
-            return currentAngle;
-        }
+        // if (isTargetDetected2() == true) {
+        //     //double horizontalDistance = LimelightHelpers::getTX();
+        //     //double distanceFromWall = getDistanceToWall();
+        //     //double angleOffset = atan(horizontalDistance / distanceFromWall);
+        //     double angleOffset = LimelightHelpers::getTX();
+        //     double angleFieldElement = setAngleSetpoint();
+        //     double currentAngle = angleFieldElement + angleOffset;
+        //     return currentAngle;
+        // }
 
-        else {
-            return 0;
-        }
+        // else {
+        //     return 0;
+        // }
     }
     
     double getAngleLimelightToTag() { // TY + limelight mount angle

@@ -25,6 +25,8 @@
 #include "swerve/SwerveAlign.h"
 #include "util/TimeDelayButton.h"
 
+#include "ctre/phoenix6/CANBus.hpp"
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -54,6 +56,10 @@ public:
   
   //Limelight
   Limelight limelight = Limelight("", 0);
+
+  ctre::phoenix6::CANBus canbus{"Drivetrain"};
+  ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
+  float busUtil = canInfo.BusUtilization;
 
   SwerveAlign align;
 

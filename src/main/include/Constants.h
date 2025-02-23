@@ -37,19 +37,19 @@ constexpr float positionD = 0.0;
 constexpr float positionFF = 0.0;
 
 // Motor/CAN IDs
-#define FLsteerID 7
+#define FLsteerID 1
 #define FLdriveID 8
 #define FL_CAN_ID 3 // updated
 
-#define FRsteerID 3
+#define FRsteerID 5
 #define FRdriveID 4
 #define FR_CAN_ID 1 // updated
 
-#define BLsteerID 5
+#define BLsteerID 3
 #define BLdriveID 6
 #define BL_CAN_ID 2 // updated;
 
-#define BRsteerID 1
+#define BRsteerID 7
 #define BRdriveID 2
 #define BR_CAN_ID 0 // updated
 
