@@ -87,14 +87,19 @@ void Robot::TeleopPeriodic()
 
   //Decide drive modes
   double zeroSetpoint = 0;
+
+  Pose3d apriltagPose = limelight.getTargetPoseRobotSpace();
+
+  frc::SmartDashboard::PutNumber("aprilx", apriltagPose.x);
+  frc::SmartDashboard::PutNumber("aprily", apriltagPose.y);
+  frc::SmartDashboard::PutNumber("aprilz", apriltagPose.z);
   
   if (ctr.GetR2Button()) {
     double offSet = 0.381;
-    double txSetpoint = atan(offSet/limelight.getDistanceToWall());
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2, txSetpoint);
+    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 1, offSet);
     frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);
-    vx = speeds.vyMetersPerSecond;
-    vy = speeds.vxMetersPerSecond;
+    vx = speeds.vxMetersPerSecond;
+    vy = speeds.vyMetersPerSecond;
     frc::SmartDashboard::PutNumber("vx", vx);
     frc::SmartDashboard::PutNumber("vy", vy);
     fieldOriented = false;

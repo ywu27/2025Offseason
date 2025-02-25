@@ -13,27 +13,29 @@ private:
     double forwardSpeed = 0;
     double strafeSpeed = 0;
     double targetDistance = 0;
+    double targetOffset = 0;
     double currentX = 0;
     double currentY = 0;
 
 public:
 
     bool isAligned(Limelight& limelight) {
-        if (abs(limelight.getTX())<2 && abs(targetDistance-limelight.getDistanceToWall())<0.05) {
+        if (abs(limelight.getTargetPoseRobotSpace().x-targetOffset)<0.05 && abs(targetDistance-limelight.getDistanceToWall())<0.05) {
             return true;
         }
         return false;
     }
 
-    ChassisSpeeds autoAlign(Limelight& limelight, SwerveHeadingController& headingController, double setpointDistance, double txSetpoint) { // distance in meters
+    ChassisSpeeds autoAlign(Limelight& limelight, SwerveHeadingController& headingController, double setpointDistance, double offsetSetpoint) { // distance in meters
         ChassisSpeeds speeds;
-        double tx = limelight.getTX();
+        double offset = limelight.getTargetPoseRobotSpace().x;
         double distanceToTag = limelight.getDistanceToWall();
         targetDistance = setpointDistance;
+        targetOffset = offsetSetpoint;
         if (!isAligned(limelight)) {
             double forwardSpeed = forwardPID.Calculate(distanceToTag, setpointDistance);
-            double strafeSpeed = strafePID.Calculate(tx, txSetpoint);
-            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-forwardSpeed, -strafeSpeed, 0);
+            double strafeSpeed = strafePID.Calculate(offset, offsetSetpoint);
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-strafeSpeed, -forwardSpeed, 0);
         }
         else {
             speeds = ChassisSpeeds(0, 0, 0);

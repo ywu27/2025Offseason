@@ -201,33 +201,7 @@ public:
     }
     
     double getDistanceToWall() { // perpendicular distance to wall in meters
-        double tagHeight = getTagHeight();
-        double ty = LimelightHelpers::getTY("");
-        double angleToTagDegrees = limelightMountAngle + ty;
-        double angleToTagRadians = angleToTagDegrees * (PI / 180.0);
-        double distanceToWall = (tagHeight - limelightHeight) / tan(angleToTagRadians);
-        distanceToWall *= 0.0254; //converted to meters
-        frc::SmartDashboard::PutNumber("distanceToWall", distanceToWall);
-        return distanceToWall;
-    }
-
-    double getCurrentAngle() {
-        
-        //Uses the getTX() function to get the horizontal angle offset from the field element
-        //This angle offset is added to the angle of the field element to get the current angle of the robot
-        // if (isTargetDetected2() == true) {
-        //     //double horizontalDistance = LimelightHelpers::getTX();
-        //     //double distanceFromWall = getDistanceToWall();
-        //     //double angleOffset = atan(horizontalDistance / distanceFromWall);
-        //     double angleOffset = LimelightHelpers::getTX();
-        //     double angleFieldElement = setAngleSetpoint();
-        //     double currentAngle = angleFieldElement + angleOffset;
-        //     return currentAngle;
-        // }
-
-        // else {
-        //     return 0;
-        // }
+        return getTargetPoseRobotSpace().y;
     }
     
     double getAngleLimelightToTag() { // TY + limelight mount angle
