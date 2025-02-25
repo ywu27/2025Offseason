@@ -43,7 +43,6 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
-  frc::SmartDashboard::PutNumber("tx", limelight.getTX());
   limelight.setPipelineIndex(0);
   limelight.isTargetDetected();
   limelight.setLEDMode(0);
@@ -60,7 +59,9 @@ void Robot::TeleopPeriodic()
 {
   bool fieldOriented = false;
   fieldOriented = mGyro.gyro.IsConnected();
-
+  frc::SmartDashboard::PutNumber("distance", limelight.getDistanceToWall());
+  frc::SmartDashboard::PutNumber("ty", limelight.getTY());
+  frc::SmartDashboard::PutNumber("tx", limelight.getTX());
   frc::SmartDashboard::PutBoolean("aligned?", align.isAligned(limelight));
 
   auto startTime = frc::Timer::GetFPGATimestamp();
@@ -88,7 +89,9 @@ void Robot::TeleopPeriodic()
   double zeroSetpoint = 0;
   
   if (ctr.GetR2Button()) {
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 0.75);
+    double offSet = 0.381;
+    double txSetpoint = atan(offSet/limelight.getDistanceToWall());
+    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 2, txSetpoint);
     frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);
     vx = speeds.vyMetersPerSecond;
     vy = speeds.vxMetersPerSecond;

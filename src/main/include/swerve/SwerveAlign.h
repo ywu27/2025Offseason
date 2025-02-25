@@ -25,14 +25,14 @@ public:
         return false;
     }
 
-    ChassisSpeeds autoAlign(Limelight& limelight, SwerveHeadingController& headingController, double distance) { // distance in meters
+    ChassisSpeeds autoAlign(Limelight& limelight, SwerveHeadingController& headingController, double setpointDistance, double txSetpoint) { // distance in meters
         ChassisSpeeds speeds;
         double tx = limelight.getTX();
         double distanceToTag = limelight.getDistanceToWall();
-        targetDistance = distance;
+        targetDistance = setpointDistance;
         if (!isAligned(limelight)) {
-            double forwardSpeed = forwardPID.Calculate(distanceToTag, distance);
-            double strafeSpeed = strafePID.Calculate(tx, 0);
+            double forwardSpeed = forwardPID.Calculate(distanceToTag, setpointDistance);
+            double strafeSpeed = strafePID.Calculate(tx, txSetpoint);
             speeds = ChassisSpeeds::fromRobotRelativeSpeeds(-forwardSpeed, -strafeSpeed, 0);
         }
         else {

@@ -12,8 +12,8 @@ class Limelight {
 
 private:
     std::string limelightName;
-    double limelightMountAngle = 30; // Measured in degrees
-    double limelightHeight = 5; // Measured in inches
+    double limelightMountAngle = 20; // Measured in degrees
+    double limelightHeight = 12; // Measured in inches
     
     double reefTagHeight = 6.875; // Measured in inches
     double coralStationTagHeight = 53.25; // Measured in inches
