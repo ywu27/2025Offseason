@@ -13,7 +13,7 @@ void Robot::RobotInit()
   mDrive.initModules();
   mGyro.init();
   limelight.setPipelineIndex(0);
-  frc::CameraServer::StartAutomaticCapture();
+  // frc::CameraServer::StartAutomaticCapture();
 }
 
 void Robot::RobotPeriodic()

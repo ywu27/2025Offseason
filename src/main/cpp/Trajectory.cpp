@@ -20,18 +20,6 @@ static frc::HolonomicDriveController controller{
             units::radians_per_second_t(189.2), // prev: 5.0
             units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}}; // prev: 100
 
-// void Trajectory::ConfigureRobot() {
-//     config.mass = 30_kg;
-//     config.MOI = 6.883_kg_sq_m;
-//     config.moduleConfig.wheelRadius = 0.0508_m;
-//     config.moduleConfig.maxDriveVelocityMPS = units::meters_per_second_t(moduleMaxFPS / 3.28084);
-//     config.moduleConfig.wheelCOF = 1.200;
-//     config.moduleConfig.driveCurrentLimit = 60_A;
-//     config.moduleConfig.driveMotor.KrakenX60; 
-    
-    
-// }
-
 /**
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
@@ -58,7 +46,7 @@ void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle = 0.0)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle)
 {
     mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
