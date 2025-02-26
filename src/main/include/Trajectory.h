@@ -8,6 +8,7 @@
 #include <pathplanner/lib/trajectory/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/path/GoalEndState.h>
+#include <pathplanner/lib/config/RobotConfig.h>
 
 #include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Pose2d.h"
@@ -19,19 +20,27 @@
 
 #include <chrono>
 #include <frc/Timer.h>
+#include "sensors/NavX.h"
+#include <frc/DriverStation.h>
 
 using namespace pathplanner;
 
 class Trajectory
 {
 private:
+    
+    SwerveDrive &mDrive;
+    NavX &mGyro;
+    Limelight &mLimelight; 
+    RobotConfig &config;
+
+public:
     Pose3d startPose = Pose3d();
     bool receivedPose;
     bool isRed = false;
-    SwerveDrive &mDrive;
-    NavX &mGyro;
-    RobotConfig &config;
+
     enum autos {
+        DO_NOTHING,
         auto_1A,  
         auto_1B,  
         auto_1C,  
@@ -51,18 +60,25 @@ private:
         auto_3E,  
         auto_3F 
     };
-public:
-    Trajectory(SwerveDrive &mDriveInput, NavX &mGyroInput, RobotConfig &configInput) : mDrive(mDriveInput), mGyro(mGyroInput), config(configInput){}; // Check patherplanner::RobotConfig documentation 
+
+    Trajectory(SwerveDrive &mDriveInput, NavX &mGyroInput, Limelight &mLimelightInput, RobotConfig &configInput) : mDrive(mDriveInput), 
+                                                                                                                mGyro(mGyroInput),
+                                                                                                                mLimelight(mLimelightInput),
+                                                                                                                config(configInput) {};
 
     void driveToState(PathPlannerTrajectoryState const &state);
 
-    void follow(std::string const &traj_dir_file_path);
+    void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle = 0.0);
 
-    void followPath(autos autopath);
+    void followPath(Trajectory::autos autoTrajectory, bool flipAlliance);
+
+    void waitToShoot(int delaySeconds);
+
+    void driveError(); 
 
     void testHolonomic(frc::Pose2d const &target_pose,
                        units::velocity::meters_per_second_t const &velocity,
                        frc::Rotation2d const &target_rot);
 
-    void waitToShoot(int delaySeconds);
+    // void ConfigureRobot();
 };

@@ -15,6 +15,8 @@
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
 #include "util/TimeDelayButton.h"
+#include <ctre/phoenix6/CANBus.hpp>
+#include "Trajectory.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -42,6 +44,14 @@ public:
   //frc::PS5Controller ctrOperator = frc::PS5Controller(1);
   NavX mGyro = NavX();
   SwerveDrive mDrive = SwerveDrive(mGyro);
+  pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
+  frc::SendableChooser<Trajectory::autos> mChooser;
+  Trajectory mTrajectory = Trajectory(mDrive, mGyro, limelight, pathConfig);
+
+  //CANivore
+  ctre::phoenix6::CANBus canbus{"Drivetrain"};
+  ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
+  float busUtil = canInfo.BusUtilization;
   
   //Limelight
   Limelight limelight = Limelight("", 30, 5);

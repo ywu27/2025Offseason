@@ -20,6 +20,18 @@ static frc::HolonomicDriveController controller{
             units::radians_per_second_t(189.2), // prev: 5.0
             units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}}; // prev: 100
 
+// void Trajectory::ConfigureRobot() {
+//     config.mass = 30_kg;
+//     config.MOI = 6.883_kg_sq_m;
+//     config.moduleConfig.wheelRadius = 0.0508_m;
+//     config.moduleConfig.maxDriveVelocityMPS = units::meters_per_second_t(moduleMaxFPS / 3.28084);
+//     config.moduleConfig.wheelCOF = 1.200;
+//     config.moduleConfig.driveCurrentLimit = 60_A;
+//     config.moduleConfig.driveMotor.KrakenX60; 
+    
+    
+// }
+
 /**
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
@@ -46,20 +58,38 @@ void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
 /**
  * Follows pathplanner trajectory
  */
-void Trajectory::follow(std::string const &traj_dir_file_path)
+void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle = 0.0)
 {
+    mDrive.enableModules();
     auto path = PathPlannerPath::fromPathFile(traj_dir_file_path);
-    PathPlannerTrajectory traj = PathPlannerTrajectory(path,  frc::ChassisSpeeds(), frc::Rotation2d(0_rad), config);
 
-    auto const initialState = traj.getInitialState();
-    auto const initialPose = initialState.pose;
-    mDrive.resetOdometry(initialPose.Translation(), initialState.heading);
+    // switches path to red alliance (mirrors it)
+    if (flipAlliance)
+    {
+        path = path->flipPath();
+    }
+
+    PathPlannerTrajectory traj = PathPlannerTrajectory(path, frc::ChassisSpeeds(), 0_rad, config);
+
+    if (first)
+    {
+        auto const initialState = traj.getInitialState();
+        auto const initialPose = initialState.pose;
+
+        // set second param to initial holonomic rotation
+        mDrive.resetOdometry(initialPose.Translation(), units::angle::degree_t(startAngle));
+    }
 
     frc::Timer trajTimer;
     trajTimer.Start();
 
     while ((mDrive.state == DriveState::Auto) && (trajTimer.Get() <= traj.getTotalTime()))
     {
+        if (intake)
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
+
         auto currentTime = trajTimer.Get();
         auto sample = traj.sample(currentTime);
 
@@ -72,134 +102,148 @@ void Trajectory::follow(std::string const &traj_dir_file_path)
         using namespace std::chrono_literals;
 
         // refresh rate of holonomic drive controller's PID controllers (edit if needed)
-        std::this_thread::sleep_for(20ms);
+        double delayStart = frc::Timer::GetFPGATimestamp().value();
+        while (mDrive.state == DriveState::Auto && frc::Timer::GetFPGATimestamp().value() - delayStart < 0.02) {
+        };
     }
     mDrive.stopModules();
 }
 
+// EDIT LATER 
 /**
  * Calls sequences of follow functions for set paths
  */
-void Trajectory::followPath(Trajectory::autos autopath)
+void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 {
-    switch (autopath)
+    switch (autoTrajectory)
     {
-    // do nothing
+        case DO_NOTHING:
+            break;
         case auto_1A:
-            follow("1 to A");
-            follow("A to Top Coral Station");
-            follow("Top Coral Station to A");
-            follow("A to Top Coral Station");
+            follow("1 to A", flipAlliance, false, true, 0.0);
+            waitToShoot(2);
+            follow("A to Top Coral Station", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("Top Coral Station to A", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("A to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_1B:
-            follow("1 to B");
-            follow("B to Top Coral Station");
-            follow("Top Coral Station to B");
-            follow("B to Top Coral Station");
+            follow("1 to B", flipAlliance, false, true, 0.0);
+            waitToShoot(2);
+            follow("B to Top Coral Station", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("Top Coral Station to B", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("B to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_1C:
-            follow("1 to C");
-            follow("C to Bottom Coral Station");
-            follow("Bottom Coral Station to C");
-            follow("C to Bottom Coral Station");
+            follow("1 to C", flipAlliance, false, true, 0.0);
+            waitToShoot(2);
+            follow("C to Bottom Coral Station", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("Bottom Coral Station to C", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("C to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_1D:
-            follow("1 to D");
-            follow("D to Bottom Coral Station");
-            follow("Bottom Coral Station to D");
-            follow("D to Bottom Coral Station");
+            follow("1 to D", flipAlliance, false, true, 0.0);
+            waitToShoot(2);
+            follow("D to Bottom Coral Station", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("Bottom Coral Station to D", flipAlliance, false, false);
+            waitToShoot(2);
+            follow("D to Bottom Coral Station", flipAlliance, false, false);
             break;
-        case auto_1E:
-            follow("1 to E");
-            follow("E to Bottom Coral Station");
-            follow("Bottom Coral Station to E");
-            follow("E to Bottom Coral Station");
-            break;
-        case auto_1F:
-            follow("1 to F");
-            follow("F to Bottom Coral Station");
-            follow("Bottom Coral Station to F");
-            follow("F to Bottom Coral Station");
-            break;
-        case auto_2A:
-            follow("2 to A");
-            follow("A to Top Coral Station");
-            follow("Top Coral Station to A");
-            follow("A to Top Coral Station");
-            break;
-        case auto_2B:
-            follow("2 to B");
-            follow("B to Top Coral Station");
-            follow("Top Coral Station to B");
-            follow("B to Top Coral Station");
-            break;
-        case auto_2C:
-            follow("2 to C");
-            follow("C to Bottom Coral Station");
-            follow("Bottom Coral Station to C");
-            follow("C to Bottom Coral Station");
-            break;
-        case auto_2D:
-            follow("2 to D");
-            follow("D to Bottom Coral Station");
-            follow("Bottom Coral Station to D");
-            follow("D to Bottom Coral Stationn");
-            break;
-        case auto_2E:
-            follow("2 to E");
-            follow("E to Bottom Coral Station");
-            follow("Bottom Coral Station to E");
-            follow("E to Bottom Coral Station");
-            break;
-        case auto_2F:    
-            follow("2 to F");
-            follow("F to Bottom Coral Station");
-            follow("Bottom Coral Station to F");
-            follow("F to Bottom Coral Station");
-            break;
-        case auto_3A:
-            follow("3 to A");
-            follow("A to Top Coral Station");
-            follow("Top Coral Station to A");
-            follow("A to Top Coral Station");
-            break;
-        case auto_3B:
-            follow("3 to B");
-            follow("B to Top Coral Station");
-            follow("Top Coral Station to B");
-            follow("B to Top Coral Station");
-            break;
-        case auto_3C:
-            follow("3 to C");
-            follow("C to Bottom Coral Station");
-            follow("Bottom Coral Station to C");
-            follow("C to Bottom Coral Station");
-            break;
-        case auto_3D:
-            follow("3 to D");
-            follow("D to Bottom Coral Station");
-            follow("Bottom Coral Station to D");
-            follow("D to Bottom Coral Station");
-            break;
-        case auto_3E:
-            follow("3 to E");
-            follow("E to Bottom Coral Station");
-            follow("Bottom Coral Station to E");
-            follow("E to Bottom Coral Station");
-            break;
-        case auto_3F:
-            follow("3 to F");
-            follow("F to Bottom Coral Station");
-            follow("Bottom Coral Station to F");
-            follow("F to Bottom Coral Station");
-            break;
+        // case auto_1E:
+        //     follow("1 to E");
+        //     follow("E to Bottom Coral Station");
+        //     follow("Bottom Coral Station to E");
+        //     follow("E to Bottom Coral Station");
+        //     break;
+        // case auto_1F:
+        //     follow("1 to F");
+        //     follow("F to Bottom Coral Station");
+        //     follow("Bottom Coral Station to F");
+        //     follow("F to Bottom Coral Station");
+        //     break;
+        // case auto_2A:
+        //     follow("2 to A");
+        //     follow("A to Top Coral Station");
+        //     follow("Top Coral Station to A");
+        //     follow("A to Top Coral Station");
+        //     break;
+        // case auto_2B:
+        //     follow("2 to B");
+        //     follow("B to Top Coral Station");
+        //     follow("Top Coral Station to B");
+        //     follow("B to Top Coral Station");
+        //     break;
+        // case auto_2C:
+        //     follow("2 to C");
+        //     follow("C to Bottom Coral Station");
+        //     follow("Bottom Coral Station to C");
+        //     follow("C to Bottom Coral Station");
+        //     break;
+        // case auto_2D:
+        //     follow("2 to D");
+        //     follow("D to Bottom Coral Station");
+        //     follow("Bottom Coral Station to D");
+        //     follow("D to Bottom Coral Stationn");
+        //     break;
+        // case auto_2E:
+        //     follow("2 to E");
+        //     follow("E to Bottom Coral Station");
+        //     follow("Bottom Coral Station to E");
+        //     follow("E to Bottom Coral Station");
+        //     break;
+        // case auto_2F:    
+        //     follow("2 to F");
+        //     follow("F to Bottom Coral Station");
+        //     follow("Bottom Coral Station to F");
+        //     follow("F to Bottom Coral Station");
+        //     break;
+        // case auto_3A:
+        //     follow("3 to A");
+        //     follow("A to Top Coral Station");
+        //     follow("Top Coral Station to A");
+        //     follow("A to Top Coral Station");
+        //     break;
+        // case auto_3B:
+        //     follow("3 to B");
+        //     follow("B to Top Coral Station");
+        //     follow("Top Coral Station to B");
+        //     follow("B to Top Coral Station");
+        //     break;
+        // case auto_3C:
+        //     follow("3 to C");
+        //     follow("C to Bottom Coral Station");
+        //     follow("Bottom Coral Station to C");
+        //     follow("C to Bottom Coral Station");
+        //     break;
+        // case auto_3D:
+        //     follow("3 to D");
+        //     follow("D to Bottom Coral Station");
+        //     follow("Bottom Coral Station to D");
+        //     follow("D to Bottom Coral Station");
+        //     break;
+        // case auto_3E:
+        //     follow("3 to E");
+        //     follow("E to Bottom Coral Station");
+        //     follow("Bottom Coral Station to E");
+        //     follow("E to Bottom Coral Station");
+        //     break;
+        // case auto_3F:
+        //     follow("3 to F");
+        //     follow("F to Bottom Coral Station");
+        //     follow("Bottom Coral Station to F");
+        //     follow("F to Bottom Coral Station");
+        //     break;
 
     }
-
-    
 }
 
 void Trajectory::waitToShoot(int delaySeconds)
 {
-    //will finish when elevator is assembled and ready...closer to comp
+    std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));
 }

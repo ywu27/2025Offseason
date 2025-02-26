@@ -27,7 +27,8 @@ void Robot::AutonomousInit()
   mDrive.state = DriveState::Auto;
   mGyro.init();
   mDrive.enableModules();
- 
+  
+  mTrajectory.followPath(Trajectory::auto_1A, false);
   // if (frc::DriverStation::IsDSAttached()) {
   //   mTraj.isRed = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed; // checks for alliance color
   // }
