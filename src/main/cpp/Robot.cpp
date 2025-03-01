@@ -49,6 +49,10 @@ void Robot::TeleopInit()
   limelight.setPipelineIndex(0);
   limelight.isTargetDetected();
   limelight.setLEDMode(0);
+  
+  limelight2.setPipelineIndex(0);
+  limelight2.isTargetDetected();
+  limelight2.setLEDMode(0);
 
   mDrive.enableModules();
   mGyro.init();
@@ -60,10 +64,9 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  limelight.getTX();
-  limelight.getTY();
-  limelight.getDistanceToWall();
 
+  frc::SmartDashboard::PutNumber("distance1", limelight.getDistanceToWall());
+  frc::SmartDashboard::PutNumber("distance2", limelight2.getDistanceToWall());
   auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);

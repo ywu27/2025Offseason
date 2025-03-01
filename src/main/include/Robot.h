@@ -54,7 +54,8 @@ public:
   // float busUtil = canInfo.BusUtilization;
   
   //Limelight
-  Limelight limelight = Limelight("", 30, 5);
+  Limelight limelight = Limelight("one", 30, 5);
+  Limelight limelight2 = Limelight("two", 30, 5);
 
   // Teleop Controls
   float ctrPercent = 1.0;
