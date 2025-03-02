@@ -12,26 +12,26 @@
 
 // controller used to track trajectories + correct minor disturbances
 static frc::HolonomicDriveController controller{
-    frc::PIDController{0.1, 0, 0},
-    frc::PIDController{0.1, 0, 0},
+    frc::PIDController{0.06, 0, 0}, // Change PIDs to be more accurate
+    frc::PIDController{0.06, 0, 0}, // Change PIDs to be more accurate
     frc::ProfiledPIDController<units::radian>{
-        steerP, 0, 0,
+        0.4, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
-            units::radians_per_second_t(189.2), // prev: 5.0
-            units::radians_per_second_squared_t(2665.993 * (25.8 / 7.6))}}}; // prev: 100
+            units::radians_per_second_t(5.0), // prev: 5.0
+            units::radians_per_second_squared_t(100)}}}; // prev: 100
 
 /**
  * Drives robot to the next state on trajectory
  * Odometry must be in meters
  */
 void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
-{   
+{
     // Calculate new chassis speeds given robot position and next desired state in trajectory
-    frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), state.pose, state.linearVelocity, state.deltaRot);
+    frc::ChassisSpeeds const correction = controller.Calculate(mDrive.getOdometryPose(), frc::Pose2d{state.pose.Translation(), state.heading}, state.linearVelocity, state.deltaRot);
 
     // Calculate x, y speeds from MPS
-    double vx_feet = correction.vx.value() * 3.281;
-    double vy_feet = correction.vy.value() * 3.281;
+    double vy_feet = correction.vx.value() * 3.281;
+    double vx_feet = correction.vy.value() * 3.281;
 
     // Clamp rot speed to 2.0 since that is the max rot we allow
     double rot = std::clamp(correction.omega.value(), -moduleMaxRot, moduleMaxRot);
@@ -40,7 +40,7 @@ void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
     frc::SmartDashboard::PutNumber("autoVX", vx_feet);
     frc::SmartDashboard::PutNumber("autoRot", rot);
 
-    mDrive.Drive(ChassisSpeeds{-vy_feet, vx_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vx_feet, vy_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
 
 /**
@@ -62,10 +62,10 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
     if (first)
     {
         auto const initialState = traj.getInitialState();
-        auto const initialPose = initialState.pose;
+        auto const initialPose = initialState.pose.Translation();
 
         // set second param to initial holonomic rotation
-        mDrive.resetOdometry(initialPose.Translation(), units::angle::degree_t(startAngle));
+        mDrive.resetOdometry(initialPose, units::angle::degree_t(startAngle));
     }
 
     frc::Timer trajTimer;
@@ -108,6 +108,7 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
         case DO_NOTHING:
             break;
         case auto_1A:
+            //follow("Test Movement", flipAlliance, false, true, 0.0);
             follow("1 to A", flipAlliance, false, true, 0.0);
             waitToShoot(2);
             follow("A to Top Coral Station", flipAlliance, false, false);
