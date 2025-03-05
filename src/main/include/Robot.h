@@ -70,4 +70,19 @@ public:
   SwerveHeadingController mHeadingController = SwerveHeadingController(-4.0, 4.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+
+  //autochooser
+ frc::SendableChooser<std::string> start_pos_chooser;
+ const std::string kAutoStartDefault = "1";
+ const std::string kAutoStartB = "2";
+ const std::string kAutoStartC = "3";
+
+ frc::SendableChooser<std::string> reef_pos_chooser;
+ const::std::string kAutoReefDefault = "A";
+ const::std::string kAutoReefB = "B";
+ const::std::string kAutoReefC = "C";
+ const::std::string kAutoReefD = "D";
+ const::std::string kAutoReefE = "E";
+ const::std::string kAutoReefF = "F";
+
 };
