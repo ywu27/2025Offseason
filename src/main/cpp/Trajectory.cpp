@@ -12,8 +12,8 @@
 
 // controller used to track trajectories + correct minor disturbances
 static frc::HolonomicDriveController controller{
-    frc::PIDController{0.06, 0, 0}, // Change PIDs to be more accurate
-    frc::PIDController{0.06, 0, 0}, // Change PIDs to be more accurate
+    frc::PIDController{6e-5, 0, 0}, // Change PIDs to be more accurate
+    frc::PIDController{6e-5, 0, 0}, // Change PIDs to be more accurate
     frc::ProfiledPIDController<units::radian>{
         0.4, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
@@ -36,9 +36,10 @@ void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
     // Clamp rot speed to 2.0 since that is the max rot we allow
     double rot = std::clamp(correction.omega.value(), -moduleMaxRot, moduleMaxRot);
 
+    frc::SmartDashboard::PutNumber("autoDeltaRot", state.deltaRot.Degrees().value());
     frc::SmartDashboard::PutNumber("autoVY", vy_feet);
     frc::SmartDashboard::PutNumber("autoVX", vx_feet);
-    frc::SmartDashboard::PutNumber("autoRot", rot);
+    frc::SmartDashboard::PutNumber("autoRot", correction.omega.value());
 
     mDrive.Drive(ChassisSpeeds{-vx_feet, vy_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
 }
