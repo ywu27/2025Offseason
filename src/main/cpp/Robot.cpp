@@ -187,7 +187,7 @@ void Robot::TeleopPeriodic()
 
   // Drive function
   mDrive.Drive(
-      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, -rot),
+      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
       mGyro.getBoundedAngleCCW(),
       mGyro.gyro.IsConnected(),
       cleanDriveAccum);

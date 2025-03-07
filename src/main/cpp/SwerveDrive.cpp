@@ -83,11 +83,13 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
  */
 void SwerveDrive::initModules() {
     mFrontLeft.initMotors();
+    //mFrontLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mFrontRight.initMotors();
+    //mFrontRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mBackLeft.initMotors();
     mBackLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mBackRight.initMotors();
-    mBackRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
+    //mBackRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
 
     modulePIDThread = std::thread(&SwerveDrive::runModules, this);
 }
