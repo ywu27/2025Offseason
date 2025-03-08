@@ -46,7 +46,9 @@ public:
   SwerveDrive mDrive = SwerveDrive(mGyro);
   pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
   frc::SendableChooser<Trajectory::autos> mChooser;
-  Trajectory mTrajectory = Trajectory(mDrive, mGyro, limelight, pathConfig);
+  // Trajectory mTrajectory = Trajectory(mDrive, mGyro, limelight, pathConfig);
+
+  Climber climber;
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};
@@ -54,8 +56,8 @@ public:
   float busUtil = canInfo.BusUtilization;
   
   //Limelight
-  Limelight limelight = Limelight("one", 30, 5);
-  Limelight limelight2 = Limelight("two", 30, 5);
+  // Limelight limelight = Limelight("one", 30, 5);
+  // Limelight limelight2 = Limelight("two", 30, 5);
 
   // Teleop Controls
   float ctrPercent = 1.0;

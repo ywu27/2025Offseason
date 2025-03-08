@@ -12,7 +12,7 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
-  limelight.setPipelineIndex(0);
+  // limelight.setPipelineIndex(0);
   // frc::CameraServer::StartAutomaticCapture();
   start_pos_chooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
   start_pos_chooser.AddOption(kAutoStartB, kAutoStartB);
@@ -31,8 +31,6 @@ void Robot::RobotInit()
 
 void Robot::RobotPeriodic()
 {
-  
-  limelight.isTargetDetected();
 }
 
 void Robot::AutonomousInit()
@@ -44,63 +42,63 @@ void Robot::AutonomousInit()
   std::string start_pos = start_pos_chooser.GetSelected();
   std::string reef_pos = reef_pos_chooser.GetSelected();
 
-  if(start_pos=="1" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_1A, false);
-  }
-  else if(start_pos=="1" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_1B, false);
-  }
-  else if(start_pos=="1" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_1C, false);
-  }
-  else if(start_pos=="1" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_1D, false);
-  }
-  else if(start_pos=="1" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_1E, false);
-  }
-  else if(start_pos=="1" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_1F, false);
-  }
-  else if(start_pos=="2" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_2A, false);
-  }
-  else if(start_pos=="2" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_2B, false);
-  }
-  else if(start_pos=="2" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_2C, false);
-  }
-  else if(start_pos=="2" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_2D, false);
-  }
-  else if(start_pos=="2" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_2E, false);
-  }
-  else if(start_pos=="2" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_2F, false);
-  }
-  else if(start_pos=="3" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_3A, false);
-  }
-  else if(start_pos=="3" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_3B, false);
-  }
-  else if(start_pos=="3" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_3C, false);
-  }
-  else if(start_pos=="3" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_3D, false);
-  }
-  else if(start_pos=="3" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_3E, false);
-  }
-  else if(start_pos=="3" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_3F, false);
-  }
-  else {
-    mTrajectory.followPath(Trajectory::auto_1A, false);
-  }
+  // if(start_pos=="1" && reef_pos=="A") {
+  //   mTrajectory.followPath(Trajectory::auto_1A, false);
+  // }
+  // else if(start_pos=="1" && reef_pos=="B") {
+  //   mTrajectory.followPath(Trajectory::auto_1B, false);
+  // }
+  // else if(start_pos=="1" && reef_pos=="C") {
+  //   mTrajectory.followPath(Trajectory::auto_1C, false);
+  // }
+  // else if(start_pos=="1" && reef_pos=="D") {
+  //   mTrajectory.followPath(Trajectory::auto_1D, false);
+  // }
+  // else if(start_pos=="1" && reef_pos=="E") {
+  //   mTrajectory.followPath(Trajectory::auto_1E, false);
+  // }
+  // else if(start_pos=="1" && reef_pos=="F") {
+  //   mTrajectory.followPath(Trajectory::auto_1F, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="A") {
+  //   mTrajectory.followPath(Trajectory::auto_2A, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="B") {
+  //   mTrajectory.followPath(Trajectory::auto_2B, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="C") {
+  //   mTrajectory.followPath(Trajectory::auto_2C, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="D") {
+  //   mTrajectory.followPath(Trajectory::auto_2D, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="E") {
+  //   mTrajectory.followPath(Trajectory::auto_2E, false);
+  // }
+  // else if(start_pos=="2" && reef_pos=="F") {
+  //   mTrajectory.followPath(Trajectory::auto_2F, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="A") {
+  //   mTrajectory.followPath(Trajectory::auto_3A, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="B") {
+  //   mTrajectory.followPath(Trajectory::auto_3B, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="C") {
+  //   mTrajectory.followPath(Trajectory::auto_3C, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="D") {
+  //   mTrajectory.followPath(Trajectory::auto_3D, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="E") {
+  //   mTrajectory.followPath(Trajectory::auto_3E, false);
+  // }
+  // else if(start_pos=="3" && reef_pos=="F") {
+  //   mTrajectory.followPath(Trajectory::auto_3F, false);
+  // }
+  // else {
+  //   mTrajectory.followPath(Trajectory::auto_1A, false);
+  // }
 }
 void Robot::AutonomousPeriodic()
 {
@@ -108,14 +106,8 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
-  
-  limelight.setPipelineIndex(0);
-  limelight.isTargetDetected();
-  limelight.setLEDMode(0);
-  
-  limelight2.setPipelineIndex(0);
-  limelight2.isTargetDetected();
-  limelight2.setLEDMode(0);
+
+  climber.init();
 
   mDrive.enableModules();
   mGyro.init();
@@ -127,15 +119,12 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-
-  frc::SmartDashboard::PutNumber("distance1", limelight.getDistanceToWall());
-  frc::SmartDashboard::PutNumber("distance2", limelight2.getDistanceToWall());
   auto startTime = frc::Timer::GetFPGATimestamp();
   // Controller inputs
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
 
-  leftX = xStickLimiter.calculate(leftX); 
+  leftX = xStickLimiter.calculate(leftX);
   leftY = yStickLimiter.calculate(leftY);
 
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
@@ -151,32 +140,42 @@ void Robot::TeleopPeriodic()
   double rot = rightX * moduleMaxRot * 2;
 
   //Decide drive modes
-  if (ctr.GetTriangleButton()) // ALIGN(scoring) mode
-  {
-      Pose3d target = limelight.getTargetPoseRobotSpace();
-      frc::SmartDashboard::PutNumber("target y", target.y);
-      frc::SmartDashboard::PutNumber("target x", target.x);
-      double angleOffset = limelight.getTX();
-      double zeroSetpoint = 0;
-      if (angleOffset>0) {
-        zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
-      }
-      else {
-        zeroSetpoint = mGyro.getBoundedAngleCCW().getDegrees() - angleOffset;
-      }
-      //frc::SmartDashboard::PutNumber("steer encoder position", mDrive.mFrontLeft.steerEnc.getAbsolutePosition().getDegrees());
-      frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-      mHeadingController.setSetpoint(zeroSetpoint);
-  }
-  else // Normal driving mode
-  {
+  // if (ctr.GetTriangleButton()) // ALIGN(scoring) mode
+  // {
+  //     Pose3d target = limelight.getTargetPoseRobotSpace();
+  //     frc::SmartDashboard::PutNumber("target y", target.y);
+  //     frc::SmartDashboard::PutNumber("target x", target.x);
+  //     double angleOffset = limelight.getTX();
+  //     double zeroSetpoint = 0;
+  //     if (angleOffset>0) {
+  //       zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+  //     }
+  //     else {
+  //       zeroSetpoint = mGyro.getBoundedAngleCCW().getDegrees() - angleOffset;
+  //     }
+  //     //frc::SmartDashboard::PutNumber("steer encoder position", mDrive.mFrontLeft.steerEnc.getAbsolutePosition().getDegrees());
+  //     frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
+  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //     mHeadingController.setSetpoint(zeroSetpoint);
+  // }
+  // else // Normal driving mode
+  // {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
-  }
+  // }
 
   // Output heading controller if used
   if (mHeadingController.getHeadingControllerState() != SwerveHeadingController::OFF) {
     rot = mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
+  }
+
+  if (ctr.GetCircleButton()) {
+    climber.climb();
+  }
+  else if (ctr.GetTriangleButton()) {
+    climber.reverse();
+  }
+  else {
+    climber.disable();
   }
 
   // Gyro Resets
@@ -194,7 +193,7 @@ void Robot::TeleopPeriodic()
   mDrive.updateOdometry();
   frc::SmartDashboard::PutNumber("driveX", mDrive.getOdometryPose().X().value());
   frc::SmartDashboard::PutNumber("driveY", mDrive.getOdometryPose().Y().value());
-  frc::SmartDashboard::PutBoolean("testtarget", limelight.isTargetDetected());
+  // frc::SmartDashboard::PutBoolean("testtarget", limelight.isTargetDetected());
 }
 
 void Robot::DisabledInit()
