@@ -12,6 +12,8 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
+  climber.init();
+  elevator.init();
   // limelight.setPipelineIndex(0);
   // frc::CameraServer::StartAutomaticCapture();
   start_pos_chooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
@@ -107,8 +109,6 @@ void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
 
-  climber.init();
-
   mDrive.enableModules();
   mGyro.init();
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
@@ -166,6 +166,20 @@ void Robot::TeleopPeriodic()
   // Output heading controller if used
   if (mHeadingController.getHeadingControllerState() != SwerveHeadingController::OFF) {
     rot = mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
+  }
+
+  frc::SmartDashboard::PutNumber("encoder", elevator.motor2.GetEncoder().GetPosition());
+  if (ctr.GetR1Button()) {
+    elevator.motor2.Set(0.1);
+    elevator.motor.Set(0.1);
+  }
+  else if (ctr.GetR2Button()) {
+    elevator.motor2.Set(-0.1);
+    elevator.motor.Set(-0.1);
+  }
+  else {
+    elevator.motor2.Set(0);
+    elevator.motor.Set(0);
   }
 
   if (ctr.GetCircleButton()) {
