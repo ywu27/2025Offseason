@@ -1,11 +1,11 @@
 #include "Elevator.h"
 void Elevator::init(){
-    config.Inverted(false);
+    config.Inverted(true);
     config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
     config.closedLoop.Pid(0.6, 0, 0.0);
     config.SmartCurrentLimit(20);
 
-    config2.Inverted(false);
+    config2.Inverted(true);
     config2.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
     config2.closedLoop.Pid(0.6, 0, 0.0);
     config2.SmartCurrentLimit(20);
