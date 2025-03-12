@@ -15,10 +15,6 @@ class Climber{
         rev::spark::SparkMaxConfig config{};
         rev::spark::SparkClosedLoopController climberCTR = motor.GetClosedLoopController();
 
-        //Set velocity setpoint for climber
-        double velocity = 5700;
-        double climbSetpoint = 2;
-    
     public:
         enum climberState {
             STOW,
