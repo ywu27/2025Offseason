@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Constants.h>
 #include "geometry/Pose2d.h"
 #include <cmath>
@@ -7,24 +6,24 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/controller/PIDController.h>
 
+
 class SwerveHeadingController {
-public:
-    frc::PIDController mPIDCtr {0.1, 0.0, 0.01};
+private:
+    frc::PIDController mPIDCtr {0, 0, 0};
     double mSetpoint = 0.0;
     double outputMax;
     double outputMin;
-        
-    
+
     Rotation2d desiredHeading;
+
+public:
 
     enum HeadingControllerState {
         OFF, SNAP, ALIGN, MAINTAIN
     };
-    
-    double kd = 0.03;
+
     HeadingControllerState mHeadingControllerState = OFF;
-
-
+    
     SwerveHeadingController(double output_min = -1.0, double output_max = 1.0) {
         mPIDCtr.EnableContinuousInput(0, 360);
         outputMax = output_max;
@@ -88,10 +87,10 @@ public:
             case OFF:
                 return 0.0;
             case SNAP:
-                mPIDCtr.SetPID(0.02, 0.0, 0.0);
+                mPIDCtr.SetPID(0.12, 0.0, 0.01);
                 break;
             case ALIGN:
-                mPIDCtr.SetPID(0.1, 0.0, 0.01);
+                mPIDCtr.SetPID(0.04, 0.0, 0.01);
                 break;
             case MAINTAIN:
                 mPIDCtr.SetPID(0.02, 0.0, 0.0);
