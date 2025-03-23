@@ -12,7 +12,7 @@ void Robot::RobotInit()
 {
   mDrive.initModules();
   mGyro.init();
-  climber.init();
+  // climber.init();
   elevator.init();
   // limelight.setPipelineIndex(0);
   // frc::CameraServer::StartAutomaticCapture();
@@ -181,16 +181,15 @@ void Robot::TeleopPeriodic()
     elevator.motor2.Set(0);
     elevator.motor.Set(0);
   }
-
-  if (ctr.GetCircleButton()) {
-    climber.climb();
-  }
-  else if (ctr.GetTriangleButton()) {
-    climber.reverse();
-  }
-  else {
-    climber.disable();
-  }
+  // if (ctr.GetCircleButton()) {
+  //   climber.climb();
+  // }
+  // else if (ctr.GetTriangleButton()) {
+  //   climber.reverse();
+  // }
+  // else {
+  //   climber.disable();
+  // }
 
   // Gyro Resets
   if (ctr.GetCrossButtonReleased())

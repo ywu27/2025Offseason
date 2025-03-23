@@ -17,7 +17,6 @@
 #include "util/TimeDelayButton.h"
 #include <ctre/phoenix6/CANBus.hpp>
 #include "Trajectory.h"
-#include "Climber.h"
 #include "Elevator.h"
 
 class Robot : public frc::TimedRobot
@@ -50,13 +49,13 @@ public:
   frc::SendableChooser<Trajectory::autos> mChooser;
   // Trajectory mTrajectory = Trajectory(mDrive, mGyro, limelight, pathConfig);
 
-  Climber climber;
+  // Climber climber;
   Elevator elevator;
 
   //CANivore
-  ctre::phoenix6::CANBus canbus{"Drivetrain"};
-  ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
-  float busUtil = canInfo.BusUtilization;
+  // ctre::phoenix6::CANBus canbus{"Drivetrain"};
+  // ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
+  // float busUtil = canInfo.BusUtilization;
   
   //Limelight
   // Limelight limelight = Limelight("one", 30, 5);
