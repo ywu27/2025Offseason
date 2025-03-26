@@ -37,21 +37,21 @@ constexpr float positionD = 0.0;
 constexpr float positionFF = 0.0;
 
 // Motor/CAN IDs
-#define FLsteerID 5
-#define FLdriveID 8
-#define FL_CAN_ID 3 // updated
+#define FLsteerID 3
+#define FLdriveID 4
+#define FL_CAN_ID 1 // updated
 
-#define FRsteerID 3
+#define FRsteerID 1
 #define FRdriveID 2
 #define FR_CAN_ID 0 // updated
 
-#define BLsteerID 7
+#define BLsteerID 5
 #define BLdriveID 6
 #define BL_CAN_ID 2 // updated;
 
-#define BRsteerID 4
-#define BRdriveID 4
-#define BR_CAN_ID 1 // updated
+#define BRsteerID 7
+#define BRdriveID 8
+#define BR_CAN_ID 3 // updated
 
 // Steer PID values(custom, untuned)
 constexpr float steerP = 0.3;
