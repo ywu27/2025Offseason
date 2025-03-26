@@ -13,7 +13,7 @@ void Robot::RobotInit()
   mDrive.initModules();
   mGyro.init();
   // climber.init();
-  elevator.init();
+  //elevator.init();
   // limelight.setPipelineIndex(0);
   // frc::CameraServer::StartAutomaticCapture();
   start_pos_chooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
@@ -168,19 +168,19 @@ void Robot::TeleopPeriodic()
     rot = mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
   }
 
-  frc::SmartDashboard::PutNumber("encoder", elevator.motor2.GetEncoder().GetPosition());
-  if (ctr.GetR1Button()) {
-    elevator.motor2.Set(0.1);
-    elevator.motor.Set(0.1);
-  }
-  else if (ctr.GetR2Button()) {
-    elevator.motor2.Set(-0.1);
-    elevator.motor.Set(-0.1);
-  }
-  else {
-    elevator.motor2.Set(0);
-    elevator.motor.Set(0);
-  }
+  // frc::SmartDashboard::PutNumber("encoder", elevator.motor2.GetEncoder().GetPosition());
+  // if (ctr.GetR1Button()) {
+  //   elevator.motor2.Set(0.1);
+  //   elevator.motor.Set(0.1);
+  // }
+  // else if (ctr.GetR2Button()) {
+  //   elevator.motor2.Set(-0.1);
+  //   elevator.motor.Set(-0.1);
+  // }
+  // else {
+  //   elevator.motor2.Set(0);
+  //   elevator.motor.Set(0);
+  // }
   // if (ctr.GetCircleButton()) {
   //   climber.climb();
   // }
