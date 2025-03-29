@@ -12,6 +12,8 @@
 #include <thread>
 #include "swerve/SwerveDriveKinematics.h"
 
+#include "sensors/Pigeon.h"
+
 // TODO: inherit thread helper
 enum DriveState{
     Teleop,
@@ -33,7 +35,7 @@ private:
     std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidthNumber, wheelBase), Translation2d(trackWidthNumber, -wheelBase), Translation2d(-trackWidthNumber, wheelBase), Translation2d(-trackWidthNumber, -wheelBase)};
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
-    NavX &mGyro; 
+    Pigeon& pigeon;
 
     // wpi lib class ver of kinemactics used to initialize odometry
     frc::SwerveDriveKinematics<4> frckinematics{ 
@@ -45,7 +47,7 @@ private:
 
     frc::SwerveDriveOdometry<4> m_odometry{
         frckinematics,
-        mGyro.getRotation2d(), 
+        pigeon.getRotation2d(),
         // might need to edit order of motors (double check)
         {
             mBackLeft.getModulePosition(), 
@@ -63,7 +65,7 @@ private:
 
 public:
 
-    SwerveDrive(NavX &mGyroInput) : mGyro(mGyroInput) {
+    SwerveDrive(Pigeon& pigeonInput) : pigeon(pigeonInput) {
     }
 
     DriveState state = DriveState::Teleop;

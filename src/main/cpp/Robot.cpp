@@ -11,7 +11,7 @@
 void Robot::RobotInit()
 {
   mDrive.initModules();
-  mGyro.init();
+  pigeon.init();
   // climber.init();
   //elevator.init();
   // limelight.setPipelineIndex(0);
@@ -38,7 +38,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   mDrive.state = DriveState::Auto;
-  mGyro.init();
+  pigeon.pigeon.Reset();
   mDrive.enableModules();
   
   std::string start_pos = start_pos_chooser.GetSelected();
@@ -110,7 +110,7 @@ void Robot::TeleopInit()
   mDrive.state = DriveState::Teleop;
 
   mDrive.enableModules();
-  mGyro.init();
+  pigeon.pigeon.Reset();
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -120,24 +120,111 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
   auto startTime = frc::Timer::GetFPGATimestamp();
+
+  double speedLimiter = mSuperstructure.speedLimiter();
+  bool fieldOriented = pigeon.pigeon.IsConnected();
+
+  double vx = 0;
+  double vy = 0;
+
   // Controller inputs
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
-
-  leftX = xStickLimiter.calculate(leftX);
-  leftY = yStickLimiter.calculate(leftY);
-
+  leftX = xStickLimiter.calculate(leftX) * speedLimiter; 
+  leftY = yStickLimiter.calculate(leftY) * speedLimiter;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+  double rot = 0;
 
-  //int dPad = ctrOperator.GetPOV();
-  bool rumbleController = false;
+  if(ctrOperator.GetL1ButtonPressed()) {
+    scorecoral = !scorecoral;
+  }
 
-  // Driver Information
+  // Driver
+  int dPad = ctr.GetPOV();
+  bool rumbleController = false; //ADD THIS
+  bool alignLimelight = ctr.GetR2Button();
 
-  // Teleop States
-  bool driveTranslating = !(leftX == 0 && leftY == 0);
-  bool driveTurning = !(rightX == 0);
-  double rot = rightX * moduleMaxRot * 2;
+  bool intakeAlgae = ctr.GetCircleButton();
+  bool scoreAlgae = ctr.GetSquareButton();
+  bool scoreCoral = ctr.GetCrossButton(); // TEST THIS
+  bool intakeCoral = ctr.GetTriangleButton();
+
+  
+  // Co-driver
+  bool stowClimber = ctrOperator.GetCircleButtonPressed();
+  // bool setClimberSetpoint = ctrOperator.GetTriangleButtonPressed();
+  bool climb = ctrOperator.GetSquareButton();
+  bool reverseClimb = ctrOperator.GetTriangleButton();
+  int dPadOperator = ctrOperator.GetPOV();
+  
+  // Driving Modes
+  double offSet = 0;
+  double targetDistance = 0; // CHECK THIS
+  double zeroSetpoint = 0;
+
+
+  if(dPadOperator==90) {
+    coralside = 1;
+  }
+  else if(dPadOperator==270){
+    coralside = 0;
+  }
+
+  if(ctrOperator.GetCrossButton()) {
+    corallevel = 1;
+  }
+  else if(ctrOperator.GetSquareButton()) {
+    corallevel = 2;
+  }
+  else if(ctrOperator.GetTriangleButton()) {
+    corallevel = 3;
+  }
+  else if(ctrOperator.GetCircleButton()) {
+    corallevel = 4;
+  }
+
+  if (alignLimelight && limelight1.isTargetDetected2()) { // Alignment Mode
+    if (limelight1.getTagType()==Limelight::REEF) {
+      offSet = 0.0381; // meters
+    }
+    targetDistance = 1;
+    zeroSetpoint = limelight1.getAngleSetpoint();
+    ChassisSpeeds speeds = align.autoAlign(limelight1, targetDistance, offSet);
+    vx = speeds.vxMetersPerSecond;
+    vy = speeds.vyMetersPerSecond;
+    fieldOriented = false;
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+    mHeadingController.setSetpoint(zeroSetpoint);
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+    mSuperstructure.mElevator.setState(corallevel, !scorecoral);
+  }
+  else if (alignLimelight && limelight2.isTargetDetected2()) { // Alignment Mode
+    if (limelight2.getTagType()==Limelight::REEF) {
+      offSet = 0.0381; // meters
+    }
+    targetDistance = 1;
+    zeroSetpoint = limelight2.getAngleSetpoint();
+    ChassisSpeeds speeds = align.autoAlign(limelight2, targetDistance, offSet);
+    vx = speeds.vxMetersPerSecond;
+    vy = speeds.vyMetersPerSecond;
+    fieldOriented = false;
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+    mHeadingController.setSetpoint(zeroSetpoint);
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  }
+  else if (dPadOperator!=-1) { // Snap mode
+    zeroSetpoint = dPadOperator;
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::SNAP);
+    mHeadingController.setSetpoint(zeroSetpoint);
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  }
+  else // Normal driving mode
+  {
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
+    vx = leftX * moduleMaxFPS;
+    vy = leftY * moduleMaxFPS;
+    rot = rightX * moduleMaxRot * 2;
+  }
 
   //Decide drive modes
   // if (ctr.GetTriangleButton()) // ALIGN(scoring) mode
@@ -148,13 +235,13 @@ void Robot::TeleopPeriodic()
   //     double angleOffset = limelight.getTX();
   //     double zeroSetpoint = 0;
   //     if (angleOffset>0) {
-  //       zeroSetpoint = mGyro.getBoundedAngleCW().getDegrees() + angleOffset;
+  //       zeroSetpoint = pigeon.getBoundedAngleCW().getDegrees() + angleOffset;
   //     }
   //     else {
-  //       zeroSetpoint = mGyro.getBoundedAngleCCW().getDegrees() - angleOffset;
+  //       zeroSetpoint = pigeon.getBoundedAngleCCW().getDegrees() - angleOffset;
   //     }
   //     //frc::SmartDashboard::PutNumber("steer encoder position", mDrive.mFrontLeft.steerEnc.getAbsolutePosition().getDegrees());
-  //     frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
+  //     frc::SmartDashboard::PutNumber("Gyro position", pigeon.getBoundedAngleCCW().getDegrees());
   //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
   //     mHeadingController.setSetpoint(zeroSetpoint);
   // }
@@ -165,7 +252,7 @@ void Robot::TeleopPeriodic()
 
   // Output heading controller if used
   if (mHeadingController.getHeadingControllerState() != SwerveHeadingController::OFF) {
-    rot = mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
   }
 
   // frc::SmartDashboard::PutNumber("encoder", elevator.motor2.GetEncoder().GetPosition());
@@ -194,14 +281,14 @@ void Robot::TeleopPeriodic()
   // Gyro Resets
   if (ctr.GetCrossButtonReleased())
   {
-    mGyro.init();
+    pigeon.pigeon.Reset();
   }
 
   // Drive function
   mDrive.Drive(
-      ChassisSpeeds(leftX * moduleMaxFPS, leftY * moduleMaxFPS, rot),
-      mGyro.getBoundedAngleCCW(),
-      mGyro.gyro.IsConnected(),
+      ChassisSpeeds(vx, vy, rot),
+      pigeon.getBoundedAngleCCW(),
+      fieldOriented,
       cleanDriveAccum);
   mDrive.updateOdometry();
   frc::SmartDashboard::PutNumber("driveX", mDrive.getOdometryPose().X().value());

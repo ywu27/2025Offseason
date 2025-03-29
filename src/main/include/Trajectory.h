@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "sensors/Limelight.h"
 #include "geometry/Translation2d.h"
+#include "swerve/SwerveAlign.h"
 
 #include <pathplanner/lib/trajectory/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
@@ -22,6 +23,8 @@
 #include <frc/Timer.h>
 #include "sensors/NavX.h"
 #include <frc/DriverStation.h>
+#include <frc/controller/PIDController.h>
+#include "sensors/Pigeon.h"
 
 using namespace pathplanner;
 
@@ -30,9 +33,11 @@ class Trajectory
 private:
     
     SwerveDrive &mDrive;
-    NavX &mGyro;
     Limelight &mLimelight; 
     RobotConfig &config;
+
+    SwerveAlign &mAlign;
+    Pigeon &pigeon;
 
 public:
     Pose3d startPose = Pose3d();
@@ -61,11 +66,11 @@ public:
         auto_3F 
     };
 
-    Trajectory(SwerveDrive &mDriveInput, NavX &mGyroInput, Limelight &mLimelightInput, RobotConfig &configInput) : mDrive(mDriveInput), 
-                                                                                                                mGyro(mGyroInput),
-                                                                                                                mLimelight(mLimelightInput),
+    Trajectory(SwerveDrive &mDriveInput, Limelight& limelight, SwerveAlign &align, Pigeon &pigeonInput, RobotConfig &configInput) : mDrive(mDriveInput), 
+                                                                                                                mLimelight(limelight),
+                                                                                                                mAlign(align),
+                                                                                                                pigeon(pigeonInput),
                                                                                                                 config(configInput) {};
-
     void driveToState(PathPlannerTrajectoryState const &state);
 
     void follow(std::string const &traj_dir_file_path, bool flipAlliance, bool intake, bool first, float startAngle = 0.0);

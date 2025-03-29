@@ -21,6 +21,18 @@ public:
           vyMetersPerSecond(vyMetersPerSecond),
           omegaRadiansPerSecond(omegaRadiansPerSecond) {}
 
+    double getVx() {
+        return vxMetersPerSecond;
+    }
+
+    double getVy() {
+        return vyMetersPerSecond;
+    }
+
+    double getRotation() {
+        return omegaRadiansPerSecond;
+    }
+
     static ChassisSpeeds fromFieldRelativeSpeeds(double vxMetersPerSecond, double vyMetersPerSecond,
                                                  double omegaRadiansPerSecond, const Rotation2d robotAngle) {
         return ChassisSpeeds(
@@ -34,13 +46,6 @@ public:
         return ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
     }
 
-    // static ChassisSpeeds fromFieldRelativeSpeeds(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, Rotation2d robotAngle) {
-    //     return ChassisSpeeds(
-    //             vxMetersPerSecond * robotAngle.cos() + vyMetersPerSecond * robotAngle.sin(),
-    //             -vxMetersPerSecond * robotAngle.sin() + vyMetersPerSecond * robotAngle.cos(),
-    //             omegaRadiansPerSecond);
-    // }
-    
     std::string toString() const {
         return "ChassisSpeeds(Vx: " + std::to_string(vxMetersPerSecond) + " m/s, Vy: " +
                std::to_string(vyMetersPerSecond) + " m/s, Omega: " +

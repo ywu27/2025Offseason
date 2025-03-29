@@ -41,7 +41,7 @@ void Trajectory::driveToState(PathPlannerTrajectoryState const &state)
     frc::SmartDashboard::PutNumber("autoVX", vx_feet);
     frc::SmartDashboard::PutNumber("autoRot", correction.omega.value());
 
-    mDrive.Drive(ChassisSpeeds{-vx_feet, vy_feet, rot}, mGyro.getBoundedAngleCCW(), true, true);
+    mDrive.Drive(ChassisSpeeds{-vx_feet, vy_feet, rot}, pigeon.getBoundedAngleCCW(), true, true);
 }
 
 /**

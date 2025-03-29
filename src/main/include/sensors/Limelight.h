@@ -7,118 +7,132 @@
 #include "LimelightHelpers.h"
 #include "geometry/Pose3d.h"
 #include "Constants.h"
+#include <frc/DriverStation.h>
 
 class Limelight {
 
 private:
     std::string limelightName;
-    double limelightMountAngle; // Measured in degrees
-    double limelightHeight; // Measured in inches
-    double tagHeight = 53; // Measured in inches
+    double limelightMountAngle = 20;
+    double limelightHeight = 12;
+    
+    struct TagInfo {
+        double height;
+        int angleSetpoint;
+    };
+    
+    std::map<int, TagInfo> tagData = {
+        {1, {53.25, 126}}, {2, {53.25, 234}}, {3, {45.875, 270}}, {4, {69.0, 0}}, {5, {69.0, 0}},
+        {10, {6.875, 180}}, {11, {6.875, 240}}, {6, {6.875, 300}}, {7, {6.875, 0}}, {8, {6.875, 60}}, {9, {6.875, 120}},
+        {12, {53.25, 234}}, {13, {53.25, 126}}, {14, {69.0, 0}}, {15, {69.0, 0}}, {16, {45.875, 270}},
+        {17, {6.875, 120}}, {18, {6.875, 60}}, {19, {6.875, 0}}, {20, {6.875, 300}}, {21, {6.875, 240}}, {22, {6.875, 180}}
+    };
 
 public:
-    Limelight(std::string name, double mountAngle, double heightOffFloor){
+    enum Alliance{RED, BLUE};
+    enum TagType {REEF, CORALSTATION, PROCESSOR, BARGE};
+    
+    Alliance alliance;
+    TagType tagType;
+
+    Limelight(std::string name, frc::DriverStation::Alliance a) { // TEST THIS
         limelightName = name;
-        limelightMountAngle = mountAngle; // degrees
-        limelightHeight = heightOffFloor; // inches
+        
+        if (a == frc::DriverStation::Alliance::kRed) {
+            alliance = RED;
+        }
+        else {
+            alliance = BLUE;
+        }
     }
 
     bool isTargetDetected() {
-        if ((nt::NetworkTableInstance::GetDefault().GetTable("")->GetNumber("tv", 0.0)) == 1)
-        {
-            frc::SmartDashboard::PutNumber("insidetest", (nt::NetworkTableInstance::GetDefault().GetTable("")->GetNumber("tv", 0.0)));
+        double tv = nt::NetworkTableInstance::GetDefault().GetTable(limelightName)->GetNumber("tv", 0.0);
+        if (tv == 1) {
             return true;
+        } else {
+            return false;
         }
-        frc::SmartDashboard::PutNumber("insidetest", (nt::NetworkTableInstance::GetDefault().GetTable("")->GetNumber("tv", 0.0)));
-        return false;
+    }
+
+    bool isTargetDetected2() {
+        if (getTX()==0 && getTY()==0) {
+            return false;
+        }
+        return true;
     }
 
     void setPipelineIndex(int index) {
-        LimelightHelpers::setPipelineIndex("", index);
+        LimelightHelpers::setPipelineIndex(limelightName, index);
     }
 
-    int getTagID() { // returns the ID of the AprilTag
+    int getTagID() {
         return (int)LimelightHelpers::getFiducialID();
     }
 
-    double getTX() { // TX
-        if (isTargetDetected() == true)
-        {
-            double tx = LimelightHelpers::getTX("");
-            frc::SmartDashboard::PutNumber("Tx", tx);
-            return tx;
+    double getTX() {
+        return LimelightHelpers::getTX(limelightName);
+    }
+
+    double getTY() {
+        return LimelightHelpers::getTY(limelightName);
+    }
+
+    TagType getTagType() {
+        int tagID = getTagID();
+        if (tagID >= 10 && tagID <= 22) {
+            return REEF;
+        } else if (tagID == 1 || tagID == 2 || tagID == 12 || tagID == 13) {
+            return CORALSTATION;
+        } else if (tagID == 3 || tagID == 16) {
+            return PROCESSOR;
+        } else if (tagID == 4 || tagID == 5 || tagID == 14 || tagID == 15) {
+            return BARGE;
+        } else {
+            return REEF;
         }
     }
 
-    double getTY() { // TY
-        if (isTargetDetected() == true)
-        {
-            double ty = LimelightHelpers::getTY("");
-            frc::SmartDashboard::PutNumber("Ty", ty);
-            return ty;
-        }
-    }
-
-    double isTargetDetected2() {
-        return !(getTX()==0);
-    }
-
-    double getDistanceToWall() { // perpendicular distance to wall in inches
-        if (isTargetDetected() == true)
-        {
-            double ty = LimelightHelpers::getTY("");
-            double angleToTagDegrees = limelightMountAngle + ty;
-            double angleToTagRadians = angleToTagDegrees * (PI / 180.0);
-            double distanceToWall = (tagHeight - limelightHeight) / tan(angleToTagRadians);
-            distanceToWall = distanceToWall + 0.4191; //added the distance between limelight and shooter
-            frc::SmartDashboard::PutNumber("distanceToWall", distanceToWall);
-            return distanceToWall;
-        }
-        else {
+    double getTagHeight() {
+        int tagID = getTagID();
+        if (tagData.count(tagID)) {
+            return tagData[tagID].height;
+        } else {
             return 0;
         }
     }
 
-    double getAngleLimelightToTag() { // TY + limelight mount angle
-        if (isTargetDetected() == true)
-        {
-            double ty = getTY();
-            double angleToTagDegrees = limelightMountAngle + ty;
-            frc::SmartDashboard::PutNumber("vertical angle", angleToTagDegrees);
-            return angleToTagDegrees;
+    double getAngleSetpoint() {
+        int tagID = getTagID();
+        if (tagData.count(tagID)) {
+            return tagData[tagID].angleSetpoint;
+        } else {
+            return 0;
         }
-        else
-        {
+    }
+
+    double getDistanceToWall() {
+        return getTargetPoseRobotSpace().y;
+    }
+
+    double getAngleLimelightToTag() {
+        if (isTargetDetected()) {
+            return limelightMountAngle + getTY();
+        } else {
             return 0;
         }
     }
 
     std::vector<double> getPolarCoords() {
-        std::vector<double> polarCoords = {getTX(), getDistanceToWall()};
-        return polarCoords;
+        return {getTX(), getDistanceToWall()};
     }
 
     std::vector<double> getXYCoords() {
-        double angle = getTX() * (PI / 180);
-        double x = (getDistanceToWall()) * sin(angle);
-        double y = (getDistanceToWall()) * cos(angle);
-        std::vector<double> xyCoords = {x, y};
-        return xyCoords;
-    }
-
-    bool isIn(int object, std::vector<int> inp) { // use to check if current ID is part of target ID list
-        for (unsigned int i = 0; i < inp.size(); i++)
-        {
-            if (inp[i] == object)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void setLEDMode(int mode) { // 0 for off / 1 for blink / 2 for on
-        nt::NetworkTableInstance::GetDefault().GetTable(limelightName)->PutNumber("ledMode", mode);
+        double angle = getTX() * (3.14153 / 180);
+        double dist = getDistanceToWall();
+        double x = dist * sin(angle);
+        double y = dist * cos(angle);
+        return {x, y};
     }
 
     Pose3d getTargetPoseRobotSpace() {
@@ -137,9 +151,5 @@ public:
         output.y = output.z;
         output.z = -tempY;
         return output;
-    }
-
-    double moveAmt() { // inches
-        return tan(getTX() * (PI / 180.0)) * getDistanceToWall();
     }
 };

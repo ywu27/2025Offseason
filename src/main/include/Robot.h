@@ -14,10 +14,19 @@
 #include "util/SlewRateLimiter.h"
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
+
+#include "swerve/SwerveAlign.h"
+
 #include "util/TimeDelayButton.h"
 #include <ctre/phoenix6/CANBus.hpp>
 #include "Trajectory.h"
 // #include "Elevator.h"
+
+#include "sensors/FusedGyro.h"
+#include <ctre/phoenix6/Pigeon2.hpp>
+#include "sensors/Pigeon.h"
+
+#include "Superstructure.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -42,12 +51,26 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
-  //frc::PS5Controller ctrOperator = frc::PS5Controller(1);
-  NavX mGyro = NavX();
-  SwerveDrive mDrive = SwerveDrive(mGyro);
+  frc::PS5Controller ctrOperator = frc::PS5Controller(1);
+  
+  //NavX mGyro = NavX();
+  //SwerveDrive mDrive = SwerveDrive(mGyro);
   pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
   frc::SendableChooser<Trajectory::autos> mChooser;
-  // Trajectory mTrajectory = Trajectory(mDrive, mGyro, limelight, pathConfig);
+
+  Superstructure mSuperstructure;
+
+  Limelight limelight1 = Limelight("one", frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kRed)); // FIX THIS
+  Limelight limelight2 = Limelight("two", frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kRed));
+
+  // For Auto Align
+  SwerveAlign align;
+
+  // Pigeon
+  Pigeon pigeon{60};
+  SwerveDrive mDrive = SwerveDrive(pigeon);
+
+  // Trajectory mTrajectory = Trajectory(mDrive, pigeon, limelight, pathConfig);
 
   // Climber climber;
   // Elevator elevator;
@@ -88,5 +111,9 @@ public:
  const::std::string kAutoReefD = "D";
  const::std::string kAutoReefE = "E";
  const::std::string kAutoReefF = "F";
+
+ int corallevel = 0;
+ int coralside = 0;
+ bool scorecoral = true;
 
 };
