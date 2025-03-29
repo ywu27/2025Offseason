@@ -8,7 +8,7 @@ class ColorSensor{
     private:
         rev::ColorSensorV3 colorSensor;
         rev::ColorMatch colorMatcher;
-        static constexpr frc::Color algae = frc::Color(0.1545, 0.5432, 0.3024); 
+        //static constexpr frc::Color algae = frc::Color(0.1545, 0.5432, 0.3024); 
     public:
         ColorSensor(frc::I2C::Port port) : colorSensor(port){}
         frc::Color getcolor(){

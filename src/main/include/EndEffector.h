@@ -48,7 +48,6 @@ public:
     void disable();
     void setState(EndEffectorState state);
     void intake();
-    void aim();
     void score();
     void setVelocity(double speed);
 };

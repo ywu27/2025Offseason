@@ -77,13 +77,9 @@ public:
   // Elevator elevator;
 
   //CANivore
-  // ctre::phoenix6::CANBus canbus{"Drivetrain"};
-  // ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
-  // float busUtil = canInfo.BusUtilization;
-  
-  //Limelight
-  // Limelight limelight = Limelight("one", 30, 5);
-  // Limelight limelight2 = Limelight("two", 30, 5);
+  ctre::phoenix6::CANBus canbus{"Drivetrain"};
+  ctre::phoenix6::CANBus::CANBusStatus canInfo = canbus.GetStatus();
+  float busUtil = canInfo.BusUtilization;
 
   // Teleop Controls
   float ctrPercent = 1.0;
