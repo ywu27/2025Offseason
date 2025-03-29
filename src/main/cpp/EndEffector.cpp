@@ -46,9 +46,12 @@ void EndEffector::setState(EndEffectorState state) {
 void EndEffector::intake() {
     intakeCTR1.SetReference(intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
     intakeCTR2.SetReference(intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
+    if (cSensor.isTarget()) {
+        disable();
+    }
 }
 
 void EndEffector::score() {
-    intakeCTR1.SetReference(-intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
-    intakeCTR2.SetReference(-intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
+    intakeCTR1.SetReference(intakeEnc1.GetPosition()+5, rev::spark::SparkLowLevel::ControlType::kPosition);
+    intakeCTR2.SetReference(intakeEnc2.GetPosition()+5, rev::spark::SparkLowLevel::ControlType::kPosition);
 }

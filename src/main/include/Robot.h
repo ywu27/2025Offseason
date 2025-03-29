@@ -25,6 +25,7 @@
 #include "sensors/FusedGyro.h"
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include "sensors/Pigeon.h"
+#include "sensors/ColorSensor.h"
 
 #include "Superstructure.h"
 

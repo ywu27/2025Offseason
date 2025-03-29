@@ -144,8 +144,8 @@ void Robot::TeleopPeriodic()
   bool rumbleController = false; //ADD THIS
   bool alignLimelight = ctr.GetR2Button();
 
-  bool intakeAlgae = ctr.GetCircleButton();
-  bool scoreAlgae = ctr.GetSquareButton();
+  //bool intakeAlgae = ctr.GetCircleButton();
+  //bool scoreAlgae = ctr.GetSquareButton();
   bool scoreCoral = ctr.GetCrossButton(); // TEST THIS
   bool intakeCoral = ctr.GetTriangleButton();
 
