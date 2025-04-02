@@ -10,7 +10,6 @@
 #include "swerve/SwerveDriveKinematics.h"
 #include "swerve/SwerveModuleState.h"
 #include <thread>
-#include "util/ShuffleUI.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
 #include "sensors/NavX.h"
@@ -93,7 +92,6 @@ public:
     void initModules();
     void enableModules();
     bool disableModules();
-    void stopModules();
     void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d getOdometryPose();
     void updateOdometry();
@@ -102,6 +100,4 @@ public:
     void resetPoseEstimator(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d GetPoseEstimatorPose();
     void updatePoseEstimator(Limelight &limelight, units::second_t timestamp);
-    // void displayDriveTelemetry();
-    // void zeroAccumulation();
 };

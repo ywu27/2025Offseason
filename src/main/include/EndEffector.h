@@ -34,7 +34,7 @@ public:
     // Color Sensor
     static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
     ColorSensor cSensor = ColorSensor(i2cPort);
-    rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
+    // rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:
     enum EndEffectorState {

@@ -51,25 +51,26 @@ public:
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
   frc::PS5Controller ctrOperator = frc::PS5Controller(1);
-  
-  //NavX mGyro = NavX();
-  //SwerveDrive mDrive = SwerveDrive(mGyro);
-  pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
-  frc::SendableChooser<Trajectory::autos> mChooser;
 
   Superstructure mSuperstructure;
 
-  Limelight limelight1 = Limelight("limelight-one"); // FIX THIS
+  Limelight limelight1 = Limelight("limelight-one");
   Limelight limelight2 = Limelight("limelight-two");
+
+  PhotonVision camera1 = PhotonVision("cameraFront");
+  frc::Pose2d visionCache;
+  std::shared_ptr<pathplanner::PathPlannerPath> path;
+  frc::Pose2d startPose;
 
   // For Auto Align
   SwerveAlign align;
+  pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, limelight1, limelight2, camera1, align, pigeon, pathConfig);
+  // frc::SendableChooser<Trajectory::autos> mChooser;
 
   // Pigeon
   Pigeon pigeon{60};
   SwerveDrive mDrive = SwerveDrive(pigeon);
-
-  // Trajectory mTrajectory = Trajectory(mDrive, pigeon, limelight, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};
@@ -105,7 +106,6 @@ public:
   const::std::string kAutoReefF = "F";
 
  int corallevel = 0;
- int coralside = 0;
+ std::string coralside = "right";
  bool scorecoral = true;
-
 };

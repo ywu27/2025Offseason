@@ -12,7 +12,6 @@
 
 #include "sensors/CAN_Coder.h"
 #include "Constants.h"
-#include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
 #include "control/PowerModule.h"
 #include "swerve/TalonFXMotor.h"

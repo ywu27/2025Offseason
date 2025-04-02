@@ -1,7 +1,6 @@
 #pragma once
 
 #include <frc/Timer.h>
-#include <util/ShuffleUI.h>
 #include <frc/PowerDistribution.h>
 
 #define swerveDriveStartCurrent 60

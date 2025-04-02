@@ -3,11 +3,13 @@
 void EndEffector::init() {
 
     intake1Config.SmartCurrentLimit(20);
-    intake1Config.closedLoop.Pid(0.00020, 0, 0.001);
+    intake1Config.closedLoop.Pid(0.0002, 0, 0.001);
+    intake1Config.Inverted(true);
     intake1Config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
 
     intake2Config.SmartCurrentLimit(20);
-    intake2Config.closedLoop.Pid(0.00020, 0, 0.001);
+    intake2Config.closedLoop.Pid(0.0002, 0, 0.001);
+    intake2Config.Inverted(true);
     intake2Config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
 
     intakeMotor1.Configure(intake1Config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
@@ -18,8 +20,8 @@ void EndEffector::init() {
 }
 
 void EndEffector::disable() {
-    intakeMotor1.StopMotor();
-    intakeMotor2.StopMotor();
+    intakeMotor1.Set(0);
+    intakeMotor2.Set(0);
 }
 
 void EndEffector::setVelocity(double speed) {
