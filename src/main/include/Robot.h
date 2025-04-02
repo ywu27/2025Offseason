@@ -16,11 +16,9 @@
 #include "SwerveDrive.h"
 
 #include "swerve/SwerveAlign.h"
-
 #include "util/TimeDelayButton.h"
 #include <ctre/phoenix6/CANBus.hpp>
 #include "Trajectory.h"
-// #include "Elevator.h"
 
 #include "sensors/FusedGyro.h"
 #include <ctre/phoenix6/Pigeon2.hpp>
@@ -72,9 +70,6 @@ public:
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
   // Trajectory mTrajectory = Trajectory(mDrive, pigeon, limelight, pathConfig);
-
-  // Climber climber;
-  // Elevator elevator;
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};

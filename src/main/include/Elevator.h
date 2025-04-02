@@ -14,17 +14,15 @@ class Elevator {
     public:
         // Need to be changed, setpoints in rotations
         double startPoint = 0.0;
-        double CoralLevel1 = 8.0;
-        double CoralLevel2 = 22.0; 
-        double CoralLevel3 = 38.0;
-        double CoralLevel4 = 52.0;
-        double CoralStation = 27.5;
-        double AlgaeLevel1 = 8.0; 
-        double AlgaeLevel2 = 15.0; 
+        double CoralLevel1 = 34.7854;
+        double CoralLevel2 = 49.786; 
+        double CoralLevel3 = 73.502;
+        double CoralLevel4 = 109.14;
+        double CoralStation = 3.286;
 
-        std::array<double, 8> levelHeight{startPoint, CoralLevel1, CoralLevel2, CoralLevel3, CoralLevel4, CoralStation, AlgaeLevel1, AlgaeLevel2};
+        std::array<double, 6> levelHeight{startPoint, CoralLevel1, CoralLevel2, CoralLevel3, CoralLevel4, CoralStation};
 
-        int currentState = 0.0;
+        int currentState;
         double setpointState;
 
         void init();

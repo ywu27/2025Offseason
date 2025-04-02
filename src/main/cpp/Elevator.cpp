@@ -1,15 +1,15 @@
 #include "Elevator.h"
 
 void Elevator::init(){
-    config.Inverted(true);
+    config.Inverted(false);
     config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
-    config.closedLoop.Pid(0.6, 0, 0.0);
-    config.SmartCurrentLimit(20);
+    config.closedLoop.Pid(0.05, 0, 0.0);
+    config.SmartCurrentLimit(70);
 
     config2.Inverted(true);
     config2.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
-    config2.closedLoop.Pid(0.6, 0, 0.0);
-    config2.SmartCurrentLimit(20);
+    config2.closedLoop.Pid(0.05, 0, 0.0);
+    config2.SmartCurrentLimit(70);
 
     motor.Configure(config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
     motor2.Configure(config2, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
@@ -19,13 +19,7 @@ void Elevator::init(){
 }
 
 void Elevator::setState(int state, bool algae) { // 0 = start, 1 = level 1, 2 = level 2, 3 = level 3, 4 = level 4, 5 = coral station
-    if (algae && ((state + 5) <= 7)) {
-        setpointState = levelHeight[state + 5];
-        state = state + 5;
-    }
-    else {
-        setpointState = levelHeight[state];
-    }
+    setpointState = levelHeight[state];
     elevatorCTR.SetReference(setpointState, rev::spark::SparkLowLevel::ControlType::kPosition);
     elevatorCTR2.SetReference(setpointState, rev::spark::SparkLowLevel::ControlType::kPosition);
     currentState = state;
