@@ -11,7 +11,7 @@ private:
 public:
     ctre::phoenix6::hardware::Pigeon2 pigeon;
 
-    Pigeon(int deviceID) : pigeon(ctre::phoenix6::hardware::Pigeon2(deviceID, "rio"))
+    Pigeon(int deviceID) : pigeon(ctre::phoenix6::hardware::Pigeon2(deviceID, "Drivetrain"))
     {
     }
 
@@ -44,12 +44,12 @@ public:
      */
     Rotation2d getBoundedAngleCCW()
     {
-        return Rotation2d(Rotation2d::degreesBound(pigeon.GetYaw().GetValueAsDouble()) * PI / 180);
+        return Rotation2d(Rotation2d::degreesBound(fmod(pigeon.GetYaw().GetValueAsDouble(), 360.0)) * PI / 180);
     }
 
     Rotation2d getBoundedAngleCW()
     {
-        return Rotation2d(Rotation2d::degreesBound(-pigeon.GetYaw().GetValueAsDouble()) * PI / 180);
+        return Rotation2d(Rotation2d::degreesBound(-fmod(pigeon.GetYaw().GetValueAsDouble(), 360.0)) * PI / 180);
     }
 
     frc::Rotation2d getRotation2d()
