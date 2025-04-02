@@ -6,14 +6,12 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 #include <string>
-#include <cameraserver/CameraServer.h>
 
 void Robot::RobotInit()
 {
   mDrive.initModules();
   pigeon.init();
   mSuperstructure.init();
-  // frc::CameraServer::StartAutomaticCapture();
   start_pos_chooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
   start_pos_chooser.AddOption(kAutoStartB, kAutoStartB);
   start_pos_chooser.AddOption(kAutoStartC, kAutoStartC);
