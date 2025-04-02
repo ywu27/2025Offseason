@@ -59,8 +59,8 @@ public:
 
   Superstructure mSuperstructure;
 
-  Limelight limelight1 = Limelight("one", frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kRed)); // FIX THIS
-  Limelight limelight2 = Limelight("two", frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kRed));
+  Limelight limelight1 = Limelight("limelight-one"); // FIX THIS
+  Limelight limelight2 = Limelight("limelight-two");
 
   // For Auto Align
   SwerveAlign align;
@@ -91,18 +91,18 @@ public:
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
 
   //autochooser
- frc::SendableChooser<std::string> start_pos_chooser;
- const std::string kAutoStartDefault = "1";
- const std::string kAutoStartB = "2";
- const std::string kAutoStartC = "3";
+  frc::SendableChooser<std::string> start_pos_chooser;
+  const std::string kAutoStartDefault = "1";
+  const std::string kAutoStartB = "2";
+  const std::string kAutoStartC = "3";
 
- frc::SendableChooser<std::string> reef_pos_chooser;
- const::std::string kAutoReefDefault = "A";
- const::std::string kAutoReefB = "B";
- const::std::string kAutoReefC = "C";
- const::std::string kAutoReefD = "D";
- const::std::string kAutoReefE = "E";
- const::std::string kAutoReefF = "F";
+  frc::SendableChooser<std::string> reef_pos_chooser;
+  const::std::string kAutoReefDefault = "A";
+  const::std::string kAutoReefB = "B";
+  const::std::string kAutoReefC = "C";
+  const::std::string kAutoReefD = "D";
+  const::std::string kAutoReefE = "E";
+  const::std::string kAutoReefF = "F";
 
  int corallevel = 0;
  int coralside = 0;

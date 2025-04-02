@@ -183,7 +183,7 @@ void Robot::TeleopPeriodic()
     corallevel = 4;
   }
 
-  if (alignLimelight && limelight1.isTargetDetected2()) { // Alignment Mode
+  if (alignLimelight && limelight1.isTargetDetected()) { // Alignment Mode
     if (limelight1.getTagType()==Limelight::REEF) {
       offSet = 0.0381; // meters
     }
@@ -198,7 +198,7 @@ void Robot::TeleopPeriodic()
     rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
     mSuperstructure.mElevator.setState(corallevel, !scorecoral);
   }
-  else if (alignLimelight && limelight2.isTargetDetected2()) { // Alignment Mode
+  else if (alignLimelight && limelight2.isTargetDetected()) { // Alignment Mode
     if (limelight2.getTagType()==Limelight::REEF) {
       offSet = 0.0381; // meters
     }
