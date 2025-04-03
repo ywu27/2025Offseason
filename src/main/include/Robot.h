@@ -86,6 +86,7 @@ public:
 
   //autochooser
   frc::SendableChooser<std::string> positionChooser;
+  const std::string kSimpleAuto = "0";
   const std::string kAutoStartDefault = "1";
   const std::string kAutoStartB = "2";
   const std::string kAutoStartC = "3";
@@ -97,6 +98,7 @@ public:
   const::std::string kAutoReefD = "D";
   const::std::string kAutoReefE = "E";
   const::std::string kAutoReefF = "F";
+  const std::string kOneCoral = "0";
 
   int coralLevel = 0;
   std::string elevatorLevel = "Start";

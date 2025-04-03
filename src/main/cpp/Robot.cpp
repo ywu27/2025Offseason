@@ -16,6 +16,7 @@ void Robot::RobotInit()
   positionChooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
   positionChooser.AddOption(kAutoStartB, kAutoStartB);
   positionChooser.AddOption(kAutoStartC, kAutoStartC);
+  positionChooser.AddOption(kSimpleAuto, kSimpleAuto);
   frc::SmartDashboard::PutData("Auto Start Position", &positionChooser);
 
   reefChooser.SetDefaultOption(kAutoReefDefault, kAutoReefDefault);
@@ -24,6 +25,7 @@ void Robot::RobotInit()
   reefChooser.AddOption(kAutoReefD, kAutoReefD);
   reefChooser.AddOption(kAutoReefE, kAutoReefE);
   reefChooser.AddOption(kAutoReefF, kAutoReefF);
+  reefChooser.AddOption(kOneCoral, kOneCoral);
   frc::SmartDashboard::PutData("Auto Reef Position", &reefChooser);
 
 }
