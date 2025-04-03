@@ -53,7 +53,7 @@ public:
 
   Superstructure mSuperstructure;
 
-  Limelight limelight1 = Limelight("limelight-one"); 
+  Limelight limelight1 = Limelight("limelight-one");
   Limelight limelight2 = Limelight("limelight-two");
   PhotonVision photonCamera = PhotonVision("cameraFront");
 
@@ -111,5 +111,5 @@ public:
   const std::string blueAlliance = "BLUE";
   bool allianceIsRed = false;
 
-  Led mLED{6, 20};
+  Led mLED{9, 43};
 };

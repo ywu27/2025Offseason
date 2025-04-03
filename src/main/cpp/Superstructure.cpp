@@ -12,13 +12,13 @@ void Superstructure::init() {
 void Superstructure::periodic() {
     while (true)
     {
-        if (!enableModules)
+        if (enableModules)
         {
             // Disable modules here
             mElevator.disable();
             mEndEffector.disable();
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -59,13 +59,13 @@ void Superstructure::scoreCoral() {
 }
 
 double Superstructure::speedLimiter() {
-    if (mElevator.currentState == 0 || mElevator.currentState == 1) {
+    if (mElevator.currentState == 0 || mElevator.currentState == 5) {
         return 1.0;
     }
-    else if (mElevator.currentState == 2 || mElevator.currentState == 3) {
+    else if (mElevator.currentState == 1 || mElevator.currentState == 2) {
         return 0.75;
     }
-    else if (mElevator.currentState == 4 || mElevator.currentState == 5) {
+    else if (mElevator.currentState == 3 || mElevator.currentState == 4) {
         return 0.25;
     }
     else {

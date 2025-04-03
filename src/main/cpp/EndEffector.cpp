@@ -2,13 +2,13 @@
 
 void EndEffector::init() {
 
-    intake1Config.SmartCurrentLimit(20);
-    intake1Config.closedLoop.Pid(0.0002, 0, 0.001);
+    intake1Config.SmartCurrentLimit(30);
+    intake1Config.closedLoop.Pid(0.02, 0, 0.001);
     intake1Config.Inverted(true);
     intake1Config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
 
-    intake2Config.SmartCurrentLimit(20);
-    intake2Config.closedLoop.Pid(0.0002, 0, 0.001);
+    intake2Config.SmartCurrentLimit(30);
+    intake2Config.closedLoop.Pid(0.02, 0, 0.001);
     intake2Config.Inverted(true);
     intake2Config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
 
@@ -46,14 +46,14 @@ void EndEffector::setState(EndEffectorState state) {
 }
 
 void EndEffector::intake() {
-    intakeCTR1.SetReference(intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
-    intakeCTR2.SetReference(intakeSpeed, rev::spark::SparkLowLevel::ControlType::kVelocity);
+    intakeMotor1.Set(0.25);
+    intakeMotor2.Set(0.25);
     if (cSensor.isTarget()) {
         disable();
     }
 }
 
 void EndEffector::score() {
-    intakeCTR1.SetReference(intakeEnc1.GetPosition()+5, rev::spark::SparkLowLevel::ControlType::kPosition);
-    intakeCTR2.SetReference(intakeEnc2.GetPosition()+5, rev::spark::SparkLowLevel::ControlType::kPosition);
+    intakeCTR1.SetReference(intakeEnc1.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
+    intakeCTR2.SetReference(intakeEnc2.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
 }

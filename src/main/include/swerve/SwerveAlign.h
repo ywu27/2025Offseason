@@ -24,7 +24,7 @@ public:
     double prevErrorY = 0;
 
     bool isAligned(Limelight& limelight) {
-        if (abs(limelight.getTargetPoseRobotSpace().x-targetOffset)<0.05 && abs(targetDistance-limelight.getDistanceToWall())<0.05) {
+        if (forwardPID.AtSetpoint() && strafePID.AtSetpoint()) {
             return true;
         }
         return false;

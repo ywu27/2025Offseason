@@ -32,6 +32,13 @@ void Robot::RobotInit()
 
 void Robot::RobotPeriodic()
 {
+  frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
+  frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
+  frc::SmartDashboard::PutBoolean("isCoralDetected", mSuperstructure.mEndEffector.cSensor.isTarget());
+  frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.cSensor.GetProximity());
+  frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.cSensor.getcolor().red);
+  frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.cSensor.getcolor().green);
+  frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.cSensor.getcolor().blue);
 }
 
 void Robot::AutonomousInit()
@@ -116,7 +123,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  mLED.Set_Color(frc::Color::kBlue);
+  mLED.Set_Color(frc::Color::kBrown);
 }
 void Robot::TeleopInit()
 {
@@ -132,8 +139,6 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  mLED.Set_Color(frc::Color::kDarkOrange);
-
   double speedLimiter = mSuperstructure.speedLimiter();
   bool fieldOriented = pigeon.pigeon.IsConnected();
 
@@ -152,20 +157,20 @@ void Robot::TeleopPeriodic()
   int dPad = ctr.GetPOV();
   bool alignLimelight = ctr.GetR2Button();
   bool intakeCoral = ctr.GetTriangleButton();
-  bool scoreCoral = ctr.GetCrossButton();
+  bool scoreCoral = ctr.GetCrossButtonPressed();
   
   // Co-driver
   bool coralIntake = ctrOperator.GetR1Button();
-  bool level1 = ctrOperator.GetCrossButtonPressed();
-  bool level2 = ctrOperator.GetSquareButtonPressed();
-  bool level3 = ctrOperator.GetCircleButtonPressed();
-  bool level4 = ctrOperator.GetTriangleButtonPressed();
+  bool level1 = ctrOperator.GetCrossButton();
+  bool level2 = ctrOperator.GetSquareButton();
+  bool level3 = ctrOperator.GetCircleButton();
+  bool level4 = ctrOperator.GetTriangleButton();
 
   bool resetGyro = (ctrOperator.GetPOV() == 0);
 
   bool zeroElevator = ctrOperator.GetL1ButtonPressed();
-  mSuperstructure.mElevator.motor.Set(-ctrOperator.GetLeftY() * 0.5);
-  mSuperstructure.mElevator.motor2.Set(-ctrOperator.GetLeftY() * 0.5);
+  mSuperstructure.mElevator.motor.Set(-ctrOperator.GetLeftY() * 1);
+  mSuperstructure.mElevator.motor2.Set(-ctrOperator.GetLeftY() * 1);
 
   int dPadOperator = ctrOperator.GetPOV();
   
@@ -184,26 +189,28 @@ void Robot::TeleopPeriodic()
 
   if(level1) {
     coralLevel = 1;
+    // mSuperstructure.mElevator.setState(1);
     elevatorLevel = "Level 1";
   }
   else if(level2) {
     coralLevel = 2;
+    // mSuperstructure.mElevator.setState(2);
     elevatorLevel = "Level 2";
   }
   else if(level3) {
     coralLevel = 3;
+    // mSuperstructure.mElevator.setState(3);
     elevatorLevel = "Level 3";
   }
   else if(level4) {
     coralLevel = 4;
+    // mSuperstructure.mElevator.setState(4);
     elevatorLevel = "Level 4";
   }
   else if (coralIntake) {
     coralLevel = 5;
     elevatorLevel = "Coral Station";
-  }
-  else if ((mSuperstructure.mElevator.enc.GetPosition() < (mSuperstructure.mElevator.levelHeight[coralLevel] + 0.2)) && (mSuperstructure.mElevator.enc.GetPosition() > (mSuperstructure.mElevator.levelHeight[coralLevel] - 0.2))) {
-    elevatorLevel = "Transitioning";
+    // mSuperstructure.mElevator.setState(5);
   }
 
   if (alignLimelight && limelight1.isTargetDetected()) { // Alignment Mode
@@ -283,21 +290,21 @@ void Robot::TeleopPeriodic()
   else if (zeroElevator) {
     mSuperstructure.mElevator.zero();
   }
-  else if (mSuperstructure.mElevator.limitSwitch.Get()) {
-    mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    mSuperstructure.mElevator.zero();
-  }
+  // else if (mSuperstructure.mElevator.limitSwitch.Get()) {
+  //   mSuperstructure.mEndEffector.setState(EndEffector::STOP);
+  //   mSuperstructure.mElevator.zero();
+  // }
   else {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    mLED.Set_Color(frc::Color::kWhite);
-  }
-
+    
   mSuperstructure.mElevator.setState(coralLevel);
-
+    mLED.Set_Color(frc::Color::kDarkOrange);
+  }
+  
   // Smart Dashboard
-  frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
+  // frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
   frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutBoolean("Aligned?", align.isAligned(limelight1));
+  // frc::SmartDashboard::PutBoolean("Aligned?", align.isAligned(limelight1));
 }
 
 void Robot::DisabledInit()
