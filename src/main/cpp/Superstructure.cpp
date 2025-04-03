@@ -5,14 +5,14 @@ void Superstructure::init() {
     mEndEffector.init();
     mElevator.setState(0);
 
-    enableModules = false;
+    enableModules = true;
     moduleThread = std::thread(&Superstructure::periodic, this);
 }
 
 void Superstructure::periodic() {
     while (true)
     {
-        if (enableModules)
+        if (!enableModules)
         {
             // Disable modules here
             mElevator.disable();
