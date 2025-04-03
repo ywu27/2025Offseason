@@ -7,6 +7,8 @@
 #include "swerve/SwerveAlign.h"
 #include "swerve/SwerveHeadingController.h"
 #include "Superstructure.h"
+#include "swerve/SwerveHeadingController.h"
+#include "Superstructure.h"
 
 #include <pathplanner/lib/trajectory/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPlannerPath.h>
@@ -14,6 +16,9 @@
 
 #include "frc/geometry/Rotation2d.h"
 #include "frc/geometry/Pose2d.h"
+
+#include <frc/trajectory/TrajectoryConfig.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
 
 #include <frc/trajectory/TrajectoryConfig.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
@@ -30,6 +35,8 @@
 
 #include <sensors/PhotonVision.h>
 
+#include <sensors/PhotonVision.h>
+
 using namespace pathplanner;
 
 class Trajectory
@@ -43,8 +50,8 @@ private:
     Limelight& mLimelight1;
     Limelight& mLimelight2;
     RobotConfig &config;
+    SwerveHeadingController &mHeadingController;
     PhotonVision &camera;
-    SwerveHeadingController mHeadingController;
 
 public:
     Pose3d startPose = Pose3d();
@@ -53,8 +60,11 @@ public:
 
     frc::Timer alignTimer;
 
+    frc::Timer alignTimer;
+
     enum autos {
         DO_NOTHING,
+        MOVE_STRAIGHT,
         MOVE_STRAIGHT,
         auto_1A,  
         auto_1B,  
@@ -81,10 +91,11 @@ public:
                                                                                                                 mHeadingController(mHeadingController),
                                                                                                                 mLimelight1(limelight1),
                                                                                                                 mLimelight2(limelight2),
+                                                                                                                camera(cameraInput),
                                                                                                                 mAlign(align),
                                                                                                                 pigeon(pigeonInput),
-                                                                                                                config(configInput),
-                                                                                                                camera(cameraInput) {};
+                                                                                                                config(configInput) {};
+
 
     void driveToState(PathPlannerTrajectoryState const &state);
 
@@ -93,12 +104,15 @@ public:
     void followPath(Trajectory::autos autoTrajectory, bool flipAlliance);
 
     void waitToScore(int delaySeconds);
+    void waitToScore(int delaySeconds);
 
     void driveError(); 
 
     void testHolonomic(frc::Pose2d const &target_pose,
                        units::velocity::meters_per_second_t const &velocity,
                        frc::Rotation2d const &target_rot);
+
+    void followTeleop(std::shared_ptr<pathplanner::PathPlannerPath> path, bool flipAlliance);
 
     void followTeleop(std::shared_ptr<pathplanner::PathPlannerPath> path, bool flipAlliance);
 };
