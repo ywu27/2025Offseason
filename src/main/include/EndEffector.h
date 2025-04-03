@@ -31,10 +31,8 @@ public:
     double coralStation = 0;
     double scoreSetpoint = 0.02;
 
-    // Color Sensor
-    static constexpr auto i2cPort = frc::I2C::Port::kOnboard;
-    ColorSensor cSensor = ColorSensor(i2cPort);
-    // rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
+    // // Color Sensor
+    rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:
     enum EndEffectorState {

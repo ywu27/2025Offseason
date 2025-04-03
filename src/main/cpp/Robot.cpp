@@ -34,11 +34,10 @@ void Robot::RobotPeriodic()
 {
   frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
   frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
-  frc::SmartDashboard::PutBoolean("isCoralDetected", mSuperstructure.mEndEffector.cSensor.isTarget());
-  frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.cSensor.GetProximity());
-  frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.cSensor.getcolor().red);
-  frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.cSensor.getcolor().green);
-  frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.cSensor.getcolor().blue);
+  frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.color.GetProximity());
+  frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.color.GetColor().red);
+  frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.color.GetColor().green);
+  frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.color.GetColor().blue);
 }
 
 void Robot::AutonomousInit()
@@ -179,6 +178,15 @@ void Robot::TeleopPeriodic()
   double targetDistance = 0; // CHECK THIS
   double zeroSetpoint = 0;
 
+  frc::Color detectedColor = mSuperstructure.mEndEffector.color.GetColor();
+  bool red = (detectedColor.red < 0.29) && (detectedColor.red > 0.255);
+  bool green = (detectedColor.green < 0.495) && (detectedColor.green > 0.47);
+  bool blue = (detectedColor.blue < 0.27) && (detectedColor.blue > 0.23);
+  bool coralIn = red && green && blue;
+
+  if (coralIn) {
+    mLED.Set_Color(frc::Color::kGreen);
+  }
 
   if(dPadOperator==90) {
     coralSide = "right";
@@ -278,14 +286,14 @@ void Robot::TeleopPeriodic()
     mLED.Set_Color(frc::Color::kRed);
     mSuperstructure.intakeCoral();
   }
-  else if (mSuperstructure.mEndEffector.cSensor.isTarget()) {
-    mLED.Set_Color(frc::Color::kGreen);
-  }
   else if (align.isAligned(limelight1)) {
     mLED.Set_Color(frc::Color::kBlue);
   }
   else if (scoreCoral) {
     mSuperstructure.scoreCoral();
+  }
+  else if (coralIn) {
+    mSuperstructure.mEndEffector.disable();
   }
   else if (zeroElevator) {
     mSuperstructure.mElevator.zero();

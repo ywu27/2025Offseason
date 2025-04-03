@@ -48,9 +48,6 @@ void EndEffector::setState(EndEffectorState state) {
 void EndEffector::intake() {
     intakeMotor1.Set(0.25);
     intakeMotor2.Set(0.25);
-    if (cSensor.isTarget()) {
-        disable();
-    }
 }
 
 void EndEffector::score() {
