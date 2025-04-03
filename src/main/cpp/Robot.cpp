@@ -283,7 +283,7 @@ void Robot::TeleopPeriodic()
   // Smart Dashboard
   frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
   frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutBoolean("Aligned?", align.isAligned());
+  frc::SmartDashboard::PutBoolean("Aligned?", align.isAligned(limelight1));
 }
 
 void Robot::DisabledInit()
