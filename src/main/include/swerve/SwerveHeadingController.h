@@ -1,5 +1,5 @@
 #pragma once
-#include "Constants.h"
+#include <Constants.h>
 #include "geometry/Pose2d.h"
 #include <cmath>
 #include <stdexcept>
@@ -8,7 +8,7 @@
 
 
 class SwerveHeadingController {
-private:
+public:
     frc::PIDController mPIDCtr {0, 0, 0};
     double mSetpoint = 0.0;
     double outputMax;

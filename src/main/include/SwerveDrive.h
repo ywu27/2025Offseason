@@ -1,25 +1,33 @@
 #pragma once
 
-#include "SwerveModule.h"
+// Geometry
 #include "geometry/Rotation2d.h"
-#include "swerve/ChassisSpeeds.h"
 #include "geometry/Pose2d.h"
 #include "geometry/Twist2d.h"
 #include "geometry/Translation2d.h"
-#include "Constants.h"
+
+// Swerve
 #include "swerve/SwerveDriveKinematics.h"
 #include "swerve/SwerveModuleState.h"
+#include "swerve/ChassisSpeeds.h"
+#include "SwerveModule.h"
+
+// Random
 #include <thread>
-#include "util/ShuffleUI.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
-#include "sensors/NavX.h"
+#include "Constants.h"
+
+// Sensors
 #include "sensors/Pigeon.h"
 #include "sensors/Limelight.h"
 
+// Kinematics 
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveDriveOdometry.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
+
+// Pathplanner
 #include "pathplanner/lib/path/PathPlannerPath.h"
 
 // TODO: inherit thread helper

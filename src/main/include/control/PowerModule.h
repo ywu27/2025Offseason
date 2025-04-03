@@ -1,7 +1,6 @@
 #pragma once
 
 #include <frc/Timer.h>
-#include <util/ShuffleUI.h>
 #include <frc/PowerDistribution.h>
 
 #define swerveDriveStartCurrent 60
@@ -28,7 +27,6 @@ public:
     }
     int updateDriveCurrentLimit()
     {
-        //ShuffleUI::MakeWidget("brownout", "Power", (int) mPDH.GetFaults().Brownout);
         if (reduceCurrentsOnBrownout)
         {
             if (mPDH.GetFaults().Brownout > 0)
@@ -47,7 +45,6 @@ public:
                 }
             }
         }
-        //ShuffleUI::MakeWidget("driveCurrent", "Power", driveCurrentLimit);
         return driveCurrentLimit;
     }
 };

@@ -18,7 +18,7 @@ void Elevator::init(){
     enc2.SetPosition(0);
 }
 
-void Elevator::setState(int state, bool algae) { // 0 = start, 1 = level 1, 2 = level 2, 3 = level 3, 4 = level 4, 5 = coral station
+void Elevator::setState(int state) { // 0 = start, 1 = level 1, 2 = level 2, 3 = level 3, 4 = level 4, 5 = coral station
     setpointState = levelHeight[state];
     elevatorCTR.SetReference(setpointState, rev::spark::SparkLowLevel::ControlType::kPosition);
     elevatorCTR2.SetReference(setpointState, rev::spark::SparkLowLevel::ControlType::kPosition);
@@ -32,4 +32,9 @@ int Elevator::getCurrentState() {
 void Elevator::disable(){
     motor.StopMotor();
     motor2.StopMotor();
+}
+
+void Elevator::zero() {
+    enc.SetPosition(0);
+    enc2.SetPosition(0);
 }

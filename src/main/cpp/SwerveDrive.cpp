@@ -3,6 +3,7 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <algorithm>
 
 void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum) {
     double desiredVx = desiredSpeeds.vxMetersPerSecond;
@@ -19,7 +20,7 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
     desiredVy = desiredSpeeds.vyMetersPerSecond;
 
     if (cleanAccum && fabs(desiredVx) < (moduleMaxFPS * 0.1) && fabs(desiredVy) < (moduleMaxFPS * 0.1)) {
-        zeroAccumulation();
+        // zeroAccumulation();
         frc::SmartDashboard::PutNumber("CleanedAccum", true);
     } else {
         frc::SmartDashboard::PutNumber("CleanedAccum", false);
@@ -35,13 +36,6 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
         mBackRight.setDriveVelocitySetpoint(0.0);
         return;
     }
-
-    // Pose2d robotPoseVel = Pose2d(desiredVx * loopTime, desiredVy * loopTime, Rotation2d(desiredSpeeds.omegaRadiansPerSecond * loopTime));
-    // Twist2d robotTwist = Pose2d::log(robotPoseVel);
-    // ChassisSpeeds newDesiredSpeeds = ChassisSpeeds(robotTwist.dx / loopTime, robotTwist.dy / loopTime, robotTwist.dtheta / loopTime);
-    // ShuffleUI::MakeWidget("Xspeed", "drive", newDesiredSpeeds.vxMetersPerSecond);
-    // ShuffleUI::MakeWidget("Yspeed", "drive", newDesiredSpeeds.vyMetersPerSecond);
-    // ShuffleUI::MakeWidget("Rot", "drive", newDesiredSpeeds.omegaRadiansPerSecond);
 
     std::vector<SwerveModuleState> moduleStates = m_kinematics.toSwerveStates(desiredSpeeds);
     moduleStates = m_kinematics.desaturateWheelSpeeds(moduleStates, moduleMaxFPS);
@@ -83,13 +77,13 @@ void SwerveDrive::Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyr
  */
 void SwerveDrive::initModules() {
     mFrontLeft.initMotors();
-    //mFrontLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
+    mFrontLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mFrontRight.initMotors();
     //mFrontRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mBackLeft.initMotors();
-    mBackLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
+    //mBackLeft.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
     mBackRight.initMotors();
-    //mBackRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
+    mBackRight.driveMotor.setInvert(ctre::phoenix6::signals::InvertedValue::CounterClockwise_Positive);
 
     modulePIDThread = std::thread(&SwerveDrive::runModules, this);
 }
@@ -122,40 +116,12 @@ void SwerveDrive::enableModules() {
  * Disable every module's thread
  * Threads still exist, just on standby while loop
  */
-bool SwerveDrive::stopModules() {
+bool SwerveDrive::disableModules() {
     mFrontLeft.stopModule();
     mBackLeft.stopModule();
     mBackRight.stopModule();
     mFrontRight.stopModule();
     return true;
-}
-
-void SwerveDrive::orientModules(double FL, double FR, double BL, double BR) {
-    mBackRight.setSteerAngleSetpoint(BR);
-    mBackLeft.setSteerAngleSetpoint(BL);
-    mFrontRight.setSteerAngleSetpoint(FR);
-    mFrontLeft.setSteerAngleSetpoint(FL);
-}
-
-void SwerveDrive::autoMove(double angleRadians, double distanceFeet) {
-    // NEEDS TESTING
-    orientModules(angleRadians, angleRadians, angleRadians, angleRadians);
-
-    mFrontLeft.setDrivePositionSetpoint(distanceFeet);
-    mFrontRight.setDrivePositionSetpoint(distanceFeet);
-    mBackLeft.setDrivePositionSetpoint(distanceFeet);
-    mBackRight.setDrivePositionSetpoint(distanceFeet);
-    
-    while(true) {
-        mFrontLeft.run();
-        mFrontRight.run();
-        mBackLeft.run();
-        mBackRight.run();
-
-        if (mFrontLeft.isFinished(0.05)&&mFrontRight.isFinished(0.05)&&mBackLeft.isFinished(0.05)&&mBackRight.isFinished(0.05)) {
-            break;
-        }
-    }
 }
 
 /**
@@ -189,16 +155,120 @@ void SwerveDrive::updateOdometry() {
 }
 
 /**
- * Uses shuffleUI to print to driveTab
+ * Swerve Drive Pose Esimator Resets
+ * Better than odometry for vision, etc.
+ */
+
+void SwerveDrive::resetPoseEstimator(frc::Translation2d trans, frc::Rotation2d angle) {
+    mSwervePose.ResetPosition(
+        pigeon.getRotation2d(),
+        {mBackLeft.getModulePosition(),
+         mFrontLeft.getModulePosition(),
+         mFrontRight.getModulePosition(),
+         mBackRight.getModulePosition()},
+        frc::Pose2d{trans, angle});
+}
+
+frc::Pose2d SwerveDrive::GetPoseEstimatorPose() { // In feet 
+    frc::Pose2d pose = mSwervePose.GetEstimatedPosition(); // Get Estimated Position is in meters
+    return frc::Pose2d{units::foot_t(pose.X().value() * 3.281), units::foot_t(pose.Y().value() * 3.281), pose.Rotation()};
+}
+
+void SwerveDrive::updatePoseEstimator(Limelight &limelight, units::second_t timestamp) {
+    mSwervePose.UpdateWithTime(timestamp, 
+        -pigeon.getRotation2d(),
+        {mBackLeft.getModulePosition(),
+         mFrontLeft.getModulePosition(),
+         mFrontRight.getModulePosition(),
+         mBackRight.getModulePosition()});
+
+    if (limelight.isTargetDetected()) {
+        std::vector<double> pose = LimelightHelpers::getBotpose_wpiBlue(limelight.getName());
+
+        mSwervePose.AddVisionMeasurement(frc::Pose2d{units::foot_t(pose[0] * 3.281), 
+                                                    units::foot_t(pose[1] * 3.281), 
+                                                    units::degree_t(pose[5])}, 
+                                                    timestamp);
+    }
+}
+
+// Auto Rotation Section
+float SwerveDrive::roundToTwoDecimals(float num) {
+    return std::round(num * 100.0) / 100.0;
+}
+
+void SwerveDrive::autoRot() {
+    // Gets encoder positions of all the modules
+    float backLeftpos = mBackLeft.getModulePosition().angle.Degrees().value();
+    float backRightpos = mBackRight.getModulePosition().angle.Degrees().value();
+    float frontLeftpos = mFrontLeft.getModulePosition().angle.Degrees().value();
+    float frontRightpos = mFrontRight.getModulePosition().angle.Degrees().value();
+
+    /*
+    Transfers the encoder positions to a vector then rounds it to the nearest two decimal points
+    */
+    std::vector<float> modulePos {roundToTwoDecimals(backLeftpos), 
+                            roundToTwoDecimals(backRightpos), 
+                            roundToTwoDecimals(frontLeftpos), 
+                            roundToTwoDecimals(frontRightpos)};
+
+    // Using a set in order to take out duplicates
+    std::set<float> moduleSet(modulePos.begin(), modulePos.end());
+
+    // Since sets sort from least to greatest, lowerDrivePos gets the lowest val and higherDrivePos gets the highest val
+    float lowerDrivePos = *moduleSet.begin();
+    float higherDrivePos = *std::prev(moduleSet.end());
+
+    // See how many times lowerDrivePos and higherDrivePos occur in the vector
+    int lowerDrivePosOccur = std::count(modulePos.begin(), modulePos.end(), lowerDrivePos);
+    int higherDrivePosOccur = std::count(modulePos.begin(), modulePos.end(), higherDrivePos);
+
+    frc::SmartDashboard::PutNumber("lowerDrivePos", lowerDrivePos);
+    frc::SmartDashboard::PutNumber("higherDrivePos", higherDrivePos);
+    frc::SmartDashboard::PutNumber("lowerDrivePosOccur", lowerDrivePosOccur);
+    frc::SmartDashboard::PutNumber("higherDrivePosOccur", higherDrivePosOccur);
+
+    // See if there's an odd one out, if not, the wheels are in the right pos
+    if (lowerDrivePosOccur == 1) {
+        index = std::distance(modulePos.begin(), std::find(modulePos.begin(), modulePos.end(), lowerDrivePos));
+    }
+    else if (higherDrivePosOccur == 1) {
+        index = std::distance(modulePos.begin(), std::find(modulePos.begin(), modulePos.end(), higherDrivePos));
+    }
+    else if (lowerDrivePosOccur == 4 || higherDrivePosOccur == 4) {
+        goodWheelPos = true;
+    }
+
+    frc::SmartDashboard::PutNumber("swerve index rot", index);
+
+    // Change angle setpoint is the wheels aren't in the right position
+    if (goodWheelPos == false) {
+        if (index == 0) {
+            mBackLeft.setSteerAngleSetpoint(backRightpos);
+        }
+        else if (index == 1) {
+            mBackRight.setSteerAngleSetpoint(frontRightpos);
+        }
+        else if (index == 2) {
+            mFrontLeft.setSteerAngleSetpoint(backLeftpos);
+        }
+        else if (index == 3) {
+            mFrontRight.setSteerAngleSetpoint(frontLeftpos);
+        }
+        goodWheelPos = true;
+    }
+}
+
+/**
  * Uses gyro widget
  * Flips angle gyro if module has negative velocity
  */
-void SwerveDrive::displayDriveTelemetry() {
-}
+// void SwerveDrive::displayDriveTelemetry() {
+// }
 
-void SwerveDrive::zeroAccumulation() {
-    // mFrontLeft.m_pidController.SetIAccum(0.0);
-    // mFrontRight.m_pidController.SetIAccum(0.0);
-    // mBackRight.m_pidController.SetIAccum(0.0);
-    // mBackLeft.m_pidController.SetIAccum(0.0);
-}
+// void SwerveDrive::zeroAccumulation() {
+//     mFrontLeft.m_pidController.SetIAccum(0.0);
+//     mFrontRight.m_pidController.SetIAccum(0.0);
+//     mBackRight.m_pidController.SetIAccum(0.0);
+//     mBackLeft.m_pidController.SetIAccum(0.0);
+// }

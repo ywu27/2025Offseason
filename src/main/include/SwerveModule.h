@@ -1,22 +1,29 @@
 #pragma once
 
+// FRC Libraries
 #include <thread>
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Timer.h>
+
+// REV Libraries
 #include <rev/SparkClosedLoopController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
-#include <frc/kinematics/SwerveModulePosition.h>
 
-#include "sensors/CAN_Coder.h"
+// Random
 #include "Constants.h"
-#include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
 #include "control/PowerModule.h"
+
+// Swerve
 #include "swerve/TalonFXMotor.h"
 #include "swerve/SwerveModuleState.h"
+#include <frc/kinematics/SwerveModulePosition.h>
+
+// Sensors
+#include "sensors/CAN_Coder.h"
 
 class SwerveModule
 {

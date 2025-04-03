@@ -4,28 +4,24 @@
 #include <frc/TimedRobot.h>
 #include <frc/PS5Controller.h>
 #include <frc/smartdashboard/SendableChooser.h>
-#include <frc/Joystick.h>
-
 #include "util/ControlUtil.h"
-#include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
-#include "util/TimeDelayedBool.h"
 #include "sensors/Limelight.h"
 #include "util/SlewRateLimiter.h"
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
 
 #include "swerve/SwerveAlign.h"
-#include "util/TimeDelayButton.h"
 #include <ctre/phoenix6/CANBus.hpp>
 #include "Trajectory.h"
 
-#include "sensors/FusedGyro.h"
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include "sensors/Pigeon.h"
 #include "sensors/ColorSensor.h"
+#include "sensors/LED.h"
 
 #include "Superstructure.h"
+#include "sensors/PhotonVision.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -51,16 +47,15 @@ public:
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
   frc::PS5Controller ctrOperator = frc::PS5Controller(1);
-  
-  //NavX mGyro = NavX();
-  //SwerveDrive mDrive = SwerveDrive(mGyro);
+
   pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
   frc::SendableChooser<Trajectory::autos> mChooser;
 
   Superstructure mSuperstructure;
 
-  Limelight limelight1 = Limelight("limelight-one"); // FIX THIS
+  Limelight limelight1 = Limelight("limelight-one"); 
   Limelight limelight2 = Limelight("limelight-two");
+  PhotonVision photonCamera = PhotonVision("cameraFront");
 
   // For Auto Align
   SwerveAlign align;
@@ -69,7 +64,7 @@ public:
   Pigeon pigeon{60};
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
-  // Trajectory mTrajectory = Trajectory(mDrive, pigeon, limelight, pathConfig);
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, limelight1, limelight2, photonCamera, align, pigeon, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};
@@ -80,7 +75,6 @@ public:
   float ctrPercent = 1.0;
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
-  TimeDelayButton snapRobotToGoal;
   bool scoreAmp = false;
   bool liftElev = false;
   bool cleanDriveAccum = true;
@@ -104,8 +98,10 @@ public:
   const::std::string kAutoReefE = "E";
   const::std::string kAutoReefF = "F";
 
- int corallevel = 0;
- int coralside = 0;
- bool scorecoral = true;
+  int coralLevel = 0;
+  std::string elevatorLevel = "Start";
+  std::string coralSide = "right";
+  bool scorecoral = true;
 
+  Led mLED{0, 20};
 };

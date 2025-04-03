@@ -1,7 +1,6 @@
 #pragma once
 
 #include <thread>
-#include "Climber.h"
 #include "Elevator.h"
 #include "EndEffector.h"
 
@@ -13,7 +12,6 @@ private:
 
 public:
     Elevator mElevator;
-    Climber mClimber;
     EndEffector mEndEffector;
 
     void init();
@@ -25,6 +23,5 @@ public:
     void elevatorUp(bool algae);
     void elevatorDown(bool algae);
     void scoreCoral();
-    void controlClimber(int position);
     double speedLimiter();
 };

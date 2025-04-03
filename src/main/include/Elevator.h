@@ -1,5 +1,6 @@
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <rev/SparkMax.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkClosedLoopController.h>
@@ -26,10 +27,11 @@ class Elevator {
         double setpointState;
 
         void init();
-        void setState(int setpointState, bool algae); // 0 = start, 1 = level 1, 2 = level 2, 3 = level 3, 4 = level 4, 5 = coral station
+        void setState(int setpointState); // 0 = start, 1 = level 1, 2 = level 2, 3 = level 3, 4 = level 4, 5 = coral station
         void runMotor(double speed);
         void disable();
         int getCurrentState();
+        void zero();
 
         rev::spark::SparkMax motor = rev::spark::SparkMax(elevatorID1, rev::spark::SparkLowLevel::MotorType::kBrushless);
         rev::spark::SparkRelativeEncoder enc = motor.GetEncoder();
@@ -41,4 +43,5 @@ class Elevator {
         rev::spark::SparkMaxConfig config2{};
         rev::spark::SparkClosedLoopController elevatorCTR2 = motor2.GetClosedLoopController();
 
+        frc::DigitalInput limitSwitch{0};
 };
