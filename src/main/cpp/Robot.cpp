@@ -12,18 +12,19 @@ void Robot::RobotInit()
   mDrive.initModules();
   pigeon.init();
   mSuperstructure.init();
-  start_pos_chooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
-  start_pos_chooser.AddOption(kAutoStartB, kAutoStartB);
-  start_pos_chooser.AddOption(kAutoStartC, kAutoStartC);
-  frc::SmartDashboard::PutData("Auto Start Position", &start_pos_chooser);
 
-  reef_pos_chooser.SetDefaultOption(kAutoReefDefault, kAutoReefDefault);
-  reef_pos_chooser.AddOption(kAutoReefB, kAutoReefB);
-  reef_pos_chooser.AddOption(kAutoReefC, kAutoReefC);
-  reef_pos_chooser.AddOption(kAutoReefD, kAutoReefD);
-  reef_pos_chooser.AddOption(kAutoReefE, kAutoReefE);
-  reef_pos_chooser.AddOption(kAutoReefF, kAutoReefF);
-  frc::SmartDashboard::PutData("Auto Reef Position", &reef_pos_chooser);
+  positionChooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
+  positionChooser.AddOption(kAutoStartB, kAutoStartB);
+  positionChooser.AddOption(kAutoStartC, kAutoStartC);
+  frc::SmartDashboard::PutData("Auto Start Position", &positionChooser);
+
+  reefChooser.SetDefaultOption(kAutoReefDefault, kAutoReefDefault);
+  reefChooser.AddOption(kAutoReefB, kAutoReefB);
+  reefChooser.AddOption(kAutoReefC, kAutoReefC);
+  reefChooser.AddOption(kAutoReefD, kAutoReefD);
+  reefChooser.AddOption(kAutoReefE, kAutoReefE);
+  reefChooser.AddOption(kAutoReefF, kAutoReefF);
+  frc::SmartDashboard::PutData("Auto Reef Position", &reefChooser);
 
 }
 
@@ -34,73 +35,86 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   mDrive.state = DriveState::Auto;
-  pigeon.pigeon.Reset();
   mDrive.enableModules();
-  
-  std::string start_pos = start_pos_chooser.GetSelected();
-  std::string reef_pos = reef_pos_chooser.GetSelected();
+  pigeon.pigeon.Reset();
 
-  if(start_pos=="1" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_1A, false);
-  }
-  else if(start_pos=="1" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_1B, false);
-  }
-  else if(start_pos=="1" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_1C, false);
-  }
-  else if(start_pos=="1" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_1D, false);
-  }
-  else if(start_pos=="1" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_1E, false);
-  }
-  else if(start_pos=="1" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_1F, false);
-  }
-  else if(start_pos=="2" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_2A, false);
-  }
-  else if(start_pos=="2" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_2B, false);
-  }
-  else if(start_pos=="2" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_2C, false);
-  }
-  else if(start_pos=="2" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_2D, false);
-  }
-  else if(start_pos=="2" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_2E, false);
-  }
-  else if(start_pos=="2" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_2F, false);
-  }
-  else if(start_pos=="3" && reef_pos=="A") {
-    mTrajectory.followPath(Trajectory::auto_3A, false);
-  }
-  else if(start_pos=="3" && reef_pos=="B") {
-    mTrajectory.followPath(Trajectory::auto_3B, false);
-  }
-  else if(start_pos=="3" && reef_pos=="C") {
-    mTrajectory.followPath(Trajectory::auto_3C, false);
-  }
-  else if(start_pos=="3" && reef_pos=="D") {
-    mTrajectory.followPath(Trajectory::auto_3D, false);
-  }
-  else if(start_pos=="3" && reef_pos=="E") {
-    mTrajectory.followPath(Trajectory::auto_3E, false);
-  }
-  else if(start_pos=="3" && reef_pos=="F") {
-    mTrajectory.followPath(Trajectory::auto_3F, false);
+  align.forwardPID.Reset();
+  align.strafePID.Reset();
+  mDrive.resetPoseEstimator(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
+
+  std::string start_pos = positionChooser.GetSelected();
+  std::string reef_pos = reefChooser.GetSelected();
+
+  std::string allianceColor = allianceChooser.GetSelected();
+  if (allianceColor == "RED") {
+    allianceIsRed = true;
   }
   else {
-    mTrajectory.followPath(Trajectory::auto_1A, false);
+    allianceIsRed = false;
+  }
+  // Auto path choosing
+  if(start_pos=="1" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_1A, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_1B, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_1C, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_1D, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_1E, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_1F, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_2A, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_2B, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_2C, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_2D, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_2E, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_2F, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_3A, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_3B, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_3C, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_3D, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_3E, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_3F, allianceIsRed);
+  }
+  else if (start_pos == "0" && reef_pos == "0") {
+    mTrajectory.followPath(Trajectory::MOVE_STRAIGHT, allianceIsRed);
   }
 }
+
 void Robot::AutonomousPeriodic()
 {
-  mLED.Set_Color(frc::Color::kBrown);
+  mLED.Set_Color(frc::Color::kBlue);
 }
 void Robot::TeleopInit()
 {

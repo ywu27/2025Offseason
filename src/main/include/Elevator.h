@@ -8,8 +8,8 @@
 #include <array>
 
 //UPDATE HERE, conflicting CAN IDs
-#define elevatorID1 11
-#define elevatorID2 12
+#define elevatorID1 9
+#define elevatorID2 19
 
 class Elevator {
     public:

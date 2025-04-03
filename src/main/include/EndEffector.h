@@ -9,8 +9,8 @@
 
 #include "sensors/ColorSensor.h"
 
-#define intakeMotorID 14
-#define intakeMotor2ID 3
+#define intakeMotorID 21
+#define intakeMotor2ID 20
 
 class EndEffector {
 

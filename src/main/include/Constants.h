@@ -47,7 +47,7 @@ constexpr float positionFF = 0.0;
 
 #define BLsteerID 5
 #define BLdriveID 6
-#define BL_CAN_ID 2 // updated;
+#define BL_CAN_ID 2 // updated
 
 #define BRsteerID 7
 #define BRdriveID 8

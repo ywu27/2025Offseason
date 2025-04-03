@@ -7,9 +7,8 @@
 #include <rev/config/SmartMotionConfig.h>
 #include <rev/ClosedLoopSlot.h>
 
-
 #define algaeMotorID 13
-#define algaeMotor2ID 3
+#define algaeMotor2ID 25
 
 class DeAlgae {
 

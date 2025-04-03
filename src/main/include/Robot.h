@@ -61,7 +61,7 @@ public:
   SwerveAlign align;
 
   // Pigeon
-  Pigeon pigeon{60};
+  Pigeon pigeon{0};
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
   Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, limelight1, limelight2, photonCamera, align, pigeon, pathConfig);
@@ -85,12 +85,12 @@ public:
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
 
   //autochooser
-  frc::SendableChooser<std::string> start_pos_chooser;
+  frc::SendableChooser<std::string> positionChooser;
   const std::string kAutoStartDefault = "1";
   const std::string kAutoStartB = "2";
   const std::string kAutoStartC = "3";
 
-  frc::SendableChooser<std::string> reef_pos_chooser;
+  frc::SendableChooser<std::string> reefChooser;
   const::std::string kAutoReefDefault = "A";
   const::std::string kAutoReefB = "B";
   const::std::string kAutoReefC = "C";
@@ -103,5 +103,11 @@ public:
   std::string coralSide = "right";
   bool scorecoral = true;
 
-  Led mLED{0, 20};
+  // Alliance Color and Chooser
+  frc::SendableChooser<std::string> allianceChooser;
+  const std::string redAlliance = "RED";
+  const std::string blueAlliance = "BLUE";
+  bool allianceIsRed = false;
+
+  Led mLED{6, 20};
 };
