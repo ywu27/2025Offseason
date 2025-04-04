@@ -255,7 +255,7 @@ void Robot::TeleopPeriodic()
     fieldOriented = false;
 
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(targetYaw);
+    mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
     rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
   }
   else if (alignPV && cameraBack.isTargetDetected() && cameraBack.isCoralStation()) {
@@ -267,7 +267,7 @@ void Robot::TeleopPeriodic()
       vy = speeds.vyMetersPerSecond;
       fieldOriented = false;
       
-      mHeadingController.setSetpoint(cameraBack.getYaw());
+      mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
       mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
       rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
     }
