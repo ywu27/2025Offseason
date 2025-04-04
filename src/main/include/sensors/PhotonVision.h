@@ -45,6 +45,10 @@ public:
         camera.SetPipelineIndex(0);
     }
 
+    bool isTargetDetected() {
+        return camera.GetLatestResult().HasTargets();
+    }
+
     void getInformationOfSpecificTargetFiducial(auto targetsSpan, int fiducial) {
         for (auto target : targetsSpan) {
             if (target.GetFiducialId() == fiducial) {
@@ -73,16 +77,12 @@ public:
         }
     }
 
-    double getTargetx() {
-        auto result = camera.GetLatestResult();
-        photon::PhotonTrackedTarget target = result.GetBestTarget();
-        return target.GetBestCameraToTarget().Translation().X().value();
+    bool isCoralStation() {
+        return (getTagType() == TagType::CORALSTATION);
     }
 
-    double getTargety() {
-        auto result = camera.GetLatestResult();
-        photon::PhotonTrackedTarget target = result.GetBestTarget();
-        return target.GetBestCameraToTarget().Translation().Y().value();
+    bool isReef() {
+        return (getTagType() == TagType::REEF);
     }
 
     double getDistanceToTarget() {
@@ -94,9 +94,7 @@ public:
     }
 
     double getYaw() {
-        auto result = camera.GetLatestResult();
-        photon::PhotonTrackedTarget target = result.GetBestTarget();
-        return target.GetYaw();
+        return camera.GetLatestResult().GetBestTarget().GetYaw();
     }
 
     frc::Pose2d returnPoseEstimate() {

@@ -13,6 +13,20 @@ void Robot::RobotInit()
   pigeon.init();
   mSuperstructure.init();
 
+  // Choosers
+  allianceChooser.SetDefaultOption("Red Alliance", redAlliance);
+  allianceChooser.AddOption("Blue Alliance", blueAlliance);
+  frc::SmartDashboard::PutData("Alliance Color", &allianceChooser);
+
+  // Determines alliance color
+  std::string allianceColor = allianceChooser.GetSelected();
+  if (allianceColor == "RED") {
+    allianceIsRed = true;
+  }
+  else {
+    allianceIsRed = false;
+  }
+
   positionChooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
   positionChooser.AddOption(kAutoStartB, kAutoStartB);
   positionChooser.AddOption(kAutoStartC, kAutoStartC);
@@ -38,6 +52,11 @@ void Robot::RobotPeriodic()
   frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.color.GetColor().red);
   frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.color.GetColor().green);
   frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.color.GetColor().blue);
+  frc::SmartDashboard::PutNumber("Tag ID", cameraFront.camera.GetLatestResult().GetBestTarget().GetFiducialId());
+  frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
+  frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
+  frc::SmartDashboard::PutBoolean("Is Aligned Reef", align.isAligned(cameraFront));
+  frc::SmartDashboard::PutBoolean("Is Aligned Coral Station", align.isAligned(cameraBack));
 }
 
 void Robot::AutonomousInit()
@@ -52,14 +71,8 @@ void Robot::AutonomousInit()
 
   std::string start_pos = positionChooser.GetSelected();
   std::string reef_pos = reefChooser.GetSelected();
-
   std::string allianceColor = allianceChooser.GetSelected();
-  if (allianceColor == "RED") {
-    allianceIsRed = true;
-  }
-  else {
-    allianceIsRed = false;
-  }
+
   // Auto path choosing
   if(start_pos=="1" && reef_pos=="A") {
     mTrajectory.followPath(Trajectory::auto_1A, allianceIsRed);
@@ -154,7 +167,7 @@ void Robot::TeleopPeriodic()
 
   // Driver
   int dPad = ctr.GetPOV();
-  bool alignLimelight = ctr.GetR2Button();
+  bool alignPV = ctr.GetR2Button();
   bool intakeCoral = ctr.GetTriangleButton();
   bool scoreCoral = ctr.GetCrossButtonPressed();
   
@@ -220,45 +233,44 @@ void Robot::TeleopPeriodic()
     elevatorLevel = "Coral Station";
     // mSuperstructure.mElevator.setState(5);
   }
+  
+  if (ctr.GetR2ButtonPressed()) {
+    align.forwardPID.Reset();
+    align.strafePID.Reset();
+  }
+  else if (alignPV && cameraFront.isTargetDetected() && cameraFront.isReef()) { // Alignment Mode
+    double targetYaw = cameraFront.getYaw();
+    targetDistance = 0.15;
 
-  if (alignLimelight && limelight1.isTargetDetected()) { // Alignment Mode
-    offSet = 0.0381; // meters
-    targetDistance = 1;
-    zeroSetpoint = limelight1.getAngleSetpoint();
-    ChassisSpeeds speeds = align.autoAlign(limelight1, targetDistance, offSet);
+    if (coralSide == "left") {
+      offSet = -0.0381; // meters
+    }
+    else if (coralSide == "right") {
+      offSet = 0.0381;
+    }
+
+    ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
     vx = speeds.vxMetersPerSecond;
     vy = speeds.vyMetersPerSecond;
     fieldOriented = false;
+
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    // if (limeligh1.getTX() > 0) {
-    //   zeroSetpoint = pigeon.getBoundedAngleCW().getDegrees() + angleOffset;
-    // }
-    // else {
-    //   zeroSetpoint = pigeon.getBoundedAngleCCW().getDegrees() - angleOffset;
-    // }
-    zeroSetpoint = limelight1.getAngleSetpoint();
-    mHeadingController.setSetpoint(zeroSetpoint);
+    mHeadingController.setSetpoint(targetYaw);
     rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
   }
+  else if (alignPV && cameraBack.isTargetDetected() && cameraBack.isCoralStation()) {
+    if (!align.isAligned(cameraBack)) {
+      targetDistance = 0.6; //set this
 
-  else if (alignLimelight && limelight2.isTargetDetected()) { // Alignment Mode
-    offSet = 0.0381; // meters
-    targetDistance = 1;
-    zeroSetpoint = limelight2.getAngleSetpoint();
-    ChassisSpeeds speeds = align.autoAlign(limelight2, targetDistance, offSet);
-    vx = speeds.vxMetersPerSecond;
-    vy = speeds.vyMetersPerSecond;
-    fieldOriented = false;
-    // if (limelight2.getTX() > 0) {
-    //   zeroSetpoint = pigeon.getBoundedAngleCW().getDegrees() + angleOffset;
-    // }
-    // else {
-    //   zeroSetpoint = pigeon.getBoundedAngleCCW().getDegrees() - angleOffset;
-    // }
-    zeroSetpoint = limelight2.getAngleSetpoint();
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(zeroSetpoint);
-    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+      ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, 0);
+      vx = speeds.vxMetersPerSecond;
+      vy = speeds.vyMetersPerSecond;
+      fieldOriented = false;
+      
+      mHeadingController.setSetpoint(cameraBack.getYaw());
+      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+      rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+    }
   }
   else // Normal driving mode
   {
@@ -286,7 +298,7 @@ void Robot::TeleopPeriodic()
     mLED.Set_Color(frc::Color::kRed);
     mSuperstructure.intakeCoral();
   }
-  else if (align.isAligned(limelight1)) {
+  else if (align.isAligned(cameraFront)) {
     mLED.Set_Color(frc::Color::kBlue);
   }
   else if (scoreCoral) {
@@ -300,19 +312,13 @@ void Robot::TeleopPeriodic()
   }
   // else if (mSuperstructure.mElevator.limitSwitch.Get()) {
   //   mSuperstructure.mEndEffector.setState(EndEffector::STOP);
+  //   mSuperstructure.mElevator.disable();
   //   mSuperstructure.mElevator.zero();
   // }
   else {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    
-  mSuperstructure.mElevator.setState(coralLevel);
     mLED.Set_Color(frc::Color::kDarkOrange);
   }
-  
-  // Smart Dashboard
-  // frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
-  frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
-  // frc::SmartDashboard::PutBoolean("Aligned?", align.isAligned(limelight1));
 }
 
 void Robot::DisabledInit()

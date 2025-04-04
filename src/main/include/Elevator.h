@@ -43,5 +43,5 @@ class Elevator {
         rev::spark::SparkMaxConfig config2{};
         rev::spark::SparkClosedLoopController elevatorCTR2 = motor2.GetClosedLoopController();
 
-        // frc::DigitalInput limitSwitch{0};
+        frc::DigitalInput limitSwitch{0};
 };

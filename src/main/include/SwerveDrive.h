@@ -20,7 +20,7 @@
 
 // Sensors
 #include "sensors/Pigeon.h"
-#include "sensors/Limelight.h"
+#include "sensors/PhotonVision.h"
 
 // Kinematics 
 #include "frc/kinematics/SwerveDriveKinematics.h"
@@ -108,5 +108,5 @@ public:
     float roundToTwoDecimals(float num);
     void resetPoseEstimator(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d GetPoseEstimatorPose();
-    void updatePoseEstimator(Limelight &limelight, units::second_t timestamp);
+    void updatePoseEstimator(PhotonVision &camera, bool vision, units::second_t timestamp);
 };

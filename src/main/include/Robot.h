@@ -53,9 +53,9 @@ public:
 
   Superstructure mSuperstructure;
 
-  Limelight limelight1 = Limelight("limelight-one");
-  Limelight limelight2 = Limelight("limelight-two");
-  PhotonVision photonCamera = PhotonVision("cameraFront");
+  // Vision
+  PhotonVision cameraFront = PhotonVision("cameraFront");
+  PhotonVision cameraBack = PhotonVision("cameraBack");
 
   // For Auto Align
   SwerveAlign align;
@@ -64,7 +64,7 @@ public:
   Pigeon pigeon{0};
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
-  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, limelight1, limelight2, photonCamera, align, pigeon, pathConfig);
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraBack, cameraFront, align, pigeon, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};

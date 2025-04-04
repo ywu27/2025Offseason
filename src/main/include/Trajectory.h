@@ -40,11 +40,10 @@ private:
     Superstructure &mSuperstructure;
     SwerveAlign &mAlign;
     Pigeon &pigeon;
-    Limelight& mLimelight1;
-    Limelight& mLimelight2;
     RobotConfig &config;
     SwerveHeadingController &mHeadingController;
-    PhotonVision &camera;
+    PhotonVision &cameraFront;
+    PhotonVision &cameraBack;
 
 public:
     Pose3d startPose = Pose3d();
@@ -76,12 +75,11 @@ public:
         auto_3F 
     };
 
-    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSuperstructure, SwerveHeadingController &mHeadingController, Limelight& limelight1, Limelight& limelight2, PhotonVision &cameraInput, SwerveAlign &align, Pigeon &pigeonInput, RobotConfig &configInput) : mDrive(mDriveInput), 
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSuperstructure, SwerveHeadingController &mHeadingController, PhotonVision &cameraBackInput, PhotonVision &cameraFrontInput, SwerveAlign &align, Pigeon &pigeonInput, RobotConfig &configInput) : mDrive(mDriveInput), 
                                                                                                                 mSuperstructure(mSuperstructure),
                                                                                                                 mHeadingController(mHeadingController),
-                                                                                                                mLimelight1(limelight1),
-                                                                                                                mLimelight2(limelight2),
-                                                                                                                camera(cameraInput),
+                                                                                                                cameraBack(cameraBackInput),
+                                                                                                                cameraFront(cameraFrontInput),
                                                                                                                 mAlign(align),
                                                                                                                 pigeon(pigeonInput),
                                                                                                                 config(configInput) {};

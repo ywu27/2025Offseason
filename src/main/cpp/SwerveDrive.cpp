@@ -174,7 +174,7 @@ frc::Pose2d SwerveDrive::GetPoseEstimatorPose() { // In feet
     return frc::Pose2d{units::foot_t(pose.X().value() * 3.281), units::foot_t(pose.Y().value() * 3.281), pose.Rotation()};
 }
 
-void SwerveDrive::updatePoseEstimator(Limelight &limelight, units::second_t timestamp) {
+void SwerveDrive::updatePoseEstimator(PhotonVision &camera, bool vision, units::second_t timestamp) {
     mSwervePose.UpdateWithTime(timestamp, 
         -pigeon.getRotation2d(),
         {mBackLeft.getModulePosition(),
@@ -182,13 +182,9 @@ void SwerveDrive::updatePoseEstimator(Limelight &limelight, units::second_t time
          mFrontRight.getModulePosition(),
          mBackRight.getModulePosition()});
 
-    if (limelight.isTargetDetected()) {
-        std::vector<double> pose = LimelightHelpers::getBotpose_wpiBlue(limelight.getName());
-
-        mSwervePose.AddVisionMeasurement(frc::Pose2d{units::foot_t(pose[0] * 3.281), 
-                                                    units::foot_t(pose[1] * 3.281), 
-                                                    units::degree_t(pose[5])}, 
-                                                    timestamp);
+    if (camera.isTargetDetected() && vision) {
+        frc::Pose2d robotPose = camera.returnPoseEstimate();
+        mSwervePose.AddVisionMeasurement(robotPose, timestamp);
     }
 }
 

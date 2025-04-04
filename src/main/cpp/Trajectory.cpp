@@ -77,7 +77,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
             auto sample = traj.sample(currentTime);
 
             driveToState(sample);
-            mDrive.updatePoseEstimator(mLimelight1, frc::Timer::GetFPGATimestamp());
+            mDrive.updatePoseEstimator(cameraFront, false, frc::Timer::GetFPGATimestamp());
 
             // frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
             // frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
@@ -115,7 +115,7 @@ void Trajectory::followTeleop(std::shared_ptr<pathplanner::PathPlannerPath> path
             auto sample = traj.sample(currentTime);
 
             driveToState(sample);
-            mDrive.updatePoseEstimator(mLimelight1, frc::Timer::GetFPGATimestamp());
+            mDrive.updatePoseEstimator(cameraFront, false, frc::Timer::GetFPGATimestamp());
 
             // frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
             // frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
@@ -315,8 +315,20 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
 void Trajectory::waitToScore(int delaySeconds) {
     mDrive.enableModules();
     delayTimer.Start();
-    while (!mAlign.isAligned(mLimelight1) || delayTimer.Get().value() < 2) {
-        ChassisSpeeds speeds = mAlign.autoAlign(mLimelight1, 0.6, -0.08);
+
+    while ((!mAlign.isAligned(cameraFront) || delayTimer.Get().value() < 2) && cameraFront.isReef() && cameraFront.isTargetDetected()) {
+        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.15, 0.0381);
+        double vx = speeds.vxMetersPerSecond;
+        double vy = speeds.vyMetersPerSecond;
+        mDrive.Drive(
+            ChassisSpeeds(vx, vy, 0),
+            pigeon.getBoundedAngleCCW(),
+            false, false);
+        mDrive.updateOdometry();
+    }
+
+    while ((!mAlign.isAligned(cameraBack) || delayTimer.Get().value() < 2) && cameraFront.isCoralStation() && cameraBack.isTargetDetected()) {
+        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.6, 0.0);
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
         mDrive.Drive(
@@ -328,7 +340,7 @@ void Trajectory::waitToScore(int delaySeconds) {
 
     mDrive.disableModules();
 
-    while (delayTimer.Get().value() < 8) {
+    while (delayTimer.Get().value() < 8 && cameraFront.isReef()) {
         mSuperstructure.mElevator.setState(4);
     }
 
