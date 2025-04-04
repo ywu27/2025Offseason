@@ -6,6 +6,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 #include <string>
+#include <cameraserver/CameraServer.h>
 
 void Robot::RobotInit()
 {
@@ -13,6 +14,7 @@ void Robot::RobotInit()
   pigeon.init();
   mSuperstructure.init();
 
+  frc::CameraServer::StartAutomaticCapture();
   // Choosers
   allianceChooser.SetDefaultOption("Red Alliance", redAlliance);
   allianceChooser.AddOption("Blue Alliance", blueAlliance);
