@@ -32,7 +32,7 @@ public:
     double scoreSetpoint = 0.02;
 
     // // Color Sensor
-    rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
+    // rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:
     enum EndEffectorState {

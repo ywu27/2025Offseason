@@ -50,15 +50,15 @@ void Robot::RobotPeriodic()
 {
   frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
   frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
-  frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.color.GetProximity());
-  frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.color.GetColor().red);
-  frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.color.GetColor().green);
-  frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.color.GetColor().blue);
-  frc::SmartDashboard::PutNumber("Tag ID", cameraFront.camera.GetLatestResult().GetBestTarget().GetFiducialId());
-  frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
-  frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
-  frc::SmartDashboard::PutBoolean("Is Aligned Reef", align.isAligned(cameraFront));
-  frc::SmartDashboard::PutBoolean("Is Aligned Coral Station", align.isAligned(cameraBack));
+  // frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.color.GetProximity());
+  // frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.color.GetColor().red);
+  // frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.color.GetColor().green);
+  // frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.color.GetColor().blue);
+  // frc::SmartDashboard::PutNumber("Tag ID", cameraFront.camera.GetLatestResult().GetBestTarget().GetFiducialId());
+  // frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
+  // frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
+  // frc::SmartDashboard::PutBoolean("Is Aligned Reef", align.isAligned(cameraFront));
+  // frc::SmartDashboard::PutBoolean("Is Aligned Coral Station", align.isAligned(cameraBack));
 }
 
 void Robot::AutonomousInit()
@@ -144,7 +144,7 @@ void Robot::TeleopInit()
   mDrive.state = DriveState::Teleop;
 
   mDrive.enableModules();
-  pigeon.pigeon.Reset();
+  pigeon.pigeon.SetYaw(units::degree_t(fmod(pigeon.getBoundedAngleCCW().getDegrees() + 180, 360)));
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -153,6 +153,10 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+
+  // frc::SmartDashboard::PutNumber("red", color.GetColor().red);
+  // frc::SmartDashboard::PutNumber("green", color.GetColor().green);
+  // frc::SmartDashboard::PutNumber("blue", color.GetColor().blue);
   double speedLimiter = mSuperstructure.speedLimiter();
   bool fieldOriented = pigeon.pigeon.IsConnected();
 
@@ -193,15 +197,15 @@ void Robot::TeleopPeriodic()
   double targetDistance = 0; // CHECK THIS
   double zeroSetpoint = 0;
 
-  frc::Color detectedColor = mSuperstructure.mEndEffector.color.GetColor();
-  bool red = (detectedColor.red < 0.29) && (detectedColor.red > 0.255);
-  bool green = (detectedColor.green < 0.495) && (detectedColor.green > 0.47);
-  bool blue = (detectedColor.blue < 0.27) && (detectedColor.blue > 0.23);
-  bool coralIn = red && green && blue;
+  // frc::Color detectedColor = color.GetColor();
+  // bool red = (detectedColor.red < 0.29) && (detectedColor.red > 0.255);
+  // bool green = (detectedColor.green < 0.495) && (detectedColor.green > 0.47);
+  // bool blue = (detectedColor.blue < 0.27) && (detectedColor.blue > 0.23);
+  // bool coralIn = red && green && blue;
 
-  if (coralIn) {
-    mLED.Set_Color(frc::Color::kGreen);
-  }
+  // if (coralIn) {
+  //   mLED.Set_Color(frc::Color::kGreen);
+  // }
 
   if(dPadOperator==90) {
     coralSide = "right";
@@ -245,10 +249,10 @@ void Robot::TeleopPeriodic()
     targetDistance = 0.15;
 
     if (coralSide == "left") {
-      offSet = -0.0381; // meters
+      offSet = -0.7; // meters
     }
     else if (coralSide == "right") {
-      offSet = 0.0381;
+      offSet = 0;
     }
 
     ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
@@ -306,9 +310,9 @@ void Robot::TeleopPeriodic()
   else if (scoreCoral) {
     mSuperstructure.scoreCoral();
   }
-  else if (coralIn) {
-    mSuperstructure.mEndEffector.disable();
-  }
+  // else if (coralIn) {
+  //   mSuperstructure.mEndEffector.disable();
+  // }
   else if (zeroElevator) {
     mSuperstructure.mElevator.zero();
   }
@@ -319,6 +323,7 @@ void Robot::TeleopPeriodic()
   // }
   else {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
+    mSuperstructure.mElevator.setState(coralLevel);
     mLED.Set_Color(frc::Color::kDarkOrange);
   }
 }
