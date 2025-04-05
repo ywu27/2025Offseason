@@ -54,7 +54,7 @@ public:
   Superstructure mSuperstructure;
 
   // Vision
-  PhotonVision cameraFront = PhotonVision("cameraFront");
+  PhotonVision cameraFront = PhotonVision("limelight-one");
   PhotonVision cameraBack = PhotonVision("cameraBack");
 
   // For Auto Align
@@ -63,7 +63,8 @@ public:
   // Pigeon
   Pigeon pigeon{0};
 
-  rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
+  ColorSensor color{frc::I2C::Port::kOnboard};
+
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
   Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraBack, cameraFront, align, pigeon, pathConfig);

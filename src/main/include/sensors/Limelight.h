@@ -19,12 +19,10 @@ private:
         int angleSetpoint;
     };
     
-    std::map<int, TagInfo> tagData = {
-        {1, {53.25, 234}}, {2, {53.25, 126}}, {3, {45.875, 90}}, {4, {69.0, 0}}, {5, {69.0, 0}},
-        {10, {6.875, 180}}, {11, {6.875, 120}}, {6, {6.875, 60}}, {7, {6.875, 0}}, {8, {6.875, 300}}, {9, {6.875, 240}},
-        {12, {53.25, 126}}, {13, {53.25, 234}}, {14, {69.0, 0}}, {15, {69.0, 0}}, {16, {45.875, 90}},
-        {17, {6.875, 300}}, {18, {6.875, 0}}, {19, {6.875, 60}}, {20, {6.875, 120}}, {21, {6.875, 180}}, {22, {6.875, 240}}
-    };
+    std::vector<std::vector<int>> tagInfo {{1, 234}, {2, 126}, {3, 90}, {4, 0}, {5, 0},
+        {10, 180}, {11, 120}, {6, 60}, {7, 0}, {8, 300}, {9, 240},
+        {12, 126}, {13, 234}, {14, 0}, {15, 0}, {16, 90},
+        {17, 300}, {18, 0}, {19, 60}, {20, 120}, {21, 180}, {22, 240}};
 
 public:
     enum Alliance{RED, BLUE};
@@ -83,25 +81,27 @@ public:
         }
     }
 
-    double getTagHeight() {
-        if (isTargetDetected()) {
-            int tagID = getTagID();
-            if (tagData.count(tagID)) {
-                return tagData[tagID].height;
-            } else {
-                return 0;
-            }
-        }
-    }
+    // double getTagHeight() {
+    //     if (isTargetDetected()) {
+    //         int tagID = getTagID();
+    //         if (tagData.count(tagID)) {
+    //             return tagData[tagID].height;
+    //         } else {
+    //             return 0;
+    //         }
+    //     }
+    // }
 
     double getAngleSetpoint() {
         if (isTargetDetected()) {
             int tagID = getTagID();
-            if (tagData.count(tagID)) {
-                return tagData[tagID].angleSetpoint;
-            } else {
-                return 0;
+            
+            for (int i = 0; tagInfo.size(); i++) {
+                if (tagInfo[i][0] == tagID) {
+                    return tagInfo[i][1];
+                }
             }
+            return 0;
         }   
     }
 

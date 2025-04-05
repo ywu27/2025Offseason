@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc/DigitalInput.h>
+#include <frc/controller/PIDController.h>
 #include <rev/SparkMax.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkClosedLoopController.h>
@@ -15,11 +16,13 @@ class Elevator {
     public:
         // Need to be changed, setpoints in rotations
         double startPoint = 0.0;
-        double CoralLevel1 = 35.7854;
-        double CoralLevel2 = 50.786; 
-        double CoralLevel3 = 74.502;
-        double CoralLevel4 = 111;
-        double CoralStation = 6.386;
+        double CoralLevel1 = 39.7854;
+        double CoralLevel2 = 49.07; 
+        double CoralLevel3 = 78.86;
+        double CoralLevel4 = 121;
+        double CoralStation = 8.386;
+
+        double zeroSetpoint = 0;
 
         std::array<double, 6> levelHeight{startPoint, CoralLevel1, CoralLevel2, CoralLevel3, CoralLevel4, CoralStation};
 
@@ -44,4 +47,5 @@ class Elevator {
         rev::spark::SparkClosedLoopController elevatorCTR2 = motor2.GetClosedLoopController();
 
         frc::DigitalInput limitSwitch{0};
+        frc::PIDController mElevatorCtr {0.05, 0.0, 0.0};
 };

@@ -51,6 +51,8 @@ void EndEffector::intake() {
 }
 
 void EndEffector::score() {
-    intakeCTR1.SetReference(intakeEnc1.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
-    intakeCTR2.SetReference(intakeEnc2.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
+    intakeMotor1.Set(0.25);
+    intakeMotor2.Set(0.25);
+    // intakeCTR1.SetReference(intakeEnc1.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
+    // intakeCTR2.SetReference(intakeEnc2.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
 }

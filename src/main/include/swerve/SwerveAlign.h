@@ -33,29 +33,29 @@ public:
         return false;
     }
 
-    // ChassisSpeeds autoAlign(Limelight& limelight, double setpointDistance, double offsetSetpoint) { // distance in meters
-    //     ChassisSpeeds speeds;
-    //     double offset = limelight.getTargetPoseRobotSpace().x;
-    //     double distanceToTag = limelight.getDistanceToWall();
-    //     targetDistance = setpointDistance;
-    //     targetOffset = offsetSetpoint;
-    //     forwardPID.SetTolerance(0.05, 0.01);
-    //     strafePID.SetTolerance(0.05, 0.01);
-    //     if (!limelight.isTargetDetected2()) {
-    //         speeds = ChassisSpeeds::fromRobotRelativeSpeeds(0, 0, 0);
-    //     }
-    //     else if (!forwardPID.AtSetpoint() || !strafePID.AtSetpoint()) {
-    //         double forwardSpeed = forwardPID.Calculate(distanceToTag, setpointDistance);
-    //         double strafeSpeed = strafePID.Calculate(offset, offsetSetpoint);
-    //         strafeSpeed = std::clamp(strafeSpeed, -4.0, 4.0);
-    //         forwardSpeed = std::clamp(forwardSpeed, -4.0, 4.0);
-    //         speeds = ChassisSpeeds::fromRobotRelativeSpeeds(strafeSpeed, -forwardSpeed, 0);
-    //     }
-    //     else {
-    //         speeds = ChassisSpeeds::fromRobotRelativeSpeeds(0, 0, 0);
-    //     }
-    //     return speeds;
-    // }
+    ChassisSpeeds autoAlign(Limelight& limelight, double setpointDistance, double offsetSetpoint) { // distance in meters
+        ChassisSpeeds speeds;
+        double offset = limelight.getTargetPoseRobotSpace().x;
+        double distanceToTag = limelight.getDistanceToWall();
+        targetDistance = setpointDistance;
+        targetOffset = offsetSetpoint;
+        forwardPID.SetTolerance(0.05, 0.01);
+        strafePID.SetTolerance(0.05, 0.01);
+        if (!limelight.isTargetDetected()) {
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(0, 0, 0);
+        }
+        else if (!forwardPID.AtSetpoint() || !strafePID.AtSetpoint()) {
+            double forwardSpeed = forwardPID.Calculate(distanceToTag, setpointDistance);
+            double strafeSpeed = strafePID.Calculate(offset, offsetSetpoint);
+            strafeSpeed = std::clamp(strafeSpeed, -4.0, 4.0);
+            forwardSpeed = std::clamp(forwardSpeed, -4.0, 4.0);
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(strafeSpeed, -forwardSpeed, 0);
+        }
+        else {
+            speeds = ChassisSpeeds::fromRobotRelativeSpeeds(0, 0, 0);
+        }
+        return speeds;
+    }
 
     ChassisSpeeds autoAlignPV(PhotonVision& photon, double setpointDistance, double offsetSetpoint) {
         ChassisSpeeds speeds;

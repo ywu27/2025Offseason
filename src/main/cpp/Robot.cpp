@@ -144,7 +144,7 @@ void Robot::TeleopInit()
   mDrive.state = DriveState::Teleop;
 
   mDrive.enableModules();
-  pigeon.pigeon.SetYaw(units::degree_t(fmod(pigeon.getBoundedAngleCCW().getDegrees() + 180, 360)));
+  // pigeon.pigeon.SetYaw(units::degree_t(fmod(pigeon.getBoundedAngleCCW().getDegrees() + 180, 360)));
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -154,9 +154,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 
-  // frc::SmartDashboard::PutNumber("red", color.GetColor().red);
-  // frc::SmartDashboard::PutNumber("green", color.GetColor().green);
-  // frc::SmartDashboard::PutNumber("blue", color.GetColor().blue);
+  // frc::SmartDashboard::PutNumber("proximity", color.GetProximity());
+  // frc::SmartDashboard::PutBoolean("istarget", color.isTarget());
   double speedLimiter = mSuperstructure.speedLimiter();
   bool fieldOriented = pigeon.pigeon.IsConnected();
 
@@ -203,6 +202,8 @@ void Robot::TeleopPeriodic()
   // bool blue = (detectedColor.blue < 0.27) && (detectedColor.blue > 0.23);
   // bool coralIn = red && green && blue;
 
+  // frc::SmartDashboard::PutBoolean("coralIN", coralIn);
+
   // if (coralIn) {
   //   mLED.Set_Color(frc::Color::kGreen);
   // }
@@ -216,57 +217,52 @@ void Robot::TeleopPeriodic()
 
   if(level1) {
     coralLevel = 1;
-    // mSuperstructure.mElevator.setState(1);
+    mSuperstructure.mElevator.setState(1);
     elevatorLevel = "Level 1";
   }
   else if(level2) {
     coralLevel = 2;
-    // mSuperstructure.mElevator.setState(2);
+    mSuperstructure.mElevator.setState(2);
     elevatorLevel = "Level 2";
   }
   else if(level3) {
     coralLevel = 3;
-    // mSuperstructure.mElevator.setState(3);
+    mSuperstructure.mElevator.setState(3);
     elevatorLevel = "Level 3";
   }
   else if(level4) {
     coralLevel = 4;
-    // mSuperstructure.mElevator.setState(4);
+    mSuperstructure.mElevator.setState(4);
     elevatorLevel = "Level 4";
   }
   else if (coralIntake) {
     coralLevel = 5;
     elevatorLevel = "Coral Station";
-    // mSuperstructure.mElevator.setState(5);
+    mSuperstructure.mElevator.setState(5);
   }
   
   if (ctr.GetR2ButtonPressed()) {
     align.forwardPID.Reset();
     align.strafePID.Reset();
   }
-  else if (alignPV && cameraFront.isTargetDetected() && cameraFront.isReef()) { // Alignment Mode
-    double targetYaw = cameraFront.getYaw();
-    targetDistance = 0.15;
+  // else if (alignPV && cameraFront.isTargetDetected() && cameraFront.isReef()) { // Alignment Mode
+  //   double targetYaw = cameraFront.getYaw();
+  //   targetDistance = 0.3;
 
-    if (coralSide == "left") {
-      offSet = -0.7; // meters
-    }
-    else if (coralSide == "right") {
-      offSet = 0;
-    }
+  //   offSet = 0;
 
-    ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
-    vx = speeds.vxMetersPerSecond;
-    vy = speeds.vyMetersPerSecond;
-    fieldOriented = false;
+  //   ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
+  //   vx = speeds.vxMetersPerSecond;
+  //   vy = speeds.vyMetersPerSecond;
+  //   fieldOriented = false;
 
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
-    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
-  }
+  //   mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //   mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+  //   rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  // }
   else if (alignPV && cameraBack.isTargetDetected() && cameraBack.isCoralStation()) {
     if (!align.isAligned(cameraBack)) {
-      targetDistance = 0.6; //set this
+      targetDistance = 0.4; //set this
 
       ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, 0);
       vx = speeds.vxMetersPerSecond;
@@ -278,6 +274,18 @@ void Robot::TeleopPeriodic()
       rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
     }
   }
+  // else if (alignPV && limelight2.isTargetDetected()) {
+  //   offSet = 0;
+  //   targetDistance = 0.4; //set this
+  //     ChassisSpeeds speeds = align.autoAlign(limelight2, targetDistance, 0);
+  //     vx = speeds.vxMetersPerSecond;
+  //     vy = speeds.vyMetersPerSecond;
+  //     fieldOriented = false;
+      
+  //     mHeadingController.setSetpoint(limelight2.getAngleSetpoint());
+  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+  //     rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  // }
   else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -304,12 +312,6 @@ void Robot::TeleopPeriodic()
     mLED.Set_Color(frc::Color::kRed);
     mSuperstructure.intakeCoral();
   }
-  else if (align.isAligned(cameraFront)) {
-    mLED.Set_Color(frc::Color::kBlue);
-  }
-  else if (scoreCoral) {
-    mSuperstructure.scoreCoral();
-  }
   // else if (coralIn) {
   //   mSuperstructure.mEndEffector.disable();
   // }
@@ -323,8 +325,16 @@ void Robot::TeleopPeriodic()
   // }
   else {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    mSuperstructure.mElevator.setState(coralLevel);
+    // mSuperstructure.mElevator.setState(coralLevel);
     mLED.Set_Color(frc::Color::kDarkOrange);
+  }
+
+  if (scoreCoral) {
+    mSuperstructure.scoreCoral();
+  }
+
+  if (align.isAligned(cameraFront)) {
+    mLED.Set_Color(frc::Color::kBlue);
   }
 }
 

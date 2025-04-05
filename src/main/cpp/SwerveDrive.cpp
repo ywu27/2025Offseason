@@ -97,7 +97,7 @@ void SwerveDrive::runModules() {
         mFrontRight.run();
         mBackLeft.run();
         mBackRight.run();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(12));
     }
 }
 

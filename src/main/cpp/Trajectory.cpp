@@ -316,8 +316,8 @@ void Trajectory::waitToScore(int delaySeconds) {
     mDrive.enableModules();
     delayTimer.Start();
 
-    while ((!mAlign.isAligned(cameraFront) || delayTimer.Get().value() < 2) && cameraFront.isReef() && cameraFront.isTargetDetected()) {
-        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.15, 0.0381);
+    while ((delayTimer.Get().value() < 2)) {
+        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraBack, 0.4, 0);
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
         mDrive.Drive(
@@ -327,28 +327,28 @@ void Trajectory::waitToScore(int delaySeconds) {
         mDrive.updateOdometry();
     }
 
-    while ((!mAlign.isAligned(cameraBack) || delayTimer.Get().value() < 2) && cameraFront.isCoralStation() && cameraBack.isTargetDetected()) {
-        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.6, 0.0);
-        double vx = speeds.vxMetersPerSecond;
-        double vy = speeds.vyMetersPerSecond;
-        mDrive.Drive(
-            ChassisSpeeds(vx, vy, 0),
-            pigeon.getBoundedAngleCCW(),
-            false, false);
-        mDrive.updateOdometry();
-    }
+    // while ((delayTimer.Get().value() < 5) && cameraFront.isCoralStation() && cameraBack.isTargetDetected()) {
+    //     ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.6, 0.0);
+    //     double vx = speeds.vxMetersPerSecond;
+    //     double vy = speeds.vyMetersPerSecond;
+    //     mDrive.Drive(
+    //         ChassisSpeeds(vx, vy, 0),
+    //         pigeon.getBoundedAngleCCW(),
+    //         false, false);
+    //     mDrive.updateOdometry();
+    // }
 
     mDrive.disableModules();
 
-    while (delayTimer.Get().value() < 8 && cameraFront.isReef()) {
-        mSuperstructure.mElevator.setState(4);
+    while (delayTimer.Get().value() < 5 && cameraFront.isReef()) {
+        mSuperstructure.mElevator.setState(2);
     }
 
-    while (delayTimer.Get().value() < 10) {
+    while (delayTimer.Get().value() < 8) {
         mSuperstructure.mEndEffector.setState(EndEffector::SCORE);
     }
 
-    while (delayTimer.Get().value() < 15) {
+    while (delayTimer.Get().value() < 10) {
         mSuperstructure.mElevator.setState(5);
     }
 }
