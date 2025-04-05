@@ -310,28 +310,9 @@ void Robot::TeleopPeriodic()
   // Superstructure
   if (intakeCoral) {
     mLED.Set_Color(frc::Color::kRed);
-    mSuperstructure.intakeCoral();
-  }
-  // else if (coralIn) {
-  //   mSuperstructure.mEndEffector.disable();
-  // }
-  else if (zeroElevator) {
-    mSuperstructure.mElevator.zero();
-  }
-  // else if (mSuperstructure.mElevator.limitSwitch.Get()) {
-  //   mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-  //   mSuperstructure.mElevator.disable();
-  //   mSuperstructure.mElevator.zero();
-  // }
-  else {
-    mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    // mSuperstructure.mElevator.setState(coralLevel);
-    mLED.Set_Color(frc::Color::kDarkOrange);
-  }
 
-  if (scoreCoral) {
     if (coralLevel != 4 && coralLevel != 1) {
-      mSuperstructure.scoreCoral();
+      mSuperstructure.intakeCoral();
     }
     else if (coralLevel == 1) {
       mSuperstructure.mEndEffector.scoreL1();
@@ -339,6 +320,14 @@ void Robot::TeleopPeriodic()
     else if (coralLevel == 4) {
       mSuperstructure.mEndEffector.scoreL4();
     }
+  }
+  else if (zeroElevator) {
+    mSuperstructure.mElevator.zero();
+  }
+  else {
+    mSuperstructure.mEndEffector.setState(EndEffector::STOP);
+    // mSuperstructure.mElevator.setState(coralLevel);
+    mLED.Set_Color(frc::Color::kWhiteSmoke);
   }
 
   if (align.isAligned(cameraFront)) {
