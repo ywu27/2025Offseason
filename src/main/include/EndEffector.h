@@ -47,5 +47,7 @@ public:
     void setState(EndEffectorState state);
     void intake();
     void score();
+    void scoreL4();
+    void scoreL1();
     void setVelocity(double speed);
 };

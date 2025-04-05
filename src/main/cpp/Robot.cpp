@@ -330,7 +330,15 @@ void Robot::TeleopPeriodic()
   }
 
   if (scoreCoral) {
-    mSuperstructure.scoreCoral();
+    if (coralLevel != 4 && coralLevel != 1) {
+      mSuperstructure.scoreCoral();
+    }
+    else if (coralLevel == 1) {
+      mSuperstructure.mEndEffector.scoreL1();
+    }
+    else if (coralLevel == 4) {
+      mSuperstructure.mEndEffector.scoreL4();
+    }
   }
 
   if (align.isAligned(cameraFront)) {
