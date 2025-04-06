@@ -43,12 +43,15 @@ private:
     RobotConfig &config;
     SwerveHeadingController &mHeadingController;
     PhotonVision &cameraFront;
+    PhotonVision &cameraBack;
 
 public:
     Pose3d startPose = Pose3d();
     bool receivedPose;
     bool isRed = false;
 
+    std::string cameraChooser = "cameraFront";
+    ChassisSpeeds speeds;
     frc::Timer alignTimer;
 
     enum autos {
@@ -74,10 +77,10 @@ public:
         auto_3F 
     };
 
-    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSuperstructure, SwerveHeadingController &mHeadingController, PhotonVision &cameraFrontInput, SwerveAlign &align, Pigeon &pigeonInput, RobotConfig &configInput) : mDrive(mDriveInput), 
+    Trajectory(SwerveDrive &mDriveInput, Superstructure &mSuperstructure, SwerveHeadingController &mHeadingController, PhotonVision &cameraFrontInput, PhotonVision &cameraBackInput, SwerveAlign &align, Pigeon &pigeonInput, RobotConfig &configInput) : mDrive(mDriveInput), 
                                                                                                                 mSuperstructure(mSuperstructure),
                                                                                                                 mHeadingController(mHeadingController),
-                                                                                                                
+                                                                                                                cameraBack(cameraBackInput),
                                                                                                                 cameraFront(cameraFrontInput),
                                                                                                                 mAlign(align),
                                                                                                                 pigeon(pigeonInput),

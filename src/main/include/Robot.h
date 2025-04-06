@@ -54,7 +54,7 @@ public:
 
   // Vision
   PhotonVision cameraFront = PhotonVision("cameraFront");
-  PhotonVision cameraBack = PhotonVision{"cameraLimelight"};
+  PhotonVision cameraBack = PhotonVision{"cameraBack"};
 
   // For Auto Align
   SwerveAlign align;
@@ -64,7 +64,7 @@ public:
 
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
-  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraFront, align, pigeon, pathConfig);
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraFront, cameraBack, align, pigeon, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};

@@ -15,6 +15,7 @@ void Robot::RobotInit()
   mSuperstructure.init();
 
   frc::CameraServer::StartAutomaticCapture();
+
   // Choosers
   allianceChooser.SetDefaultOption("Red Alliance", redAlliance);
   allianceChooser.AddOption("Blue Alliance", blueAlliance);
@@ -211,10 +212,10 @@ void Robot::TeleopPeriodic()
   //   mLED.Set_Color(frc::Color::kGreen);
   // }
 
-  if(dPadOperator==90) {
+  if(dPad==90) {
     coralSide = "right";
   }
-  else if(dPadOperator==270) {
+  else if(dPad==270) {
     coralSide = "left";
   }
 
@@ -248,42 +249,36 @@ void Robot::TeleopPeriodic()
     align.forwardPID.Reset();
     align.strafePID.Reset();
   }
-  else if (alignPV && cameraFront.isTargetDetected()) { // Alignment Mode
-    targetDistance = 0.275;
-    offSet = -0.07;
-    ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
-    vx = speeds.vxMetersPerSecond;
-    vy = speeds.vyMetersPerSecond;
-    fieldOriented = false;
+  else if (alignPV) { // Alignment Mode
+    if (cameraBack.isTargetDetected() || cameraFront.isTargetDetected()) {
+      if (cameraBack.isTargetDetected() && coralSide == "left") {
+        targetDistance = 0.275;
+        offSet = -0.07;
 
-    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
-    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
-  }
-  else if (alignPV && cameraBack.isTargetDetected() && cameraBack.isCoralStation()) {
-      targetDistance = 0.2;
+        ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, offSet);
+        vx = speeds.vxMetersPerSecond;
+        vy = speeds.vyMetersPerSecond;
+        fieldOriented = false;
 
-      ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, 0.07);
-      vx = speeds.vxMetersPerSecond;
-      vy = speeds.vyMetersPerSecond;
-      fieldOriented = false;
-      
-      mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
-      mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-      rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+        mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+        mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+        rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+      }
+      else if (cameraFront.isTargetDetected() && coralSide == "right") {
+        targetDistance = 0.275;
+        offSet = 0.07;
+
+        ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
+        vx = speeds.vxMetersPerSecond;
+        vy = speeds.vyMetersPerSecond;
+        fieldOriented = false;
+
+        mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+        mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+        rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+      }
+    }
   }
-  // else if (alignPV && limelight2.isTargetDetected()) {
-  //   offSet = 0;
-  //   targetDistance = 0.4; //set this
-  //     ChassisSpeeds speeds = align.autoAlign(limelight2, targetDistance, 0);
-  //     vx = speeds.vxMetersPerSecond;
-  //     vy = speeds.vyMetersPerSecond;
-  //     fieldOriented = false;
-      
-  //     mHeadingController.setSetpoint(limelight2.getAngleSetpoint());
-  //     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-  //     rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
-  // }
   else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -322,13 +317,11 @@ void Robot::TeleopPeriodic()
   else if (zeroElevator) {
     mSuperstructure.mElevator.zero();
   }
-  else {
+  else if (!(cameraFront.isTargetDetected() && cameraBack.isTargetDetected())) {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
-    // mSuperstructure.mElevator.setState(coralLevel);
     mLED.Set_Color(frc::Color::kGreen);
   }
-
-  if (cameraFront.isTargetDetected()) {
+  else if (cameraFront.isTargetDetected() || cameraBack.isTargetDetected()) {
     mLED.Set_Color(frc::Color::kBlue);
   }
 }

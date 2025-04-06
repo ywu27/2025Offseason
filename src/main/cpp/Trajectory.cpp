@@ -8,7 +8,7 @@ static frc::HolonomicDriveController controller{
     frc::PIDController{5e-4, 0, 0}, // Change PIDs to be more accurate
     frc::PIDController{5e-4, 0, 0}, // Change PIDs to be more accurate
     frc::ProfiledPIDController<units::radian>{
-        0.45, 0, 0,
+        0.5, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
             units::radians_per_second_t(5.0), // prev: 5.0
             units::radians_per_second_squared_t(100)}}}; // prev: 100
@@ -316,11 +316,25 @@ void Trajectory::waitToScore(int delaySeconds) {
     mDrive.enableModules();
     delayTimer.Start();
 
+    if (cameraFront.isTargetDetected()) {
+        cameraChooser = "cameraFront";
+    }
+    else if (cameraBack.isTargetDetected()) {
+        cameraChooser = "cameraBack";
+    }
+
     while ((delayTimer.Get().value() < 4)) {
-        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.275, -0.07);
+        if (cameraChooser == "cameraFront") {
+            speeds = mAlign.autoAlignPV(cameraFront, 0.275, -0.07);
+            mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+        }
+        else if (cameraChooser == "cameraBack") {
+            speeds = mAlign.autoAlignPV(cameraBack, 0.275, -0.07);
+            mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+        }
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
-        mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+        mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
         double rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
         mDrive.Drive(
             ChassisSpeeds(vx, vy, rot),
@@ -329,22 +343,11 @@ void Trajectory::waitToScore(int delaySeconds) {
         mDrive.updateOdometry();
     }
 
-    // while ((delayTimer.Get().value() < 5) && cameraBack.isCoralStation() && cameraBack.isTargetDetected()) {
-    //     ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.6, 0.0);
-    //     double vx = speeds.vxMetersPerSecond;
-    //     double vy = speeds.vyMetersPerSecond;
-    //     mDrive.Drive(
-    //         ChassisSpeeds(vx, vy, 0),
-    //         pigeon.getBoundedAngleCCW(),
-    //         false, false);
-    //     mDrive.updateOdometry();
-    // }
-
     mDrive.disableModules();
 
     while (delayTimer.Get().value() < 6 && cameraFront.isReef()) {
-        mSuperstructure.mElevator.elevatorCTR.SetReference(51, rev::spark::SparkLowLevel::ControlType::kPosition);
-        mSuperstructure.mElevator.elevatorCTR2.SetReference(51, rev::spark::SparkLowLevel::ControlType::kPosition);
+        mSuperstructure.mElevator.elevatorCTR.SetReference(51.1, rev::spark::SparkLowLevel::ControlType::kPosition);
+        mSuperstructure.mElevator.elevatorCTR2.SetReference(51.1, rev::spark::SparkLowLevel::ControlType::kPosition);
     }
 
     while (delayTimer.Get().value() < 7.4) {
