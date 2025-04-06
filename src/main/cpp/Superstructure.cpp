@@ -57,21 +57,3 @@ void Superstructure::intakeCoral() {
 void Superstructure::scoreCoral() {
     mEndEffector.setState(EndEffector::SCORE);
 }
-
-double Superstructure::speedLimiter() {
-    if (mElevator.currentState == 0) {
-        return 1.0;
-    }
-    else if (mElevator.currentState == 5) {
-        return 0.75;
-    }
-    else if (mElevator.currentState == 1 || mElevator.currentState == 2) {
-        return 0.5;
-    }
-    else if (mElevator.currentState == 3 || mElevator.currentState == 4) {
-        return 0.1;
-    }
-    else {
-        return 1.0;
-    }
-}

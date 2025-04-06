@@ -7,8 +7,6 @@
 #include <rev/config/SmartMotionConfig.h>
 #include <rev/ClosedLoopSlot.h>
 
-#include "sensors/ColorSensor.h"
-
 #define intakeMotorID 21
 #define intakeMotor2ID 20
 
@@ -30,9 +28,6 @@ public:
     double velocity = 5;
     double coralStation = 0;
     double scoreSetpoint = 0.02;
-
-    // // Color Sensor
-    // rev::ColorSensorV3 color = rev::ColorSensorV3(frc::I2C::Port::kOnboard);
 
 public:
     enum EndEffectorState {

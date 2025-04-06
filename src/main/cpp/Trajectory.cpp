@@ -149,164 +149,164 @@ void Trajectory::followPath(Trajectory::autos autoTrajectory, bool flipAlliance)
             break;
         case auto_1A:
             follow("1 to A", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to A", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_1B:
             follow("1 to B", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to B", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_1C:
             follow("1 to C", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to C", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_1D:
             follow("1 to D", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to D", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_1E:
             follow("1 to E", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to E", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_1F:
             follow("1 to F", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to F", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_2A:
             follow("2 to A", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to A", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_2B:
             follow("2 to B", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to B", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_2C:
             follow("2 to C", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("Bottom Coral Station to C", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_2D:
             follow("2 to D", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to D", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Stationn", flipAlliance, false, false);
             break;
         case auto_2E:
             follow("2 to E", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to E", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_2F:    
             follow("2 to F", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to F", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_3A:
             follow("3 to A", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to A", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("A to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_3B:
             follow("3 to B", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Top Coral Station to B", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("B to Top Coral Station", flipAlliance, false, false);
             break;
         case auto_3C:
             follow("3 to C", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to C", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("C to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_3D:
             follow("3 to D", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to D", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("D to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_3E:
             follow("3 to E", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to E", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("E to Bottom Coral Station", flipAlliance, false, false);
             break;
         case auto_3F:
             follow("3 to F", flipAlliance, false, true, 0.0);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             // waitToScore(7);
             follow("Bottom Coral Station to F", flipAlliance, false, false);
-            waitToScore(7);
+            waitToScore(6);
             follow("F to Bottom Coral Station", flipAlliance, false, false);
             break;
     }
@@ -316,18 +316,20 @@ void Trajectory::waitToScore(int delaySeconds) {
     mDrive.enableModules();
     delayTimer.Start();
 
-    while ((delayTimer.Get().value() < 2)) {
-        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraBack, 0.4, 0);
+    while ((delayTimer.Get().value() < 4)) {
+        ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.275, -0.07);
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
+        mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+        double rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
         mDrive.Drive(
-            ChassisSpeeds(vx, vy, 0),
+            ChassisSpeeds(vx, vy, rot),
             pigeon.getBoundedAngleCCW(),
             false, false);
         mDrive.updateOdometry();
     }
 
-    // while ((delayTimer.Get().value() < 5) && cameraFront.isCoralStation() && cameraBack.isTargetDetected()) {
+    // while ((delayTimer.Get().value() < 5) && cameraBack.isCoralStation() && cameraBack.isTargetDetected()) {
     //     ChassisSpeeds speeds = mAlign.autoAlignPV(cameraFront, 0.6, 0.0);
     //     double vx = speeds.vxMetersPerSecond;
     //     double vy = speeds.vyMetersPerSecond;
@@ -340,15 +342,18 @@ void Trajectory::waitToScore(int delaySeconds) {
 
     mDrive.disableModules();
 
-    while (delayTimer.Get().value() < 5 && cameraFront.isReef()) {
-        mSuperstructure.mElevator.setState(2);
+    while (delayTimer.Get().value() < 6 && cameraFront.isReef()) {
+        mSuperstructure.mElevator.elevatorCTR.SetReference(51, rev::spark::SparkLowLevel::ControlType::kPosition);
+        mSuperstructure.mElevator.elevatorCTR2.SetReference(51, rev::spark::SparkLowLevel::ControlType::kPosition);
     }
 
-    while (delayTimer.Get().value() < 8) {
-        mSuperstructure.mEndEffector.setState(EndEffector::SCORE);
+    while (delayTimer.Get().value() < 7.4) {
+        mSuperstructure.mEndEffector.intakeMotor1.Set(0.42);
+        mSuperstructure.mEndEffector.intakeMotor2.Set(0.42);
     }
 
-    while (delayTimer.Get().value() < 10) {
+    while (delayTimer.Get().value() < 9) {
+        mSuperstructure.mEndEffector.setState(EndEffector::STOP);
         mSuperstructure.mElevator.setState(5);
     }
 }

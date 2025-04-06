@@ -17,7 +17,6 @@
 
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include "sensors/Pigeon.h"
-#include "sensors/ColorSensor.h"
 #include "sensors/LED.h"
 
 #include "Superstructure.h"
@@ -54,8 +53,8 @@ public:
   Superstructure mSuperstructure;
 
   // Vision
-  PhotonVision cameraFront = PhotonVision("limelight-one");
-  PhotonVision cameraBack = PhotonVision("cameraBack");
+  PhotonVision cameraFront = PhotonVision("cameraFront");
+  PhotonVision cameraBack = PhotonVision{"cameraLimelight"};
 
   // For Auto Align
   SwerveAlign align;
@@ -63,11 +62,9 @@ public:
   // Pigeon
   Pigeon pigeon{0};
 
-  ColorSensor color{frc::I2C::Port::kOnboard};
-
   SwerveDrive mDrive = SwerveDrive(pigeon);
 
-  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraBack, cameraFront, align, pigeon, pathConfig);
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraFront, align, pigeon, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};
@@ -81,6 +78,7 @@ public:
   bool scoreAmp = false;
   bool liftElev = false;
   bool cleanDriveAccum = true;
+  double speedLimiter = 1.0;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-4.0, 4.0);

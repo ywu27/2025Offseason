@@ -8,8 +8,8 @@
 
 class SwerveAlign {
 public: 
-    frc::PIDController forwardPID{7.1, 0, 0.1};
-    frc::PIDController strafePID{8.1, 0, 0.1};
+    frc::PIDController forwardPID{8.55, 0, 0.2};
+    frc::PIDController strafePID{9.1, 0, 0.2};
     
     double forwardSpeed = 0;
     double strafeSpeed = 0;
@@ -73,7 +73,7 @@ public:
         targetDistance = setpointDistance;
         targetOffset = offsetSetpoint;
         forwardPID.SetTolerance(0.05, 0.01);
-        strafePID.SetTolerance(0.05, 0.01);
+        strafePID.SetTolerance(0.025, 0.01);
         
         if (!forwardPID.AtSetpoint() || !strafePID.AtSetpoint()) {
             double forwardSpeed = forwardPID.Calculate(distanceToTag, setpointDistance);

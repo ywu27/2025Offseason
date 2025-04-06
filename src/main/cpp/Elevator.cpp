@@ -3,13 +3,13 @@
 void Elevator::init(){
     config.Inverted(false);
     config.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
-    config.closedLoop.Pid(0.04, 0, 0.0);
-    config.SmartCurrentLimit(60);
+    config.closedLoop.Pid(0.035, 0, 0.0);
+    config.SmartCurrentLimit(55);
 
     config2.Inverted(true);
     config2.SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake);
-    config2.closedLoop.Pid(0.04, 0, 0.0);
-    config2.SmartCurrentLimit(60);
+    config2.closedLoop.Pid(0.035, 0, 0.0);
+    config2.SmartCurrentLimit(55);
 
     motor.Configure(config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
     motor2.Configure(config2, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
@@ -23,7 +23,7 @@ void Elevator::setState(int state) { // 0 = start, 1 = level 1, 2 = level 2, 3 =
 
     if ((state < currentState) && (currentState != 5)) {
         double speed = mElevatorCtr.Calculate(enc.GetPosition(), zeroSetpoint + setpointState);
-        speed = std::clamp(speed, -0.5, 0.5);
+        speed = std::clamp(speed, -0.35, 0.35);
         elevatorCTR.SetReference(speed, rev::spark::SparkLowLevel::ControlType::kVelocity);
         elevatorCTR2.SetReference(speed, rev::spark::SparkLowLevel::ControlType::kVelocity);
 

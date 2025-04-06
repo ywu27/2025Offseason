@@ -91,7 +91,7 @@ public:
         if (isTargetDetected()) {
             int tagID = getTagID();
             
-            for (int i = 0; tagInfo.size(); i++) {
+            for (int i = 0; i < tagInfo.size(); i++) {
                 if (tagInfo[i][0] == tagID) {
                     return tagInfo[i][1];
                 }

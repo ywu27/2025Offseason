@@ -50,15 +50,6 @@ void Robot::RobotPeriodic()
 {
   frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
   frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
-  // frc::SmartDashboard::PutNumber("proximmitry", mSuperstructure.mEndEffector.color.GetProximity());
-  // frc::SmartDashboard::PutNumber("red", mSuperstructure.mEndEffector.color.GetColor().red);
-  // frc::SmartDashboard::PutNumber("green", mSuperstructure.mEndEffector.color.GetColor().green);
-  // frc::SmartDashboard::PutNumber("blue", mSuperstructure.mEndEffector.color.GetColor().blue);
-  // frc::SmartDashboard::PutNumber("Tag ID", cameraFront.camera.GetLatestResult().GetBestTarget().GetFiducialId());
-  // frc::SmartDashboard::PutString("Elevator Stage", elevatorLevel);
-  // frc::SmartDashboard::PutNumber("Gyro CW", pigeon.getBoundedAngleCW().getDegrees());
-  // frc::SmartDashboard::PutBoolean("Is Aligned Reef", align.isAligned(cameraFront));
-  // frc::SmartDashboard::PutBoolean("Is Aligned Coral Station", align.isAligned(cameraBack));
 }
 
 void Robot::AutonomousInit()
@@ -153,10 +144,22 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  if (coralLevel == 1) {
+    speedLimiter = 0.8;
+  }
+  else if (coralLevel ==2 ) {
+    speedLimiter = 0.7;
+  }
+  else if (coralLevel == 3) {
+    speedLimiter = 0.5;
+  }
+  else if (coralLevel == 4) {
+    speedLimiter = 0.3;
+  }
+  else if (coralLevel==5) {
+    speedLimiter = 0.9;
+  }
 
-  // frc::SmartDashboard::PutNumber("proximity", color.GetProximity());
-  // frc::SmartDashboard::PutBoolean("istarget", color.isTarget());
-  double speedLimiter = mSuperstructure.speedLimiter();
   bool fieldOriented = pigeon.pigeon.IsConnected();
 
   double vx = 0;
@@ -165,7 +168,7 @@ void Robot::TeleopPeriodic()
   // Controller inputs
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
-  leftX = xStickLimiter.calculate(leftX) * speedLimiter; 
+  leftX = xStickLimiter.calculate(leftX) * speedLimiter;
   leftY = yStickLimiter.calculate(leftY) * speedLimiter;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
   double rot = 0;
@@ -183,7 +186,7 @@ void Robot::TeleopPeriodic()
   bool level3 = ctrOperator.GetCircleButton();
   bool level4 = ctrOperator.GetTriangleButton();
 
-  bool resetGyro = (ctrOperator.GetPOV() == 0);
+  bool resetGyro = (ctrOperator.GetPOV() == 0) || (ctr.GetPOV() == 0);
 
   bool zeroElevator = ctrOperator.GetL1ButtonPressed();
   mSuperstructure.mElevator.motor.Set(-ctrOperator.GetLeftY() * 1);
@@ -245,26 +248,22 @@ void Robot::TeleopPeriodic()
     align.forwardPID.Reset();
     align.strafePID.Reset();
   }
-  // else if (alignPV && cameraFront.isTargetDetected() && cameraFront.isReef()) { // Alignment Mode
-  //   double targetYaw = cameraFront.getYaw();
-  //   targetDistance = 0.3;
+  else if (alignPV && cameraFront.isTargetDetected()) { // Alignment Mode
+    targetDistance = 0.275;
+    offSet = -0.07;
+    ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
+    vx = speeds.vxMetersPerSecond;
+    vy = speeds.vyMetersPerSecond;
+    fieldOriented = false;
 
-  //   offSet = 0;
-
-  //   ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
-  //   vx = speeds.vxMetersPerSecond;
-  //   vy = speeds.vyMetersPerSecond;
-  //   fieldOriented = false;
-
-  //   mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-  //   mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
-  //   rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
-  // }
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+    mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  }
   else if (alignPV && cameraBack.isTargetDetected() && cameraBack.isCoralStation()) {
-    if (!align.isAligned(cameraBack)) {
-      targetDistance = 0.4; //set this
+      targetDistance = 0.2;
 
-      ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, 0);
+      ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, 0.07);
       vx = speeds.vxMetersPerSecond;
       vy = speeds.vyMetersPerSecond;
       fieldOriented = false;
@@ -272,7 +271,6 @@ void Robot::TeleopPeriodic()
       mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
       mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
       rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
-    }
   }
   // else if (alignPV && limelight2.isTargetDetected()) {
   //   offSet = 0;
@@ -327,10 +325,10 @@ void Robot::TeleopPeriodic()
   else {
     mSuperstructure.mEndEffector.setState(EndEffector::STOP);
     // mSuperstructure.mElevator.setState(coralLevel);
-    mLED.Set_Color(frc::Color::kWhiteSmoke);
+    mLED.Set_Color(frc::Color::kGreen);
   }
 
-  if (align.isAligned(cameraFront)) {
+  if (cameraFront.isTargetDetected()) {
     mLED.Set_Color(frc::Color::kBlue);
   }
 }
