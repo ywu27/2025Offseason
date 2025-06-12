@@ -5,8 +5,8 @@
 
 // controller used to track trajectories + correct minor disturbances
 static frc::HolonomicDriveController controller{
-    frc::PIDController{5e-4, 0, 0}, // Change PIDs to be more accurate
-    frc::PIDController{5e-4, 0, 0}, // Change PIDs to be more accurate
+    frc::PIDController{6e-4, 0, 0}, // Change PIDs to be more accurate
+    frc::PIDController{6e-4, 0, 0}, // Change PIDs to be more accurate
     frc::ProfiledPIDController<units::radian>{
         0.5, 0, 0,
         frc::TrapezoidProfile<units::radian>::Constraints{
@@ -325,12 +325,12 @@ void Trajectory::waitToScore(int delaySeconds) {
 
     while ((delayTimer.Get().value() < 4)) {
         if (cameraChooser == "cameraFront") {
-            speeds = mAlign.autoAlignPV(cameraFront, 0.275, -0.07);
-            mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+            speeds = mAlign.autoAlignPV(cameraFront, 0.275, -0.078);
+            mHeadingController.setSetpoint(cameraFront.getAngleSetpoint() - 180);
         }
         else if (cameraChooser == "cameraBack") {
-            speeds = mAlign.autoAlignPV(cameraBack, 0.275, -0.07);
-            mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+            speeds = mAlign.autoAlignPV(cameraBack, 0.275, 0.078);
+            mHeadingController.setSetpoint(cameraBack.getAngleSetpoint() - 180);
         }
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
@@ -346,8 +346,8 @@ void Trajectory::waitToScore(int delaySeconds) {
     mDrive.disableModules();
 
     while (delayTimer.Get().value() < 6 && cameraFront.isReef()) {
-        mSuperstructure.mElevator.elevatorCTR.SetReference(51.1, rev::spark::SparkLowLevel::ControlType::kPosition);
-        mSuperstructure.mElevator.elevatorCTR2.SetReference(51.1, rev::spark::SparkLowLevel::ControlType::kPosition);
+        mSuperstructure.mElevator.elevatorCTR.SetReference(mSuperstructure.mElevator.CoralLevel2 + 1, rev::spark::SparkLowLevel::ControlType::kPosition);
+        mSuperstructure.mElevator.elevatorCTR2.SetReference(mSuperstructure.mElevator.CoralLevel2 + 1, rev::spark::SparkLowLevel::ControlType::kPosition);
     }
 
     while (delayTimer.Get().value() < 7.4) {

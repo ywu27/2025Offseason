@@ -17,8 +17,8 @@ class Elevator {
         // Need to be changed, setpoints in rotations
         double startPoint = 0.0;
         double CoralLevel1 = 39.7854;
-        double CoralLevel2 = 49.07; 
-        double CoralLevel3 = 78.86;
+        double CoralLevel2 = 53;
+        double CoralLevel3 = 82.86;
         double CoralLevel4 = 121;
         double CoralStation = 8.386;
 

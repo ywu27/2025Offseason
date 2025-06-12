@@ -58,6 +58,8 @@ public:
 
   // For Auto Align
   SwerveAlign align;
+  float setpointX = 0;
+  float setpointY = 0;
 
   // Pigeon
   Pigeon pigeon{0};

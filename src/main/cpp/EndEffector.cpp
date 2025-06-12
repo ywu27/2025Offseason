@@ -46,13 +46,13 @@ void EndEffector::setState(EndEffectorState state) {
 }
 
 void EndEffector::intake() {
-    intakeMotor1.Set(0.25);
-    intakeMotor2.Set(0.25);
+    intakeMotor1.Set(0.3);
+    intakeMotor2.Set(0.3);
 }
 
 void EndEffector::score() {
-    intakeMotor1.Set(0.25);
-    intakeMotor2.Set(0.25);
+    intakeMotor1.Set(0.3);
+    intakeMotor2.Set(0.3);
     // intakeCTR1.SetReference(intakeEnc1.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
     // intakeCTR2.SetReference(intakeEnc2.GetPosition()+20, rev::spark::SparkLowLevel::ControlType::kPosition);
 }
