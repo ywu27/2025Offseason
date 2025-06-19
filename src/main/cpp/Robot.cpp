@@ -244,29 +244,34 @@ void Robot::TeleopPeriodic()
     elevatorLevel = "Coral Station";
     mSuperstructure.mElevator.setState(5);
   }
+
   
   if (ctr.GetR2ButtonPressed()) {
     align.forwardPID.Reset();
     align.strafePID.Reset();
   }
-  else if (ctr.GetR1ButtonPressed() && cameraBack.camera.GetLatestResult().HasTargets()) {
-    align.forwardPID.Reset();
-    align.strafePID.Reset();
+  else if (ctr.GetL1Button()) {
+    mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+    mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  }
+  else if (ctr.GetR1ButtonPressed() && cameraBack.camera.GetLatestResult().HasTargets()) { // && cameraBack.camera.GetLatestResult().HasTargets()
+    align.PIDsetpointX.Reset();
+    align.PIDsetpointY.Reset();
     float offset = cameraBack.getStrafeDistancetoTarget();
     float distanceToTag = cameraBack.getDistanceToTarget();
     float angle = cameraBack.getAngleSetpoint();
-    setpointX = mDrive.getOdometryPose().X().value() + (distanceToTag * 39.37);
-    setpointY = mDrive.getOdometryPose().Y().value() - (offset * 39.37 - 13.0);
+    setpointX = mDrive.getOdometryPose().X().value() + (distanceToTag * 39.37 - 15.42);
+    setpointY = mDrive.getOdometryPose().Y().value() - (offset * 39.37) - 4.0;
+    // setpointX = mDrive.getOdometryPose().X().value() + 24.0;
+    // setpointY = mDrive.getOdometryPose().Y().value() + 35.0;
   }
   else if (ctr.GetR1Button()) {
     ChassisSpeeds speed = align.driveToSetpointX(setpointX, mDrive, pigeon);
     ChassisSpeeds speeds = align.driveToSetpointY(setpointY, mDrive, pigeon);
     vy = speed.vyMetersPerSecond;
     vx = speeds.vyMetersPerSecond;
-    rot = 0;
-    // mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    // mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
-    // rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+    // rot = 0;
   }
   else if (alignPV) { // Alignment Mode
     if (cameraBack.isTargetDetected() && coralSide == "left") {
@@ -309,6 +314,9 @@ void Robot::TeleopPeriodic()
     pigeon.pigeon.Reset();
   }
 
+  vx = std::clamp(vx, -7.5, 7.5);
+  vy = std::clamp(vy, -7.5, 7.5);
+
   // Drive function
   mDrive.Drive(
       ChassisSpeeds(vx, vy, rot),
@@ -325,6 +333,7 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber("setpoint y", setpointY);
   frc::SmartDashboard::PutNumber("distance to tag", cameraBack.getDistanceToTarget());
   frc::SmartDashboard::PutNumber("offset", cameraBack.getStrafeDistancetoTarget());
+  frc::SmartDashboard::PutNumber("rot", pigeon.getBoundedAngleCW().getDegrees());
 
   // Superstructure
   if (intakeCoral) {

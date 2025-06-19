@@ -8,8 +8,11 @@
 
 class SwerveAlign {
 public: 
-    frc::PIDController forwardPID{9.1, 0, 0.2}; // 8.55
-    frc::PIDController strafePID{9.1, 0, 0.2};
+    frc::PIDController forwardPID{8.55, 0, 0.0}; // 8.55
+    frc::PIDController strafePID{9.1, 0, 0};
+
+    frc::PIDController PIDsetpointX{0.4, 0.0, 0.01};
+    frc::PIDController PIDsetpointY{0.4, 0.0, 0.01};
     
     double forwardSpeed = 0;
     double strafeSpeed = 0;
@@ -91,17 +94,17 @@ public:
         double currentX = drive.getOdometryPose().X().value();
 
         //Tolerance
-        strafePID.SetTolerance(1.5, 0.01);
+        PIDsetpointX.SetTolerance(2.0, 0.1);
 
-        if (!strafePID.AtSetpoint()) {
-            double strafeSpeed = strafePID.Calculate(currentX, setpointX);
+        if (!PIDsetpointX.AtSetpoint()) {
+            double strafeSpeed = PIDsetpointX.Calculate(currentX, setpointX);
             // if (prevErrorX < (setpointX-currentX)) {
             //     strafeSpeed = -fabs(strafeSpeed);
             // }
             // else {
             //     strafeSpeed = fabs(strafeSpeed);
             // }
-            strafeSpeed = std::clamp(strafeSpeed, -10.0, 10.0);
+            strafeSpeed = std::clamp(strafeSpeed, -7.5, 7.5);
             speeds = ChassisSpeeds::fromFieldRelativeSpeeds(0, strafeSpeed, 0, pigeon.getBoundedAngleCW());
         }
         else {
@@ -118,17 +121,17 @@ public:
         double currentY = drive.getOdometryPose().Y().value();
 
         // Tolerance
-        forwardPID.SetTolerance(14.5, 0.01);
+        PIDsetpointY.SetTolerance(2.0, 0.1);
 
-        if (!forwardPID.AtSetpoint()) {
-            double forwardSpeed = forwardPID.Calculate(currentY, setpointY);
+        if (!PIDsetpointY.AtSetpoint()) {
+            double forwardSpeed = PIDsetpointY.Calculate(currentY, setpointY);
             // if (prevErrorY < (setpointY - currentY)) {
-            //     forwardSpeed = -fabs(forwardSpeed);
+            //     forwardSpeed = -fabs(forwardSpeed)
             // }
             // else {
             //     forwardSpeed = fabs(forwardSpeed);
             // }
-            forwardSpeed = std::clamp(forwardSpeed, -10.0, 10.0);
+            forwardSpeed = std::clamp(forwardSpeed, -7.5, 7.5);
             speeds = ChassisSpeeds::fromFieldRelativeSpeeds(0, forwardSpeed, 0, pigeon.getBoundedAngleCW());
         }
         else {

@@ -60,6 +60,7 @@ public:
   SwerveAlign align;
   float setpointX = 0;
   float setpointY = 0;
+  bool flag = false;
 
   // Pigeon
   Pigeon pigeon{0};
