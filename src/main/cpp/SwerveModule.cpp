@@ -154,7 +154,7 @@ bool SwerveModule::isFinished(float percentageBound) {
 void SwerveModule::run() {
     // Steer PID
     frc::SmartDashboard::PutNumber("SteerEncoder" + std::to_string(steerID), steerEnc.getAbsolutePosition().getDegrees());
-    frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
+    // frc::SmartDashboard::PutNumber("SteerSetpoint" + std::to_string(steerID), steerAngleSetpoint * (180 / M_PI));
     frc::SmartDashboard::PutNumber("SteerOutput" + std::to_string(steerID), steerMotor.GetAppliedOutput());
     if (moduleInhibit) { // Thread is in standby mode
         currentSteerOutput = 0.0;

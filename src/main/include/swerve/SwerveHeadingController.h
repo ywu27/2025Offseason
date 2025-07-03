@@ -8,7 +8,7 @@
 
 
 class SwerveHeadingController {
-private:
+public:
     frc::PIDController mPIDCtr {0, 0, 0};
     double mSetpoint = 0.0;
     double outputMax;
@@ -50,7 +50,7 @@ public:
             if (POV == 0) 
             {
                 mSetpoint = 45;
-            } else if (POV == 180) 
+            } else if (POV == 180)
             {
                 mSetpoint = 0;
             } else if (POV == 270) 
@@ -87,7 +87,7 @@ public:
             case OFF:
                 return 0.0;
             case SNAP:
-                mPIDCtr.SetPID(0.1, 0.0, 0.01);
+                mPIDCtr.SetPID(0.12, 0.0, 0.01);
                 break;
             case ALIGN:
                 mPIDCtr.SetPID(0.04, 0.0, 0.01);

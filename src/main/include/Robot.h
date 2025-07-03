@@ -1,31 +1,26 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 #pragma once
 
 #include <frc/TimedRobot.h>
 #include <frc/PS5Controller.h>
-#include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
-
-#include "util/ShuffleUI.h"
-#include <thread>
-
 #include "util/ControlUtil.h"
-#include "sensors/NavX.h"
 #include "swerve/SwerveHeadingController.h"
-#include "util/TimeDelayedBool.h"
-#include <frc/Joystick.h>
 #include "sensors/Limelight.h"
 #include "util/SlewRateLimiter.h"
-#include <frc/GenericHID.h>
 #include "control/PowerModule.h"
 #include "SwerveDrive.h"
+
 #include "swerve/SwerveAlign.h"
-#include "util/TimeDelayButton.h"
-#include "sensors/Limelight.h"
 #include <ctre/phoenix6/CANBus.hpp>
+#include "Trajectory.h"
+
+#include <ctre/phoenix6/Pigeon2.hpp>
+#include "sensors/Pigeon.h"
+#include "sensors/LED.h"
+
+#include "Superstructure.h"
+#include "sensors/PhotonVision.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -50,15 +45,29 @@ public:
 
   // Modules/Devices
   frc::PS5Controller ctr = frc::PS5Controller(0);
-  //frc::PS5Controller ctrOperator = frc::PS5Controller(1);
-  NavX mGyro = NavX();
-  SwerveDrive mDrive = SwerveDrive(mGyro);
-  
-  //Limelight
-  Limelight limelight = Limelight("", Limelight::RED);
+  frc::PS5Controller ctrOperator = frc::PS5Controller(1);
 
+  pathplanner::RobotConfig pathConfig = pathplanner::RobotConfig::fromGUISettings();
+  frc::SendableChooser<Trajectory::autos> mChooser;
+
+  Superstructure mSuperstructure;
+
+  // Vision
+  PhotonVision cameraFront = PhotonVision("cameraFront");
+  PhotonVision cameraBack = PhotonVision{"cameraBack"};
+
+  // For Auto Align
   SwerveAlign align;
-  units::second_t timestamp = frc::Timer::GetFPGATimestamp();
+  float setpointX = 0;
+  float setpointY = 0;
+  bool flag = false;
+
+  // Pigeon
+  Pigeon pigeon{0};
+
+  SwerveDrive mDrive = SwerveDrive(pigeon);
+
+  Trajectory mTrajectory = Trajectory(mDrive, mSuperstructure, mHeadingController, cameraFront, cameraBack, align, pigeon, pathConfig);
 
   //CANivore
   ctre::phoenix6::CANBus canbus{"Drivetrain"};
@@ -69,13 +78,42 @@ public:
   float ctrPercent = 1.0;
   float boostPercent = 0.9;
   double ctrPercentAim = 0.3;
-  TimeDelayButton snapRobotToGoal;
   bool scoreAmp = false;
   bool liftElev = false;
   bool cleanDriveAccum = true;
+  double speedLimiter = 1.0;
 
   // Controllers
   SwerveHeadingController mHeadingController = SwerveHeadingController(-4.0, 4.0);
   SlewRateLimiter xStickLimiter = SlewRateLimiter(ctrSlewRate);
   SlewRateLimiter yStickLimiter = SlewRateLimiter(ctrSlewRate);
+
+  //autochooser
+  frc::SendableChooser<std::string> positionChooser;
+  const std::string kSimpleAuto = "0";
+  const std::string kAutoStartDefault = "1";
+  const std::string kAutoStartB = "2";
+  const std::string kAutoStartC = "3";
+
+  frc::SendableChooser<std::string> reefChooser;
+  const::std::string kAutoReefDefault = "A";
+  const::std::string kAutoReefB = "B";
+  const::std::string kAutoReefC = "C";
+  const::std::string kAutoReefD = "D";
+  const::std::string kAutoReefE = "E";
+  const::std::string kAutoReefF = "F";
+  const std::string kOneCoral = "0";
+
+  int coralLevel = 0;
+  std::string elevatorLevel = "Start";
+  std::string coralSide = "right";
+  bool scorecoral = true;
+
+  // Alliance Color and Chooser
+  frc::SendableChooser<std::string> allianceChooser;
+  const std::string redAlliance = "RED";
+  const std::string blueAlliance = "BLUE";
+  bool allianceIsRed = false;
+
+  Led mLED{9, 43};
 };

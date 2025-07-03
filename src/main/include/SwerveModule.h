@@ -1,38 +1,39 @@
 #pragma once
 
+// FRC Libraries
 #include <thread>
-#include <string>
-
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Timer.h>
+
+// REV Libraries
 #include <rev/SparkClosedLoopController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
-#include <frc/Timer.h>
 
-#include "sensors/CAN_Coder.h"
-#include "geometry/Translation2d.h"
-#include "swerve/SwerveModuleState.h"
+// Random
 #include "Constants.h"
-#include "util/ShuffleUI.h"
 #include "util/ControlUtil.h"
-#include "frc/kinematics/SwerveModulePosition.h"
-#include "frc/geometry/Rotation2d.h"
 #include "control/PowerModule.h"
-#include <swerve/TalonFXMotor.h>
+
+// Swerve
+#include "swerve/TalonFXMotor.h"
+#include "swerve/SwerveModuleState.h"
+#include <frc/kinematics/SwerveModulePosition.h>
+
+// Sensors
+#include "sensors/CAN_Coder.h"
 
 class SwerveModule
 {
-    // private: <- removed for testing
-public:
+private:
     int steerID;
     int driveID;
 
     rev::spark::SparkMax steerMotor;
     rev::spark::SparkMaxConfig config;
     rev::spark::SparkClosedLoopController PIDController = steerMotor.GetClosedLoopController();
-    TalonFXMotor driveMotor;
 
     CAN_Coder steerEnc;
     frc::PIDController steerCTR;
@@ -69,7 +70,8 @@ public:
     // TODO: Brownout module
     double currentSteerOutput = 0.0;
 
-    // public:
+public:
+    TalonFXMotor driveMotor;
     SwerveModule(int steerMotorID, int driveMotorID, int cancoderID);
     void initMotors();
 

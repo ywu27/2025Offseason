@@ -1,22 +1,33 @@
 #pragma once
 
-#include "SwerveModule.h"
+// Geometry
 #include "geometry/Rotation2d.h"
-#include "swerve/ChassisSpeeds.h"
 #include "geometry/Pose2d.h"
 #include "geometry/Twist2d.h"
 #include "geometry/Translation2d.h"
-#include "Constants.h"
+
+// Swerve
 #include "swerve/SwerveDriveKinematics.h"
 #include "swerve/SwerveModuleState.h"
+#include "swerve/ChassisSpeeds.h"
+#include "SwerveModule.h"
+
+// Random
 #include <thread>
-#include "util/ShuffleUI.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <networktables/NetworkTableEntry.h>
-#include "sensors/NavX.h"
+#include "Constants.h"
 
+// Sensors
+#include "sensors/Pigeon.h"
+#include "sensors/PhotonVision.h"
+
+// Kinematics 
 #include "frc/kinematics/SwerveDriveKinematics.h"
 #include "frc/kinematics/SwerveDriveOdometry.h"
+#include "frc/estimator/SwerveDrivePoseEstimator.h"
+
+// Pathplanner
 #include "pathplanner/lib/path/PathPlannerPath.h"
 
 // TODO: inherit thread helper
@@ -28,7 +39,7 @@ enum DriveState{
 };
 class SwerveDrive
 {
-private:
+public: // put back to private
 
     SwerveModule mFrontLeft = SwerveModule(FLsteerID, FLdriveID, FL_CAN_ID);
     SwerveModule mFrontRight = SwerveModule(FRsteerID, FRdriveID, FR_CAN_ID);
@@ -39,9 +50,11 @@ private:
     std::thread modulePIDThread;
     float maxRot = moduleMaxRot;
     std::array<Translation2d, 4> wheelPs = {Translation2d(trackWidthNumber, wheelBase), Translation2d(trackWidthNumber, -wheelBase), Translation2d(-trackWidthNumber, wheelBase), Translation2d(-trackWidthNumber, -wheelBase)};
+    int index;
+    bool goodWheelPos = true;
 
     SwerveDriveKinematics m_kinematics = SwerveDriveKinematics(wheelPs);
-    NavX &mGyro; 
+    Pigeon& pigeon;
 
     // wpi lib class ver of kinemactics used to initialize odometry
     frc::SwerveDriveKinematics<4> frckinematics{ 
@@ -53,7 +66,7 @@ private:
 
     frc::SwerveDriveOdometry<4> m_odometry{
         frckinematics,
-        mGyro.getRotation2d(), 
+        pigeon.getRotation2d(), 
         // might need to edit order of motors (double check)
         {
             mBackLeft.getModulePosition(), 
@@ -64,21 +77,36 @@ private:
         frc::Pose2d{0_m, 0_m, 0_deg}
     };
 
+    frc::SwerveDrivePoseEstimator<4> mSwervePose{
+        frckinematics, 
+        pigeon.getRotation2d(), 
+        { 
+            mBackLeft.getModulePosition(),
+            mFrontLeft.getModulePosition(),
+            mFrontRight.getModulePosition(),
+            mBackRight.getModulePosition()
+        },
+        frc::Pose2d{0_m, 0_m, 0_deg} 
+    };
+
     void runModules(); // Private - do not call outside of init
 
 public:
 
-    SwerveDrive(NavX &mGyroInput) : mGyro(mGyroInput) {
+    SwerveDrive(Pigeon& pigeonInput) : pigeon(pigeonInput) {
     }
 
     DriveState state = DriveState::Teleop;
     void Drive(ChassisSpeeds desiredSpeeds, Rotation2d fieldRelativeGyro, bool useFieldOriented, bool cleanAccum = false);
     void initModules();
     void enableModules();
-    bool stopModules();
+    bool disableModules();
     void resetOdometry(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d getOdometryPose();
     void updateOdometry();
-    void displayDriveTelemetry();
-    void zeroAccumulation();
+    void autoRot();
+    float roundToTwoDecimals(float num);
+    void resetPoseEstimator(frc::Translation2d trans, frc::Rotation2d angle);
+    frc::Pose2d GetPoseEstimatorPose();
+    void updatePoseEstimator(PhotonVision &camera, bool vision, units::second_t timestamp);
 };

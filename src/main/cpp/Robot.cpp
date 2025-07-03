@@ -11,44 +11,132 @@
 void Robot::RobotInit()
 {
   mDrive.initModules();
-  limelight.setPipelineIndex(0);
+  pigeon.init();
+  mSuperstructure.init();
+
   frc::CameraServer::StartAutomaticCapture();
+
+  // Choosers
+  allianceChooser.SetDefaultOption("Red Alliance", redAlliance);
+  allianceChooser.AddOption("Blue Alliance", blueAlliance);
+  frc::SmartDashboard::PutData("Alliance Color", &allianceChooser);
+
+  // Determines alliance color
+  std::string allianceColor = allianceChooser.GetSelected();
+  if (allianceColor == "RED") {
+    allianceIsRed = true;
+  }
+  else {
+    allianceIsRed = false;
+  }
+
+  positionChooser.SetDefaultOption(kAutoStartDefault, kAutoStartDefault);
+  positionChooser.AddOption(kAutoStartB, kAutoStartB);
+  positionChooser.AddOption(kAutoStartC, kAutoStartC);
+  positionChooser.AddOption(kSimpleAuto, kSimpleAuto);
+  frc::SmartDashboard::PutData("Auto Start Position", &positionChooser);
+
+  reefChooser.SetDefaultOption(kAutoReefDefault, kAutoReefDefault);
+  reefChooser.AddOption(kAutoReefB, kAutoReefB);
+  reefChooser.AddOption(kAutoReefC, kAutoReefC);
+  reefChooser.AddOption(kAutoReefD, kAutoReefD);
+  reefChooser.AddOption(kAutoReefE, kAutoReefE);
+  reefChooser.AddOption(kAutoReefF, kAutoReefF);
+  reefChooser.AddOption(kOneCoral, kOneCoral);
+  frc::SmartDashboard::PutData("Auto Reef Position", &reefChooser);
+
 }
 
 void Robot::RobotPeriodic()
 {
-  
-  limelight.isTargetDetected();
+  frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
+  frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
 }
 
 void Robot::AutonomousInit()
 {
   mDrive.state = DriveState::Auto;
-  mGyro.init();
   mDrive.enableModules();
- 
-  // if (frc::DriverStation::IsDSAttached()) {
-  //   mTraj.isRed = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed; // checks for alliance color
-  // }
-  // if (limelight.targetDetected()) {
-  //   mTraj.startPose = mLimelight.getRobotPoseFieldSpace();
-  //   mTraj.receivedPose = true;
-  // } else {
-  //   mTraj.receivedPose = false;
-  // }
+  pigeon.pigeon.Reset();
+
+  align.forwardPID.Reset();
+  align.strafePID.Reset();
+  mDrive.resetPoseEstimator(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
+
+  std::string start_pos = positionChooser.GetSelected();
+  std::string reef_pos = reefChooser.GetSelected();
+  std::string allianceColor = allianceChooser.GetSelected();
+
+  // Auto path choosing
+  if(start_pos=="1" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_1A, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_1B, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_1C, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_1D, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_1E, allianceIsRed);
+  }
+  else if(start_pos=="1" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_1F, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_2A, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_2B, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_2C, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_2D, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_2E, allianceIsRed);
+  }
+  else if(start_pos=="2" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_2F, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="A") {
+    mTrajectory.followPath(Trajectory::auto_3A, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="B") {
+    mTrajectory.followPath(Trajectory::auto_3B, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="C") {
+    mTrajectory.followPath(Trajectory::auto_3C, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="D") {
+    mTrajectory.followPath(Trajectory::auto_3D, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="E") {
+    mTrajectory.followPath(Trajectory::auto_3E, allianceIsRed);
+  }
+  else if(start_pos=="3" && reef_pos=="F") {
+    mTrajectory.followPath(Trajectory::auto_3F, allianceIsRed);
+  }
+  else if (start_pos == "0" && reef_pos == "0") {
+    mTrajectory.followPath(Trajectory::MOVE_STRAIGHT, allianceIsRed);
+  }
 }
+
 void Robot::AutonomousPeriodic()
 {
+  mLED.Set_Color(frc::Color::kBrown);
 }
 void Robot::TeleopInit()
 {
   mDrive.state = DriveState::Teleop;
-  limelight.setPipelineIndex(0);
-  limelight.isTargetDetected();
-  limelight.setLEDMode(0);
 
   mDrive.enableModules();
-  mGyro.init();
+  // pigeon.pigeon.SetYaw(units::degree_t(fmod(pigeon.getBoundedAngleCCW().getDegrees() + 180, 360)));
   mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
 
   mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
@@ -57,91 +145,228 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  bool fieldOriented = false;
-  fieldOriented = mGyro.gyro.IsConnected();
-  frc::SmartDashboard::PutNumber("distance", limelight.getDistanceToWall());
-  frc::SmartDashboard::PutNumber("ty", limelight.getTY());
-  frc::SmartDashboard::PutNumber("tx", limelight.getTX());
-  frc::SmartDashboard::PutBoolean("aligned?", align.isAligned(limelight));
+  if (coralLevel == 1) {
+    speedLimiter = 0.8;
+  }
+  else if (coralLevel ==2 ) {
+    speedLimiter = 0.7;
+  }
+  else if (coralLevel == 3) {
+    speedLimiter = 0.5;
+  }
+  else if (coralLevel == 4) {
+    speedLimiter = 0.3;
+  }
+  else if (coralLevel==5) {
+    speedLimiter = 0.9;
+  }
 
-  auto startTime = frc::Timer::GetFPGATimestamp();
+  bool fieldOriented = pigeon.pigeon.IsConnected();
+
   double vx = 0;
   double vy = 0;
 
   // Controller inputs
   double leftX = ControlUtil::deadZonePower(ctr.GetLeftX(), ctrDeadzone, 1);
   double leftY = ControlUtil::deadZonePower(-ctr.GetLeftY(), ctrDeadzone, 1);
-
-  leftX = xStickLimiter.calculate(leftX); 
-  leftY = yStickLimiter.calculate(leftY);
-
+  leftX = xStickLimiter.calculate(leftX) * speedLimiter;
+  leftY = yStickLimiter.calculate(leftY) * speedLimiter;
   double rightX = ControlUtil::deadZoneQuadratic(ctr.GetRightX(), ctrDeadzone);
+  double rot = 0;
 
-  //int dPad = ctrOperator.GetPOV();
-  bool rumbleController = false;
+  // Driver
+  int dPad = ctr.GetPOV();
+  bool alignPV = ctr.GetR2Button();
+  bool intakeCoral = ctr.GetTriangleButton();
+  bool scoreCoral = ctr.GetCrossButtonPressed();
+  
+  // Co-driver
+  bool coralIntake = ctrOperator.GetR2Button();
+  bool level1 = ctrOperator.GetCrossButton();
+  bool level2 = ctrOperator.GetSquareButton();
+  bool level3 = ctrOperator.GetCircleButton();
+  bool level4 = ctrOperator.GetTriangleButton();
 
-  // Driver Information
+  bool resetGyro = (ctrOperator.GetPOV() == 0) || (ctr.GetPOV() == 0);
 
-  // Teleop States
-  double rot = rightX * moduleMaxRot * 2;
+  bool zeroElevator = ctrOperator.GetL1ButtonPressed();
+  mSuperstructure.mElevator.motor.Set(-ctrOperator.GetLeftY() * 1);
+  mSuperstructure.mElevator.motor2.Set(-ctrOperator.GetLeftY() * 1);
 
-  //Decide drive modes
+  int dPadOperator = ctrOperator.GetPOV();
+  
+  // Driving Modes
+  double offSet = 0;
+  double targetDistance = 0; // CHECK THIS
   double zeroSetpoint = 0;
 
-  Pose3d apriltagPose = limelight.getTargetPoseRobotSpace();
+  // frc::Color detectedColor = color.GetColor();
+  // bool red = (detectedColor.red < 0.29) && (detectedColor.red > 0.255);
+  // bool green = (detectedColor.green < 0.495) && (detectedColor.green > 0.47);
+  // bool blue = (detectedColor.blue < 0.27) && (detectedColor.blue > 0.23);
+  // bool coralIn = red && green && blue;
 
-  frc::SmartDashboard::PutNumber("aprilx", apriltagPose.x);
-  frc::SmartDashboard::PutNumber("aprily", apriltagPose.y);
-  frc::SmartDashboard::PutNumber("aprilz", apriltagPose.z);
+  // frc::SmartDashboard::PutBoolean("coralIN", coralIn);
+
+  // if (coralIn) {
+  //   mLED.Set_Color(frc::Color::kGreen);
+  // }
+
+  if(dPad==90) {
+    coralSide = "right";
+  }
+  else if(dPad==270) {
+    coralSide = "left";
+  }
+
+  if(level1) {
+    coralLevel = 1;
+    mSuperstructure.mElevator.setState(1);
+    elevatorLevel = "Level 1";
+  }
+  else if(level2) {
+    coralLevel = 2;
+    mSuperstructure.mElevator.setState(2);
+    elevatorLevel = "Level 2";
+  }
+  else if(level3) {
+    coralLevel = 3;
+    mSuperstructure.mElevator.setState(3);
+    elevatorLevel = "Level 3";
+  }
+  else if(level4) {
+    coralLevel = 4;
+    mSuperstructure.mElevator.setState(4);
+    elevatorLevel = "Level 4";
+  }
+  else if (coralIntake) {
+    coralLevel = 5;
+    elevatorLevel = "Coral Station";
+    mSuperstructure.mElevator.setState(5);
+  }
+
   
-  if (ctr.GetR2Button()) {
-    double offSet = 0.381;
-    ChassisSpeeds speeds = align.autoAlign(limelight, mHeadingController, 1, offSet);
-    frc::SmartDashboard::PutNumber("strafe", speeds.vyMetersPerSecond);
-    vx = speeds.vxMetersPerSecond;
-    vy = speeds.vyMetersPerSecond;
-    frc::SmartDashboard::PutNumber("vx", vx);
-    frc::SmartDashboard::PutNumber("vy", vy);
-    fieldOriented = false;
-    zeroSetpoint = 0;
-    frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
+  if (ctr.GetR2ButtonPressed()) {
+    align.forwardPID.Reset();
+    align.strafePID.Reset();
+  }
+  else if (ctr.GetL1Button()) {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
-    mHeadingController.setSetpoint(zeroSetpoint);
-    rot = mHeadingController.calculate(mGyro.getBoundedAngleCW().getDegrees());
+    mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+    rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+  }
+  else if (ctr.GetR1ButtonPressed() && cameraBack.camera.GetLatestResult().HasTargets()) { // && cameraBack.camera.GetLatestResult().HasTargets()
+    align.PIDsetpointX.Reset();
+    align.PIDsetpointY.Reset();
+    float offset = cameraBack.getStrafeDistancetoTarget();
+    float distanceToTag = cameraBack.getDistanceToTarget();
+    float angle = cameraBack.getAngleSetpoint();
+    setpointX = mDrive.getOdometryPose().X().value() + (distanceToTag * 39.37 - 15.42);
+    setpointY = mDrive.getOdometryPose().Y().value() - (offset * 39.37) - 4.0;
+    // setpointX = mDrive.getOdometryPose().X().value() + 24.0;
+    // setpointY = mDrive.getOdometryPose().Y().value() + 35.0;
+  }
+  else if (ctr.GetR1Button()) {
+    ChassisSpeeds speed = align.driveToSetpointX(setpointX, mDrive, pigeon);
+    ChassisSpeeds speeds = align.driveToSetpointY(setpointY, mDrive, pigeon);
+    vy = speed.vyMetersPerSecond;
+    vx = speeds.vyMetersPerSecond;
+    // rot = 0;
+  }
+  else if (alignPV) { // Alignment Mode
+    if (cameraBack.isTargetDetected() && coralSide == "left") {
+        targetDistance = 0.275;
+        offSet = 0.078;
+
+        ChassisSpeeds speeds = align.autoAlignPV(cameraBack, targetDistance, offSet);
+        vx = speeds.vxMetersPerSecond;
+        vy = speeds.vyMetersPerSecond;
+        fieldOriented = false;
+
+        mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+        mHeadingController.setSetpoint(cameraBack.getAngleSetpoint());
+        rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+      }
+      else if (cameraFront.isTargetDetected() && coralSide == "right") {
+        targetDistance = 0.275;
+        offSet = -0.07;
+
+        ChassisSpeeds speeds = align.autoAlignPV(cameraFront, targetDistance, offSet);
+        vx = speeds.vxMetersPerSecond;
+        vy = speeds.vyMetersPerSecond;
+        fieldOriented = false;
+
+        mHeadingController.setHeadingControllerState(SwerveHeadingController::ALIGN);
+        mHeadingController.setSetpoint(cameraFront.getAngleSetpoint());
+        rot = mHeadingController.calculate(pigeon.getBoundedAngleCW().getDegrees());
+      }
   }
   else // Normal driving mode
   {
     mHeadingController.setHeadingControllerState(SwerveHeadingController::OFF);
     vx = leftX * moduleMaxFPS;
     vy = leftY * moduleMaxFPS;
+    rot = rightX * moduleMaxRot * 2;
   }
   // Gyro Resets
-  if (ctr.GetCrossButtonReleased()) {
-    mGyro.init();
+  if (resetGyro) {
+    pigeon.pigeon.Reset();
   }
 
-  if (align.isAligned(limelight)) {
-    mGyro.setYaw(0);
-  }
+  vx = std::clamp(vx, -7.5, 7.5);
+  vy = std::clamp(vy, -7.5, 7.5);
 
   // Drive function
   mDrive.Drive(
-      ChassisSpeeds(vx, vy, -rot),
-      mGyro.getBoundedAngleCCW(),
+      ChassisSpeeds(vx, vy, rot),
+      pigeon.getBoundedAngleCCW(),
       fieldOriented,
       cleanDriveAccum);
   mDrive.updateOdometry();
-  frc::SmartDashboard::PutNumber("Gyro position", mGyro.getBoundedAngleCCW().getDegrees());
+
+  frc::SmartDashboard::PutNumber("Odometry X", mDrive.getOdometryPose().X().value());
+  frc::SmartDashboard::PutNumber("Odometry Y", mDrive.getOdometryPose().Y().value());
   frc::SmartDashboard::PutNumber("vx", vx);
   frc::SmartDashboard::PutNumber("vy", vy);
-  frc::SmartDashboard::PutNumber("driveX", mDrive.getOdometryPose().X().value());
-  frc::SmartDashboard::PutNumber("driveY", mDrive.getOdometryPose().Y().value());
+  frc::SmartDashboard::PutNumber("setpoint X", setpointX);
+  frc::SmartDashboard::PutNumber("setpoint y", setpointY);
+  frc::SmartDashboard::PutNumber("distance to tag", cameraBack.getDistanceToTarget());
+  frc::SmartDashboard::PutNumber("offset", cameraBack.getStrafeDistancetoTarget());
+  frc::SmartDashboard::PutNumber("rot", pigeon.getBoundedAngleCW().getDegrees());
+
+  // Superstructure
+  if (intakeCoral) {
+    mLED.Set_Color(frc::Color::kRed);
+
+    if (coralLevel != 4 && coralLevel != 1) {
+      mSuperstructure.intakeCoral();
+    }
+    else if (coralLevel == 1) {
+      mSuperstructure.mEndEffector.scoreL1();
+    }
+    else if (coralLevel == 4) {
+      mSuperstructure.mEndEffector.scoreL4();
+    }
+  }
+  else if (zeroElevator) {
+    mSuperstructure.mElevator.zero();
+  }
+  else {
+    mSuperstructure.mEndEffector.setState(EndEffector::STOP);
+  }
+  
+  if (!(cameraFront.isTargetDetected() && cameraBack.isTargetDetected()))  {
+    mLED.Set_Color(frc::Color::kGreen);
+  }
+  else if (cameraFront.isTargetDetected() || cameraBack.isTargetDetected()) {
+    mLED.Set_Color(frc::Color::kBlue);
+  }
 }
 
 void Robot::DisabledInit()
 {
   mDrive.state = DriveState::Disabled;
-  mDrive.stopModules();
+  mDrive.disableModules();
 }
 void Robot::DisabledPeriodic() {}
 
