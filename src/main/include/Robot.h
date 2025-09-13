@@ -19,6 +19,7 @@
 #include "sensors/Pigeon.h"
 #include "sensors/LED.h"
 
+#include "sensors/Vision.h"
 #include "Superstructure.h"
 #include "sensors/PhotonVision.h"
 
@@ -55,6 +56,12 @@ public:
   // Vision
   PhotonVision cameraFront = PhotonVision("cameraFront");
   PhotonVision cameraBack = PhotonVision{"cameraBack"};
+  Vision vision = Vision{
+  [=, this](frc::Pose2d pose, units::second_t timestamp,
+            Eigen::Matrix<double, 3, 1> stddevs) {
+    mDrive.AddVisionMeasurement(pose, timestamp, stddevs);
+  }, cameraFront
+  };
 
   // For Auto Align
   SwerveAlign align;

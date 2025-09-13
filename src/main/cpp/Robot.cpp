@@ -51,6 +51,8 @@ void Robot::RobotPeriodic()
 {
   frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
   frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
+  vision.Periodic();
+  mDrive.updatePoseEstimator();
 }
 
 void Robot::AutonomousInit()
