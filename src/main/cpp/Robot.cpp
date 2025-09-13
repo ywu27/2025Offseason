@@ -326,8 +326,8 @@ void Robot::TeleopPeriodic()
       cleanDriveAccum);
   mDrive.updateOdometry();
 
-  frc::SmartDashboard::PutNumber("Odometry X", mDrive.getOdometryPose().X().value());
-  frc::SmartDashboard::PutNumber("Odometry Y", mDrive.getOdometryPose().Y().value());
+  frc::SmartDashboard::PutNumber("Odometry X", mDrive.GetPoseEstimatorPose().X().value());
+  frc::SmartDashboard::PutNumber("Odometry Y", mDrive.GetPoseEstimatorPose().Y().value());
   frc::SmartDashboard::PutNumber("vx", vx);
   frc::SmartDashboard::PutNumber("vy", vy);
   frc::SmartDashboard::PutNumber("setpoint X", setpointX);
