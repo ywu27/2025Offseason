@@ -89,6 +89,10 @@ public:
         }   
     }
 
+    double getAmbiguity() {
+        return camera.GetLatestResult().GetBestTarget().GetPoseAmbiguity();
+    }
+
     bool isCoralStation() {
         return (getTagType() == TagType::CORALSTATION);
     }

@@ -34,6 +34,7 @@
 #include <functional>
 #include <limits>
 #include <memory>
+#include <algorithm>
 
 #include <frc/apriltag/AprilTagFieldLayout.h>
 #include <frc/apriltag/AprilTagFields.h>
@@ -49,8 +50,8 @@ class Vision {
    */
   Vision(std::function<void(frc::Pose2d, units::second_t,
                             Eigen::Matrix<double, 3, 1>)>
-             estConsumer, PhotonVision &camera)
-      : estConsumer{estConsumer}, camera(camera) {
+             estConsumer, PhotonVision &camera, PhotonVision &camera1, PhotonVision &camera2, PhotonVision &camera3)
+      : estConsumer{estConsumer}, camera(camera), camera1(camera1), camera2(camera2), camera3(camera3) {
     photonEstimator.SetMultiTagFallbackStrategy(
         photon::PoseStrategy::LOWEST_AMBIGUITY);
   }
@@ -58,8 +59,35 @@ class Vision {
   photon::PhotonPipelineResult GetLatestResult() { return m_latestResult; }
 
   void Periodic() {
+    std::array<double, 4> cameraAmbiguity = {camera.getAmbiguity(), camera1.getAmbiguity(), camera2.getAmbiguity(), camera3.getAmbiguity()};
+    auto min = std::min_element(cameraAmbiguity.begin(), cameraAmbiguity.end());
+    double minAmb = *min;
+    int index = 0;
+    std::vector<photon::PhotonPipelineResult> camResults;
+    // i = num of cameras dedicated to pose estimation
+    // Find lowest ambiguity camera
+    for (int i = 0; i < 4; i++) {
+      if ((cameraAmbiguity[i] + 0.01) == minAmb || ((cameraAmbiguity[i] - 0.01) == minAmb)) {
+        index = i;
+      }
+    }
+    
+    // Get cam results for lowest ambiguity camera (looping will take up a lot of memory usage)
+    if (index == 0) {
+      camResults = camera.camera.GetAllUnreadResults();
+    }
+    if (index == 1) {
+      camResults = camera1.camera.GetAllUnreadResults();
+    }
+    if (index == 2) {
+      camResults = camera2.camera.GetAllUnreadResults();
+    }
+    if (index == 3) {
+      camResults = camera3.camera.GetAllUnreadResults();
+    }
+    
     // Run each new pipeline result through our pose estimator
-    for (const auto& result : camera.camera.GetAllUnreadResults()) {
+    for (const auto& result : camResults) {
       // cache result and update pose estimator
       auto visionEst = photonEstimator.Update(result);
       m_latestResult = result;
@@ -109,6 +137,9 @@ class Vision {
       apriltagField, photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
       frc::Transform3d(0.0_m, 0.0_m, 0.0_m, frc::Rotation3d(0.0_deg, 0.0_deg, 0.0_deg))};
   PhotonVision &camera;
+  PhotonVision &camera1;
+  PhotonVision &camera2;
+  PhotonVision &camera3;
   std::unique_ptr<photon::VisionSystemSim> visionSim;
   std::unique_ptr<photon::SimCameraProperties> cameraProp;
   std::shared_ptr<photon::PhotonCameraSim> cameraSim;
