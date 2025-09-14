@@ -10,6 +10,8 @@
 
 void Robot::RobotInit()
 {
+  mDrive.resetPoseEstimator(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
+  mDrive.resetOdometry(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_rad));
   mDrive.initModules();
   pigeon.init();
   mSuperstructure.init();
@@ -49,10 +51,13 @@ void Robot::RobotInit()
 
 void Robot::RobotPeriodic()
 {
-  frc::SmartDashboard::PutNumber("enc1", mSuperstructure.mElevator.enc.GetPosition());
-  frc::SmartDashboard::PutNumber("enc2", mSuperstructure.mElevator.enc2.GetPosition());
   vision.Periodic();
   mDrive.updatePoseEstimator();
+  mDrive.updateOdometry();
+  frc::SmartDashboard::PutNumber("Odometry X", mDrive.getOdometryPose().X().value()); // In feet (field-oriented from robot enable/start point)
+  frc::SmartDashboard::PutNumber("Odometry Y", mDrive.getOdometryPose().Y().value()); // In feet (field-oriented from robot enable/start point)
+  frc::SmartDashboard::PutNumber("Robot Tag Pose X", mDrive.mSwervePose.GetEstimatedPosition().X().value()); // In meters (field-oriented odometry w/ april tag estimation)
+  frc::SmartDashboard::PutNumber("Robot Tag Pose Y", mDrive.mSwervePose.GetEstimatedPosition().Y().value()); // In meters (field-oriented odometry w/ april tag estimation)
 }
 
 void Robot::AutonomousInit()
@@ -324,10 +329,7 @@ void Robot::TeleopPeriodic()
       pigeon.getBoundedAngleCCW(),
       fieldOriented,
       cleanDriveAccum);
-  mDrive.updateOdometry();
 
-  frc::SmartDashboard::PutNumber("Odometry X", mDrive.GetPoseEstimatorPose().X().value());
-  frc::SmartDashboard::PutNumber("Odometry Y", mDrive.GetPoseEstimatorPose().Y().value());
   frc::SmartDashboard::PutNumber("vx", vx);
   frc::SmartDashboard::PutNumber("vy", vy);
   frc::SmartDashboard::PutNumber("setpoint X", setpointX);
