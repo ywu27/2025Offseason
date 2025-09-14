@@ -174,18 +174,24 @@ frc::Pose2d SwerveDrive::GetPoseEstimatorPose() { // In feet
     return frc::Pose2d{units::foot_t(pose.X().value() * 3.281), units::foot_t(pose.Y().value() * 3.281), pose.Rotation()};
 }
 
-void SwerveDrive::updatePoseEstimator(PhotonVision &camera, bool vision, units::second_t timestamp) {
-    mSwervePose.UpdateWithTime(timestamp, 
-        -pigeon.getRotation2d(),
+void SwerveDrive::updatePoseEstimator() {
+    // mSwervePose.UpdateWithTime(timestamp, 
+    //     -pigeon.getRotation2d(),
+    //     {mBackLeft.getModulePosition(),
+    //      mFrontLeft.getModulePosition(),
+    //      mFrontRight.getModulePosition(),
+    //      mBackRight.getModulePosition()});
+
+    mSwervePose.Update(pigeon.getRotation2d(),
         {mBackLeft.getModulePosition(),
          mFrontLeft.getModulePosition(),
          mFrontRight.getModulePosition(),
          mBackRight.getModulePosition()});
 
-    if (camera.isTargetDetected() && vision) {
-        frc::Pose2d robotPose = camera.returnPoseEstimate();
-        mSwervePose.AddVisionMeasurement(robotPose, timestamp);
-    }
+    // if (camera.isTargetDetected() && vision) {
+    //     frc::Pose2d robotPose = camera.returnPoseEstimate();
+    //     mSwervePose.AddVisionMeasurement(robotPose, timestamp);
+    // }
 }
 
 // Auto Rotation Section
@@ -253,6 +259,18 @@ void SwerveDrive::autoRot() {
         }
         goodWheelPos = true;
     }
+}
+
+void SwerveDrive::AddVisionMeasurement(const frc::Pose2d& visionMeasurement,
+                                       units::second_t timestamp) {
+  mSwervePose.AddVisionMeasurement(visionMeasurement, timestamp);
+}
+
+void SwerveDrive::AddVisionMeasurement(const frc::Pose2d& visionMeasurement,
+                                       units::second_t timestamp,
+                                       const Eigen::Vector3d& stdDevs) {
+  wpi::array<double, 3> newStdDevs{stdDevs(0), stdDevs(1), stdDevs(2)};
+  mSwervePose.AddVisionMeasurement(visionMeasurement, timestamp, newStdDevs);
 }
 
 /**

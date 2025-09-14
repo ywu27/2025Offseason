@@ -77,7 +77,7 @@ void Trajectory::follow(std::string const &traj_dir_file_path, bool flipAlliance
             auto sample = traj.sample(currentTime);
 
             driveToState(sample);
-            mDrive.updatePoseEstimator(cameraFront, false, frc::Timer::GetFPGATimestamp());
+            mDrive.updatePoseEstimator();
 
             // frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
             // frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());
@@ -115,7 +115,7 @@ void Trajectory::followTeleop(std::shared_ptr<pathplanner::PathPlannerPath> path
             auto sample = traj.sample(currentTime);
 
             driveToState(sample);
-            mDrive.updatePoseEstimator(cameraFront, false, frc::Timer::GetFPGATimestamp());
+            mDrive.updatePoseEstimator();
 
             // frc::SmartDashboard::PutNumber("curr pose x meters", mDrive.getOdometryPose().Translation().X().value());
             // frc::SmartDashboard::PutNumber("curr pose y meters", mDrive.getOdometryPose().Translation().Y().value());

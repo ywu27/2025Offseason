@@ -108,5 +108,10 @@ public:
     float roundToTwoDecimals(float num);
     void resetPoseEstimator(frc::Translation2d trans, frc::Rotation2d angle);
     frc::Pose2d GetPoseEstimatorPose();
-    void updatePoseEstimator(PhotonVision &camera, bool vision, units::second_t timestamp);
+    void updatePoseEstimator();
+    void AddVisionMeasurement(const frc::Pose2d& visionMeasurement,
+                            units::second_t timestamp);
+    void AddVisionMeasurement(const frc::Pose2d& visionMeasurement,
+                            units::second_t timestamp,
+                            const Eigen::Vector3d& stdDevs);
 };
